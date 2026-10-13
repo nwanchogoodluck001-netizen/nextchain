@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Support | NEXTCHAIN</title>
+    <meta name="description" content="Get help with your NEXTCHAIN account, wallet, investments, and transactions.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #080B14;
+            --sidebar: #0B0F1B;
+            --surface: #101625;
+            --surface-2: #151D30;
+            --border: rgba(150, 166, 205, 0.12);
+            --text: #F4F6FC;
+            --muted: #929DB6;
+            --primary: #8B7CFF;
+            --primary-light: #B6AEFF;
+            --cyan: #65D9FF;
+            --success: #45D6A0;
+            --danger: #FF7585;
+            --radius: 16px;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 3px;
+        }
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--sidebar-width);
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            padding: 27px 17px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform .3s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 11px;
+            margin-bottom: 42px;
+        }
+
+        .brand-icon {
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #A69BFF, #6552E8);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 23px;
+            box-shadow: 0 5px 24px rgba(113, 93, 255, .2);
+        }
+
+        .brand-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -.8px;
+        }
+
+        .brand-name span {
+            color: var(--primary-light);
+        }
+
+        .nav-label {
+            color: #69748E;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 0 13px;
+            margin: 0 0 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 46px;
+            padding: 0 13px;
+            border-radius: 11px;
+            color: #929DB6;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(139, 124, 255, .07);
+        }
+
+        .nav-link.active {
+            background: rgba(139, 124, 255, .13);
+            color: var(--primary-light);
+            box-shadow: inset 3px 0 0 var(--primary);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .sidebar-help {
+            padding: 18px 15px;
+            margin: 0 3px 20px;
+            border: 1px solid rgba(139, 124, 255, .19);
+            background: linear-gradient(145deg, rgba(139, 124, 255, .10), rgba(101, 217, 255, .035));
+            border-radius: 14px;
+        }
+
+        .sidebar-help-icon {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            color: var(--primary-light);
+            background: rgba(139, 124, 255, .14);
+            font-size: 19px;
+            margin-bottom: 13px;
+        }
+
+        .sidebar-help h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .sidebar-help p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+            margin-bottom: 13px;
+        }
+
+        .sidebar-help a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-light);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .sidebar-profile {
+            border-top: 1px solid var(--border);
+            padding: 19px 7px 0;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: #E5E1FF;
+            background: #292447;
+            border: 1px solid rgba(182, 174, 255, .2);
+            font-size: 15px;
+        }
+
+        .profile-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-info span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .profile-more {
+            background: transparent;
+            border: 0;
+            color: var(--muted);
+            font-size: 20px;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            min-height: 77px;
+            padding: 0 39px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 11, 20, .84);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .breadcrumb i {
+            font-size: 15px;
+        }
+
+        .breadcrumb .current {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #A3E8CB;
+            background: rgba(69, 214, 160, .07);
+            border: 1px solid rgba(69, 214, 160, .14);
+            border-radius: 30px;
+            padding: 8px 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 9px rgba(69, 214, 160, .5);
+        }
+
+        .icon-button {
+            width: 37px;
+            height: 37px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: #AAB4CC;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+        }
+
+        .icon-button:hover {
+            border-color: rgba(139, 124, 255, .4);
+            color: var(--primary-light);
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+
+        .content {
+            max-width: 1500px;
+            padding: 35px 39px 50px;
+            margin: 0 auto;
+        }
+
+        /* PAGE INTRO */
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--primary-light);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.6px;
+            margin-bottom: 13px;
+        }
+
+        .eyebrow i {
+            font-size: 15px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Sora', sans-serif;
+        }
+
+        .page-heading h1 {
+            font-size: clamp(25px, 3vw, 33px);
+            letter-spacing: -1.3px;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .page-heading p {
+            max-width: 590px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* HERO */
+
+        .support-hero {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(139, 124, 255, .2);
+            border-radius: 21px;
+            padding: 34px;
+            margin-bottom: 27px;
+            background:
+                radial-gradient(ellipse at 92% 0%, rgba(101, 217, 255, .10), transparent 38%),
+                radial-gradient(ellipse at 0% 100%, rgba(139, 124, 255, .12), transparent 45%),
+                #101625;
+        }
+
+        .support-hero::after {
+            content: '';
+            position: absolute;
+            right: -45px;
+            bottom: -105px;
+            width: 250px;
+            height: 250px;
+            border: 1px solid rgba(182, 174, 255, .09);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 28px rgba(182, 174, 255, .025),
+                0 0 0 56px rgba(182, 174, 255, .02);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 10px;
+            border-radius: 7px;
+            border: 1px solid rgba(182, 174, 255, .18);
+            color: #C2BBFF;
+            background: rgba(139, 124, 255, .08);
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 17px;
+        }
+
+        .hero-badge i {
+            font-size: 14px;
+        }
+
+        .support-hero h2 {
+            max-width: 620px;
+            font-size: clamp(23px, 3vw, 31px);
+            letter-spacing: -1px;
+            line-height: 1.4;
+            margin-bottom: 11px;
+        }
+
+        .support-hero h2 span {
+            color: var(--primary-light);
+        }
+
+        .support-hero p {
+            color: #9BA6C0;
+            font-size: 12px;
+            line-height: 1.8;
+            max-width: 520px;
+            margin-bottom: 24px;
+        }
+
+        .search-box {
+            width: min(100%, 610px);
+            height: 53px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 15px;
+            background: #0A0F1C;
+            border: 1px solid rgba(160, 172, 210, .18);
+            border-radius: 12px;
+            transition: border-color .2s;
+        }
+
+        .search-box:focus-within {
+            border-color: rgba(139, 124, 255, .65);
+        }
+
+        .search-box > i {
+            color: var(--primary-light);
+            font-size: 21px;
+        }
+
+        .search-box input {
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        .search-box input::placeholder {
+            color: #707C96;
+        }
+
+        .search-shortcut {
+            color: #78839C;
+            font-size: 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 5px 7px;
+            white-space: nowrap;
+        }
+
+        /* SECTION HEADER */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin: 32px 0 17px;
+        }
+
+        .section-heading h2 {
+            font-size: 16px;
+            letter-spacing: -.4px;
+            margin-bottom: 6px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .text-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-light);
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .text-link i {
+            font-size: 16px;
+        }
+
+        /* HELP CATEGORIES */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .category-card {
+            min-height: 158px;
+            padding: 20px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: left;
+            transition: transform .2s, border-color .2s, background .2s;
+            color: var(--text);
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(139, 124, 255, .35);
+            background: #121A2B;
+        }
+
+        .category-icon {
+            display: grid;
+            place-items: center;
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            margin-bottom: 17px;
+            font-size: 22px;
+        }
+
+        .icon-violet {
+            color: #B6AEFF;
+            background: rgba(139, 124, 255, .13);
+        }
+
+        .icon-cyan {
+            color: #77DEFF;
+            background: rgba(101, 217, 255, .10);
+        }
+
+        .icon-green {
+            color: #62DDB1;
+            background: rgba(69, 214, 160, .10);
+        }
+
+        .icon-orange {
+            color: #FFBD85;
+            background: rgba(255, 169, 103, .10);
+        }
+
+        .category-card h3 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .category-card p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        /* MAIN SUPPORT GRID */
+
+        .support-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(280px, .85fr);
+            gap: 20px;
+            align-items: start;
+            margin-top: 35px;
+        }
+
+        .panel {
+            min-width: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 22px 23px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-header h2 {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .panel-header p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .panel-body {
+            padding: 8px 22px 18px;
+        }
+
+        /* FAQ */
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:last-child {
+            border-bottom: 0;
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 18px 0;
+            color: #E6EAF5;
+            background: transparent;
+            border: 0;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.7;
+        }
+
+        .faq-question i {
+            color: #8E9AB4;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: transform .2s;
+        }
+
+        .faq-item.open .faq-question {
+            color: var(--primary-light);
+        }
+
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+            color: var(--primary-light);
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 0 23px 18px 0;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .faq-answer a {
+            color: var(--primary-light);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .faq-empty {
+            display: none;
+            text-align: center;
+            padding: 30px 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .faq-empty i {
+            display: block;
+            font-size: 25px;
+            color: var(--primary-light);
+            margin-bottom: 10px;
+        }
+
+        /* CONTACT CARD */
+
+        .contact-card {
+            padding: 23px;
+            background:
+                radial-gradient(ellipse at 100% 0%, rgba(139, 124, 255, .10), transparent 45%),
+                var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .contact-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            color: var(--primary-light);
+            background: rgba(139, 124, 255, .13);
+            border: 1px solid rgba(139, 124, 255, .15);
+            border-radius: 13px;
+            font-size: 23px;
+            margin-bottom: 17px;
+        }
+
+        .contact-card h2 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .contact-card > p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #B8C1D6;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            min-height: 43px;
+            border: 1px solid rgba(150, 166, 205, .15);
+            background: #0B101D;
+            color: var(--text);
+            border-radius: 9px;
+            padding: 11px 12px;
+            outline: none;
+            font-size: 11px;
+            transition: border-color .2s;
+        }
+
+        .form-control:focus {
+            border-color: rgba(139, 124, 255, .65);
+        }
+
+        .form-control::placeholder {
+            color: #69758D;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23929DB6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        select.form-control option {
+            background: #101625;
+            color: var(--text);
+        }
+
+        textarea.form-control {
+            min-height: 105px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+
+        .submit-button {
+            width: 100%;
+            min-height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            background: linear-gradient(110deg, #8B7CFF, #7060EF);
+            color: white;
+            border: 0;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            box-shadow: 0 7px 22px rgba(112, 96, 239, .15);
+            transition: opacity .2s, transform .2s;
+        }
+
+        .submit-button:hover {
+            opacity: .92;
+            transform: translateY(-1px);
+        }
+
+        .submit-button i {
+            font-size: 17px;
+        }
+
+        .form-note {
+            display: flex;
+            gap: 7px;
+            align-items: flex-start;
+            color: #77839C;
+            font-size: 9px;
+            line-height: 1.7;
+            margin-top: 13px;
+        }
+
+        .form-note i {
+            color: var(--primary-light);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .form-message {
+            display: none;
+            margin-top: 13px;
+            border: 1px solid rgba(255, 189, 133, .18);
+            background: rgba(255, 169, 103, .06);
+            color: #FFCD9E;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .form-message.show {
+            display: block;
+        }
+
+        /* SECURITY NOTICE */
+
+        .security-notice {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 18px 20px;
+            margin-top: 23px;
+            border: 1px solid rgba(101, 217, 255, .13);
+            border-radius: 13px;
+            background: rgba(101, 217, 255, .035);
+        }
+
+        .security-notice > i {
+            font-size: 21px;
+            color: var(--cyan);
+            flex-shrink: 0;
+        }
+
+        .security-notice h3 {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .security-notice p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-top: 1px solid var(--border);
+            margin-top: 38px;
+            padding-top: 23px;
+        }
+
+        .footer p {
+            color: #707C94;
+            font-size: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #8792AA;
+            font-size: 10px;
+            transition: color .2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+        /* OVERLAY */
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .65);
+            z-index: 90;
+            display: none;
+            backdrop-filter: blur(3px);
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1200px) {
+            :root {
+                --sidebar-width: 225px;
+            }
+
+            .content {
+                padding-left: 28px;
+                padding-right: 28px;
+            }
+
+            .topbar {
+                padding: 0 28px;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 950px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 265px;
+                box-shadow: none;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 15px 0 50px rgba(0, 0, 0, .3);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: grid;
+            }
+
+            .topbar {
+                min-height: 70px;
+            }
+
+            .support-layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .contact-card {
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 0 17px;
+                gap: 10px;
+            }
+
+            .content {
+                padding: 27px 16px 35px;
+            }
+
+            .breadcrumb {
+                font-size: 11px;
+            }
+
+            .topbar-right {
+                gap: 8px;
+            }
+
+            .status-pill {
+                padding: 8px 9px;
+                font-size: 9px;
+            }
+
+            .status-pill .status-text {
+                display: none;
+            }
+
+            .support-hero {
+                padding: 24px 19px;
+                border-radius: 16px;
+            }
+
+            .support-hero h2 {
+                font-size: 24px;
+            }
+
+            .support-hero p {
+                font-size: 11px;
+            }
+
+            .search-box {
+                height: 49px;
+                gap: 9px;
+                padding: 0 12px;
+            }
+
+            .search-box input {
+                font-size: 11px;
+            }
+
+            .search-shortcut {
+                display: none;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                margin-top: 28px;
+            }
+
+            .section-heading h2 {
+                font-size: 15px;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .category-card {
+                min-height: 148px;
+                padding: 15px 13px;
+            }
+
+            .category-icon {
+                width: 39px;
+                height: 39px;
+                font-size: 20px;
+                margin-bottom: 13px;
+            }
+
+            .category-card h3 {
+                font-size: 11px;
+            }
+
+            .category-card p {
+                font-size: 9px;
+            }
+
+            .support-layout {
+                margin-top: 28px;
+                gap: 17px;
+            }
+
+            .panel-header {
+                padding: 18px 16px;
+            }
+
+            .panel-body {
+                padding: 7px 16px 15px;
+            }
+
+            .faq-question {
+                font-size: 10px;
+                padding: 16px 0;
+            }
+
+            .faq-answer {
+                font-size: 10px;
+            }
+
+            .contact-card {
+                padding: 19px 16px;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .footer-links {
+                gap: 15px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a href="dashboard.html" class="brand" aria-label="NEXTCHAIN dashboard">
+            <div class="brand-icon">
+                <i class='bx bx-cube-alt'></i>
+            </div>
+            <div class="brand-name">NEXT<span>CHAIN</span></div>
+        </a>
+
+        <div class="nav-label">MAIN MENU</div>
+
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="dashboard.html" class="nav-link">
+                <i class='bx bx-grid-alt'></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="investments.html" class="nav-link">
+                <i class='bx bx-trending-up'></i>
+                <span>Investments</span>
+            </a>
+
+            <a href="wallet.html" class="nav-link">
+                <i class='bx bx-wallet-alt'></i>
+                <span>My Wallet</span>
+            </a>
+
+            <a href="deposit.html" class="nav-link">
+                <i class='bx bx-down-arrow-circle'></i>
+                <span>Deposit</span>
+            </a>
+
+            <a href="withdraw.html" class="nav-link">
+                <i class='bx bx-up-arrow-circle'></i>
+                <span>Withdraw</span>
+            </a>
+
+            <a href="transactions.html" class="nav-link">
+                <i class='bx bx-transfer-alt'></i>
+                <span>Transactions</span>
+            </a>
+        </nav>
+
+        <div class="nav-label" style="margin-top: 30px;">PREFERENCES</div>
+
+        <nav class="nav-links" aria-label="Preferences">
+            <a href="settings.html" class="nav-link">
+                <i class='bx bx-cog'></i>
+                <span>Settings</span>
+            </a>
+
+            <a href="support.html" class="nav-link active" aria-current="page">
+                <i class='bx bx-support'></i>
+                <span>Help & Support</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-help">
+                <div class="sidebar-help-icon">
+                    <i class='bx bx-headphone'></i>
+                </div>
+                <h4>Need assistance?</h4>
+                <p>Find answers to common questions or contact the support team.</p>
+                <a href="#contact-support">
+                    Contact support <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
+                    <i class='bx bx-user'></i>
+                </div>
+
+                <div class="profile-info">
+                    <strong>My Account</strong>
+                    <span>Account profile</span>
+                </div>
+
+                <button class="profile-more" type="button" aria-label="Account options" title="Account options">
+                    <i class='bx bx-dots-horizontal-rounded'></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:13px;">
+                <button class="icon-button menu-toggle" id="menuToggle" type="button"
+                    aria-label="Open navigation menu" aria-expanded="false">
+                    <i class='bx bx-menu'></i>
+                </button>
+
+                <div class="breadcrumb">
+                    <span>Workspace</span>
+                    <i class='bx bx-chevron-right'></i>
+                    <span class="current">Help & Support</span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Support Center</span>
+                </div>
+
+                <button class="icon-button" type="button" aria-label="Help information"
+                    onclick="document.getElementById('faq-section').scrollIntoView({behavior:'smooth'})">
+                    <i class='bx bx-help-circle'></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- INTRO -->
+            <section class="page-heading">
+                <div class="eyebrow">
+                    <i class='bx bx-support'></i>
+                    CUSTOMER CARE
+                </div>
+
+                <h1>How can we help you?</h1>
+
+                <p>
+                    Find answers, explore helpful resources, and get guidance
+                    on using your NEXTCHAIN account.
+                </p>
+            </section>
+
+            <!-- HERO SEARCH -->
+            <section class="support-hero">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class='bx bx-check-shield'></i>
+                        NEXTCHAIN HELP CENTER
+                    </div>
+
+                    <h2>Answers to your questions, <span>all in one place.</span></h2>
+
+                    <p>
+                        Search through frequently asked questions and support topics
+                        to find the information you need.
+                    </p>
+
+                    <label class="search-box" for="helpSearch">
+                        <i class='bx bx-search'></i>
+
+                        <input type="search" id="helpSearch"
+                            placeholder="Search for a topic, question, or keyword..."
+                            autocomplete="off">
+
+                        <span class="search-shortcut">Search</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- CATEGORIES -->
+            <section id="help-categories">
+                <div class="section-heading">
+                    <div>
+                        <h2>Browse help topics</h2>
+                        <p>Select a category to explore related questions.</p>
+                    </div>
+                </div>
+
+                <div class="category-grid">
+                    <button class="category-card" type="button" data-category="account">
+                        <div class="category-icon icon-violet">
+                            <i class='bx bx-user-circle'></i>
+                        </div>
+                        <h3>Account & Security</h3>
+                        <p>Account access, profile settings, and security.</p>
+                    </button>
+
+                    <button class="category-card" type="button" data-category="wallet">
+                        <div class="category-icon icon-cyan">
+                            <i class='bx bx-wallet-alt'></i>
+                        </div>
+                        <h3>Wallet & Payments</h3>
+                        <p>Wallet information, deposits, and withdrawals.</p>
+                    </button>
+
+                    <button class="category-card" type="button" data-category="investments">
+                        <div class="category-icon icon-green">
+                            <i class='bx bx-line-chart'></i>
+                        </div>
+                        <h3>Investments</h3>
+                        <p>Investment information and account activity.</p>
+                    </button>
+
+                    <button class="category-card" type="button" data-category="transactions">
+                        <div class="category-icon icon-orange">
+                            <i class='bx bx-transfer-alt'></i>
+                        </div>
+                        <h3>Transactions</h3>
+                        <p>Transaction records, statuses, and payment issues.</p>
+                    </button>
+                </div>
+            </section>
+
+            <!-- FAQ + CONTACT -->
+            <section class="support-layout">
+
+                <!-- FAQ PANEL -->
+                <div class="panel" id="faq-section">
+                    <div class="panel-header">
+                        <div>
+                            <h2>Frequently asked questions</h2>
+                            <p>Helpful answers to common questions.</p>
+                        </div>
+
+                        <i class='bx bx-message-square-detail'
+                            style="font-size:23px;color:var(--primary-light);"></i>
+                    </div>
+
+                    <div class="panel-body" id="faqList">
+
+                        <div class="faq-item" data-category="account"
+                            data-search="account login sign in access password cannot log in">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>What should I do if I cannot access my account?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Check that you are using the correct account details and
+                                that your internet connection is working. If the problem
+                                continues, use the account recovery option if available
+                                or contact the official NEXTCHAIN support team.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="account"
+                            data-search="password change reset forgot account security">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>How can I change or reset my password?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                If password management is enabled for your account, open
+                                Settings and look for the security options. If you have
+                                forgotten your password, use the official password recovery
+                                process. Never share your password or verification codes
+                                with another person.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="wallet"
+                            data-search="deposit funding payment money wallet how to deposit">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>How do I make a deposit?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Open the Deposit section and review the available payment
+                                methods and instructions. Only use payment details shown
+                                through an official, verified NEXTCHAIN channel. Deposit
+                                processing depends on the payment services configured for
+                                the platform.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="wallet"
+                            data-search="withdrawal withdraw funds money payment pending">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>What if my withdrawal has not arrived?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Review the withdrawal status and any transaction reference
+                                available in your account. Processing times can vary by
+                                payment method. If the transaction remains unresolved,
+                                contact the official support team with the relevant
+                                reference. Do not send your password or private keys.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="investments"
+                            data-search="investment plan returns profit risk investment">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>Where can I find information about investments?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Visit the Investments section to review the information
+                                made available for each investment product. Carefully
+                                read the terms, fees, and risks before making a decision.
+                                Investment returns are not guaranteed unless explicitly
+                                supported by legally binding product terms.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="transactions"
+                            data-search="transaction history record receipt reference status">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>Where can I check my transaction history?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Open the Transactions section to view the records available
+                                for your account. If a transaction does not appear, confirm
+                                its status with the relevant payment provider before
+                                attempting the payment again.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="account"
+                            data-search="verify identity verification documents personal details">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>Why might I be asked to verify my identity?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Some financial services require identity verification
+                                for security, fraud prevention, or regulatory compliance.
+                                If NEXTCHAIN requests verification, review the instructions
+                                through an official channel and understand how your
+                                information will be handled before submitting documents.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="account"
+                            data-search="scam fraud suspicious link security private key seed phrase">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>How can I keep my account secure?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Use a unique password, secure your email account, and enable
+                                additional security features when available. Avoid suspicious
+                                links and never share passwords, one-time verification codes,
+                                wallet recovery phrases, or private keys. Support staff
+                                should not need your private key or recovery phrase.
+                            </div>
+                        </div>
+
+                        <div class="faq-item" data-category="transactions"
+                            data-search="wrong payment duplicate payment failed transaction error">
+                            <button class="faq-question" type="button" aria-expanded="false">
+                                <span>What should I do if a payment fails?</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </button>
+                            <div class="faq-answer">
+                                Check the payment status with your payment provider and
+                                review any error message. Avoid repeating a payment until
+                                you have confirmed that the earlier attempt did not go
+                                through. Keep your transaction reference for any support
+                                request.
+                            </div>
+                        </div>
+
+                        <div class="faq-empty" id="faqEmpty">
+                            <i class='bx bx-search-alt'></i>
+                            <strong>No matching questions found.</strong>
+                            <br>
+                            Try a different search term or contact support.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- CONTACT SUPPORT -->
+                <section class="contact-card" id="contact-support">
+                    <div class="contact-icon">
+                        <i class='bx bx-envelope'></i>
+                    </div>
+
+                    <h2>Contact support</h2>
+
+                    <p>
+                        Can't find the answer you need? Describe your question below
+                        to prepare a support request.
+                    </p>
+
+                    <form id="supportForm">
+                        <div class="form-group">
+                            <label for="fullName">Your name</label>
+                            <input class="form-control" type="text" id="fullName"
+                                name="fullName" placeholder="Enter your name"
+                                autocomplete="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input class="form-control" type="email" id="email"
+                                name="email" placeholder="you@example.com"
+                                autocomplete="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="topic">Support topic</label>
+                            <select class="form-control" id="topic" name="topic" required>
+                                <option value="">Select a topic</option>
+                                <option value="Account & Security">Account & Security</option>
+                                <option value="Wallet & Payments">Wallet & Payments</option>
+                                <option value="Investments">Investments</option>
+                                <option value="Transactions">Transactions</option>
+                                <option value="Other">Other question</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input class="form-control" type="text" id="subject"
+                                name="subject" placeholder="Briefly describe your issue"
+                                maxlength="120" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">How can we help?</label>
+                            <textarea class="form-control" id="message" name="message"
+                                placeholder="Describe your question or issue..."
+                                maxlength="3000" required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-button">
+                            <i class='bx bx-send'></i>
+                            Prepare support request
+                        </button>
+
+                        <div class="form-message" id="formMessage" role="status" aria-live="polite"></div>
+
+                        <p class="form-note">
+                            <i class='bx bx-info-circle'></i>
+                            This form is a frontend prototype. It does not send or store
+                            your message until an official support submission service
+                            is connected.
+                        </p>
+                    </form>
+                </section>
+
+            </section>
+
+            <!-- SECURITY NOTICE -->
+            <section class="security-notice">
+                <i class='bx bx-shield-quarter'></i>
+
+                <div>
+                    <h3>Keep your account information safe</h3>
+                    <p>
+                        Never share your password, one-time verification code, wallet
+                        recovery phrase, or private keys with anyone claiming to provide
+                        support. Verify that you are communicating through an official
+                        NEXTCHAIN support channel before sharing account information.
+                    </p>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <p>&copy; <span id="currentYear"></span> NEXTCHAIN. All rights reserved.</p>
+
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="support.html">Help Center</a>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    // MOBILE SIDEBAR
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggle = document.getElementById('menuToggle');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('show');
+        menuToggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('show');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    menuToggle.addEventListener('click', function () {
+        if (sidebar.classList.contains('open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeSidebar();
+        }
+    });
+
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 950) {
+            closeSidebar();
+        }
+    });
+
+    // FAQ ACCORDION
+    const faqItems = Array.from(document.querySelectorAll('.faq-item'));
+
+    faqItems.forEach(function (item) {
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', function () {
+            const isOpen = item.classList.contains('open');
+
+            item.classList.toggle('open', !isOpen);
+            question.setAttribute('aria-expanded', String(!isOpen));
+        });
+    });
+
+    // SEARCH FAQs
+    const helpSearch = document.getElementById('helpSearch');
+    const faqEmpty = document.getElementById('faqEmpty');
+
+    function filterFAQs(searchTerm, category) {
+        const term = searchTerm.trim().toLowerCase();
+        let visibleCount = 0;
+
+        faqItems.forEach(function (item) {
+            const question = item.querySelector('.faq-question').innerText.toLowerCase();
+            const answer = item.querySelector('.faq-answer').innerText.toLowerCase();
+            const keywords = (item.dataset.search || '').toLowerCase();
+            const itemCategory = item.dataset.category;
+
+            const matchesSearch = !term ||
+                question.includes(term) ||
+                answer.includes(term) ||
+                keywords.includes(term);
+
+            const matchesCategory = !category || itemCategory === category;
+            const isVisible = matchesSearch && matchesCategory;
+
+            item.style.display = isVisible ? '' : 'none';
+
+            if (isVisible) {
+                visibleCount++;
+            } else {
+                item.classList.remove('open');
+                item.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        faqEmpty.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    helpSearch.addEventListener('input', function () {
+        filterFAQs(helpSearch.value, null);
+    });
+
+    // CATEGORY FILTERS
+    document.querySelectorAll('.category-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            const category = card.dataset.category;
+
+            helpSearch.value = '';
+            filterFAQs('', category);
+
+            document.getElementById('faq-section').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    });
+
+    // FRONTEND-ONLY SUPPORT REQUEST PREVIEW
+    const supportForm = document.getElementById('supportForm');
+    const formMessage = document.getElementById('formMessage');
+
+    supportForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        if (!supportForm.reportValidity()) {
+            return;
+        }
+
+        const formData = new FormData(supportForm);
+
+        const request = {
+            name: String(formData.get('fullName') || '').trim(),
+            email: String(formData.get('email') || '').trim(),
+            topic: String(formData.get('topic') || '').trim(),
+            subject: String(formData.get('subject') || '').trim(),
+            message: String(formData.get('message') || '').trim()
+        };
+
+        if (!request.name || !request.email || !request.topic ||
+            !request.subject || !request.message) {
+            return;
+        }
+
+        /*
+          No request is sent to a server here.
+          Connect an official support endpoint when the backend is ready.
+          This preview deliberately does not store the submitted information.
+        */
+
+        formMessage.textContent =
+            'Your form has been checked, but it has not been sent. ' +
+            'Support submission is not configured yet. Please use an official ' +
+            'NEXTCHAIN support channel when one is available.';
+
+        formMessage.classList.add('show');
+    });
+
+    // FOOTER YEAR
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

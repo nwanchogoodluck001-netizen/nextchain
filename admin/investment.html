@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investments | NEXTCHAIN Admin</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: "#080D20",
+                        panel: "#101831",
+                        violet: "#7867FF",
+                        ice: "#43D9FF",
+                        muted: "#8993B5"
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080D20;
+            color: #F3F5FF;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .brand {
+            font-family: 'Sora', sans-serif;
+        }
+
+        .sidebar {
+            width: 258px;
+            position: fixed;
+            inset: 0 auto 0 0;
+            background: #0B1228;
+            border-right: 1px solid rgba(255,255,255,.07);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform .3s ease;
+        }
+
+        .main {
+            margin-left: 258px;
+            min-height: 100vh;
+        }
+
+        .brand-mark {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: white;
+            font-size: 24px;
+            background: linear-gradient(135deg, #7867FF, #43D9FF);
+            box-shadow: 0 5px 24px rgba(120,103,255,.22);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            color: #8993B5;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: .2s;
+            text-decoration: none;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,.045);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: rgba(120,103,255,.15);
+            box-shadow: inset 3px 0 #7867FF;
+        }
+
+        .nav-link.active i {
+            color: #A69BFF;
+        }
+
+        .card {
+            background: #101831;
+            border: 1px solid rgba(255,255,255,.065);
+            border-radius: 16px;
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .form-control {
+            background: #0B1228;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+            padding: 11px 13px;
+            color: #F3F5FF;
+            outline: none;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        .form-control:focus {
+            border-color: #7867FF;
+            box-shadow: 0 0 0 3px rgba(120,103,255,.1);
+        }
+
+        .form-control::placeholder {
+            color: #66708F;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #101831;
+            color: white;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            text-align: left;
+            color: #8993B5;
+            background: rgba(255,255,255,.018);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            padding: 16px 20px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 17px 20px;
+            border-top: 1px solid rgba(255,255,255,.055);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            transition: background .2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(255,255,255,.025);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 7px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-active {
+            color: #48D9A4;
+            background: rgba(72,217,164,.09);
+        }
+
+        .status-pending {
+            color: #F5C76A;
+            background: rgba(245,199,106,.09);
+        }
+
+        .status-completed {
+            color: #43D9FF;
+            background: rgba(67,217,255,.09);
+        }
+
+        .status-cancelled {
+            color: #FF8290;
+            background: rgba(255,130,144,.09);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #7867FF;
+            color: white;
+            padding: 11px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 0;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-primary:hover {
+            background: #6654F5;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.09);
+            color: #C8CEE5;
+            padding: 10px 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,.08);
+            color: white;
+        }
+
+        .icon-btn {
+            width: 33px;
+            height: 33px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,.04);
+            color: #A8B1CE;
+            border: 1px solid rgba(255,255,255,.07);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .icon-btn:hover {
+            color: white;
+            background: rgba(120,103,255,.15);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2,5,16,.78);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 200;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #101831;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 18px;
+            padding: 25px;
+            animation: modalIn .2s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #8993B5;
+            font-size: 12px;
+        }
+
+        .detail-value {
+            color: #F3F5FF;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .mobile-overlay {
+            display: none;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            background: rgba(120,103,255,.1);
+            color: #A69BFF;
+            font-size: 28px;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-overlay.show {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,.6);
+                z-index: 90;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-content {
+                padding: 20px 15px !important;
+            }
+
+            .topbar {
+                padding: 15px !important;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-card {
+                padding: 15px !important;
+            }
+
+            .stat-value {
+                font-size: 20px !important;
+            }
+
+            .modal {
+                padding: 19px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile sidebar overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="px-6 py-6 flex items-center gap-3 border-b border-white/[0.06]">
+            <div class="brand-mark">
+                <i class='bx bx-layer'></i>
+            </div>
+
+            <div>
+                <h1 class="brand text-lg font-bold tracking-wide">NEXTCHAIN</h1>
+                <p class="text-[10px] text-muted tracking-[2px] uppercase mt-1">Admin Console</p>
+            </div>
+        </div>
+
+        <div class="px-5 pt-6 pb-2">
+            <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#64708F] px-3">
+                Main Menu
+            </p>
+        </div>
+
+        <nav class="px-4 space-y-1">
+            <a href="index.html" class="nav-link">
+                <i class='bx bx-grid-alt'></i>
+                Dashboard
+            </a>
+
+            <a href="user.html" class="nav-link">
+                <i class='bx bx-user'></i>
+                Users
+            </a>
+
+            <a href="investment.html" class="nav-link active">
+                <i class='bx bx-trending-up'></i>
+                Investments
+            </a>
+        </nav>
+
+        <div class="px-5 pt-7 pb-2">
+            <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#64708F] px-3">
+                Finance
+            </p>
+        </div>
+
+        <nav class="px-4 space-y-1">
+            <a href="deposit.html" class="nav-link">
+                <i class='bx bx-wallet'></i>
+                Deposits
+            </a>
+
+            <a href="withdrawals.html" class="nav-link">
+                <i class='bx bx-money-withdraw'></i>
+                Withdrawals
+            </a>
+
+            <a href="transaction.html" class="nav-link">
+                <i class='bx bx-transfer-alt'></i>
+                Transactions
+            </a>
+        </nav>
+
+        <div class="px-5 pt-7 pb-2">
+            <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#64708F] px-3">
+                Platform
+            </p>
+        </div>
+
+        <nav class="px-4 space-y-1">
+            <a href="support.html" class="nav-link">
+                <i class='bx bx-support'></i>
+                Support
+            </a>
+
+            <a href="report-notification.html" class="nav-link">
+                <i class='bx bx-bar-chart-alt-2'></i>
+                Reports & Notifications
+            </a>
+
+            <a href="settings.html" class="nav-link">
+                <i class='bx bx-cog'></i>
+                Settings & Profile
+            </a>
+        </nav>
+
+        <div class="mt-auto p-4">
+            <div class="rounded-xl p-4 border border-white/[0.07] bg-white/[0.02]">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span class="text-xs font-medium text-gray-300">Admin Workspace</span>
+                </div>
+                <p class="text-[10px] text-muted leading-relaxed">
+                    Frontend preview. Investment records are not connected to a live data source.
+                </p>
+            </div>
+
+            <button onclick="logoutNotice()" class="nav-link w-full mt-3">
+                <i class='bx bx-log-out'></i>
+                Logout
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <header class="topbar sticky top-0 z-40 flex items-center justify-between gap-4 px-8 py-5 border-b border-white/[0.06] bg-[#080D20]/95 backdrop-blur-xl">
+
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="icon-btn lg:hidden flex-shrink-0" aria-label="Open menu">
+                    <i class='bx bx-menu'></i>
+                </button>
+
+                <div>
+                    <div class="flex items-center gap-2 text-[11px] text-muted mb-1">
+                        <span>Admin</span>
+                        <i class='bx bx-chevron-right'></i>
+                        <span class="text-[#B8B0FF]">Investments</span>
+                    </div>
+
+                    <h2 class="text-lg sm:text-xl font-semibold">Investment Management</h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <button class="icon-btn relative" onclick="showNotice('Notifications are not connected yet.')" aria-label="Notifications">
+                    <i class='bx bx-bell'></i>
+                </button>
+
+                <div class="hidden sm:flex items-center gap-3 pl-3 border-l border-white/[0.09]">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center bg-violet/20 text-[#B9B0FF] font-semibold text-sm">
+                        A
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold">Administrator</p>
+                        <p class="text-[10px] text-muted mt-1">Platform Admin</p>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <div class="page-content p-8">
+
+            <!-- Page heading -->
+            <section class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+                <div>
+                    <p class="text-xs text-ice font-medium mb-2">FINANCIAL OVERVIEW</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Investments</h1>
+                    <p class="text-sm text-muted mt-2 max-w-xl leading-relaxed">
+                        View investment records, monitor plan activity, and inspect individual investment details.
+                    </p>
+                </div>
+
+                <button class="btn-secondary self-start sm:self-auto" onclick="exportInvestments()">
+                    <i class='bx bx-download text-lg'></i>
+                    Export CSV
+                </button>
+            </section>
+
+            <!-- Preview notice -->
+            <div class="flex items-start gap-3 rounded-xl border border-ice/15 bg-ice/[0.04] px-4 py-3.5 mb-6">
+                <i class='bx bx-info-circle text-ice text-xl mt-0.5'></i>
+                <div>
+                    <p class="text-xs font-semibold text-gray-200">Investment data is not connected</p>
+                    <p class="text-[11px] text-muted mt-1 leading-relaxed">
+                        The figures and table reflect the current frontend state. Statistics will update when a backend supplies actual investment records.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <section class="stat-grid grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Total Investments</p>
+                        <div class="stat-icon bg-violet/10 text-[#A69BFF]">
+                            <i class='bx bx-layer'></i>
+                        </div>
+                    </div>
+
+                    <h3 class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Total Principal</p>
+                        <div class="stat-icon bg-ice/10 text-ice">
+                            <i class='bx bx-wallet'></i>
+                        </div>
+                    </div>
+
+                    <h3 class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Active Investments</p>
+                        <div class="stat-icon bg-emerald-400/10 text-emerald-400">
+                            <i class='bx bx-pulse'></i>
+                        </div>
+                    </div>
+
+                    <h3 class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Completed Investments</p>
+                        <div class="stat-icon bg-amber-400/10 text-amber-300">
+                            <i class='bx bx-check-circle'></i>
+                        </div>
+                    </div>
+
+                    <h3 class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+            </section>
+
+            <!-- Investment plans -->
+            <section class="card p-5 sm:p-6 mb-7">
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                    <div>
+                        <h2 class="text-base font-semibold">Investment Plans</h2>
+                        <p class="text-xs text-muted mt-1">
+                            Overview of configured plan types.
+                        </p>
+                    </div>
+
+                    <span class="text-[10px] text-muted border border-white/[0.08] rounded-lg px-3 py-2">
+                        <i class='bx bx-info-circle mr-1'></i>
+                        Illustrative examples
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <div class="rounded-xl p-5 border border-white/[0.07] bg-white/[0.015]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-violet/10 text-[#A69BFF] flex items-center justify-center text-xl">
+                                <i class='bx bx-leaf'></i>
+                            </div>
+                            <span class="text-[10px] text-muted bg-white/[0.04] rounded-md px-2 py-1">Example</span>
+                        </div>
+
+                        <h3 class="font-semibold text-sm">Starter Plan</h3>
+                        <p class="text-[11px] text-muted mt-1">Entry-level plan configuration</p>
+
+                        <div class="mt-5 pt-4 border-t border-white/[0.06] flex justify-between items-center">
+                            <span class="text-xs text-muted">Investment range</span>
+                            <span class="text-xs font-semibold">Not configured</span>
+                        </div>
+
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs text-muted">Duration / return</span>
+                            <span class="text-xs text-muted">Not configured</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl p-5 border border-violet/25 bg-violet/[0.045]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-violet/15 text-[#B8B0FF] flex items-center justify-center text-xl">
+                                <i class='bx bx-rocket'></i>
+                            </div>
+                            <span class="text-[10px] text-[#B8B0FF] bg-violet/10 rounded-md px-2 py-1">Example</span>
+                        </div>
+
+                        <h3 class="font-semibold text-sm">Growth Plan</h3>
+                        <p class="text-[11px] text-muted mt-1">Intermediate plan configuration</p>
+
+                        <div class="mt-5 pt-4 border-t border-white/[0.06] flex justify-between items-center">
+                            <span class="text-xs text-muted">Investment range</span>
+                            <span class="text-xs font-semibold">Not configured</span>
+                        </div>
+
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs text-muted">Duration / return</span>
+                            <span class="text-xs text-muted">Not configured</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl p-5 border border-white/[0.07] bg-white/[0.015]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-ice/10 text-ice flex items-center justify-center text-xl">
+                                <i class='bx bx-diamond'></i>
+                            </div>
+                            <span class="text-[10px] text-muted bg-white/[0.04] rounded-md px-2 py-1">Example</span>
+                        </div>
+
+                        <h3 class="font-semibold text-sm">Premium Plan</h3>
+                        <p class="text-[11px] text-muted mt-1">Advanced plan configuration</p>
+
+                        <div class="mt-5 pt-4 border-t border-white/[0.06] flex justify-between items-center">
+                            <span class="text-xs text-muted">Investment range</span>
+                            <span class="text-xs font-semibold">Not configured</span>
+                        </div>
+
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="text-xs text-muted">Duration / return</span>
+                            <span class="text-xs text-muted">Not configured</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p class="text-[10px] text-muted mt-4 leading-relaxed">
+                    These are visual placeholders, not active financial products. Configure actual plan terms and any applicable risks and fees before offering a plan to users.
+                </p>
+
+            </section>
+
+            <!-- Investment records -->
+            <section class="card overflow-hidden">
+
+                <div class="p-5 sm:p-6 border-b border-white/[0.06]">
+
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-base font-semibold">Investment Records</h2>
+                            <p class="text-xs text-muted mt-1">
+                                Search and inspect individual investment entries.
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-muted">
+                            <span class="w-2 h-2 rounded-full bg-amber-300"></span>
+                            <span id="recordCount">0 records</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+
+                        <div class="relative sm:col-span-2 lg:col-span-2">
+                            <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg'></i>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                class="form-control pl-10"
+                                placeholder="Search user, email or investment ID..."
+                            >
+                        </div>
+
+                        <select id="statusFilter" class="form-control">
+                            <option value="">All statuses</option>
+                            <option value="Active">Active</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                        <select id="planFilter" class="form-control">
+                            <option value="">All plans</option>
+                            <option value="Starter">Starter</option>
+                            <option value="Growth">Growth</option>
+                            <option value="Premium">Premium</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="table-wrap">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Investment ID</th>
+                                <th>User</th>
+                                <th>Plan</th>
+                                <th>Principal</th>
+                                <th>Start Date</th>
+                                <th>Maturity Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="investmentTableBody">
+                            <!-- Investment records are inserted here when real data is available. -->
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <!-- Empty state -->
+                <div id="emptyState" class="py-14 px-5 text-center">
+                    <div class="empty-icon">
+                        <i class='bx bx-layer'></i>
+                    </div>
+
+                    <h3 class="text-sm font-semibold">No investment records yet</h3>
+
+                    <p class="text-xs text-muted mt-2 max-w-sm mx-auto leading-relaxed">
+                        Investment records will appear here when the backend connects and supplies investment data.
+                    </p>
+
+                    <button onclick="resetFilters()" class="btn-secondary mt-5">
+                        <i class='bx bx-refresh text-lg'></i>
+                        Reset filters
+                    </button>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="hidden p-5 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <p id="pageInfo" class="text-xs text-muted"></p>
+
+                    <div class="flex items-center gap-2">
+                        <button id="prevPage" class="btn-secondary" onclick="changePage(-1)">
+                            <i class='bx bx-chevron-left'></i>
+                            Previous
+                        </button>
+
+                        <span id="pageNumber" class="text-xs text-muted px-2"></span>
+
+                        <button id="nextPage" class="btn-secondary" onclick="changePage(1)">
+                            Next
+                            <i class='bx bx-chevron-right'></i>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-8 pb-4 flex flex-col sm:flex-row justify-between gap-2 text-[10px] text-muted">
+                <p>© <span id="currentYear"></span> NEXTCHAIN. Admin Console.</p>
+                <p>Investment figures are unavailable until a data source is connected.</p>
+            </footer>
+
+        </div>
+
+    </main>
+
+    <!-- Investment details modal -->
+    <div class="modal-overlay" id="investmentModal" onclick="closeModalOutside(event)">
+
+        <div class="modal">
+
+            <div class="flex items-start justify-between gap-4 mb-5">
+                <div>
+                    <p class="text-[10px] text-ice tracking-[1.5px] uppercase mb-2">Investment Details</p>
+                    <h2 class="text-lg font-semibold" id="modalInvestmentId">Investment</h2>
+                    <p class="text-xs text-muted mt-1">Record information</p>
+                </div>
+
+                <button onclick="closeModal()" class="icon-btn" aria-label="Close details">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <div class="rounded-xl p-4 bg-white/[0.025] border border-white/[0.06] mb-5">
+                <p class="text-xs text-muted mb-2">Principal Amount</p>
+                <h3 id="modalAmount" class="text-2xl font-bold">—</h3>
+                <div class="mt-3">
+                    <span id="modalStatus" class="status status-pending">Pending</span>
+                </div>
+            </div>
+
+            <div id="modalDetails">
+
+                <div class="detail-row">
+                    <span class="detail-label">User</span>
+                    <span class="detail-value" id="modalUser">—</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value" id="modalEmail">—</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Plan</span>
+                    <span class="detail-value" id="modalPlan">—</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Start Date</span>
+                    <span class="detail-value" id="modalStartDate">—</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Maturity Date</span>
+                    <span class="detail-value" id="modalMaturityDate">—</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Expected Return</span>
+                    <span class="detail-value" id="modalReturn">—</span>
+                </div>
+
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button onclick="closeModal()" class="btn-secondary">
+                    Close
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Notification toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-[300] hidden max-w-sm rounded-xl border border-white/10 bg-[#151F3B] px-4 py-3 shadow-2xl">
+        <div class="flex items-start gap-3">
+            <i class='bx bx-info-circle text-ice text-xl'></i>
+            <div>
+                <p id="toastTitle" class="text-xs font-semibold">Notice</p>
+                <p id="toastMessage" class="text-[11px] text-muted mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /*
+         * NEXTCHAIN INVESTMENT MANAGEMENT
+         *
+         * Frontend only.
+         * No Firebase, database, API, or backend integration.
+         *
+         * The records array is intentionally empty.
+         * Connect your backend later to supply genuine records.
+         */
+
+        const investments = [];
+
+        const pageSize = 8;
+        let currentPage = 1;
+        let toastTimer;
+
+        const tableBody = document.getElementById("investmentTableBody");
+        const emptyState = document.getElementById("emptyState");
+        const pagination = document.getElementById("pagination");
+        const searchInput = document.getElementById("searchInput");
+        const statusFilter = document.getElementById("statusFilter");
+        const planFilter = document.getElementById("planFilter");
+
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+        function formatCurrency(value, currency = "USD") {
+            const amount = Number(value);
+
+            if (!Number.isFinite(amount)) {
+                return "—";
+            }
+
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: currency,
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[character]);
+        }
+
+        function formatDate(value) {
+            if (!value) return "—";
+
+            const date = new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+                return "—";
+            }
+
+            return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+        }
+
+        function getStatusClass(status) {
+            const normalized = String(status || "").toLowerCase();
+
+            if (normalized === "active") return "status-active";
+            if (normalized === "completed") return "status-completed";
+            if (normalized === "cancelled") return "status-cancelled";
+
+            return "status-pending";
+        }
+
+        function getFilteredInvestments() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const selectedStatus = statusFilter.value.toLowerCase();
+            const selectedPlan = planFilter.value.toLowerCase();
+
+            return investments.filter(investment => {
+                const searchableText = [
+                    investment.id,
+                    investment.user,
+                    investment.email,
+                    investment.plan
+                ].join(" ").toLowerCase();
+
+                const matchesSearch = !searchTerm || searchableText.includes(searchTerm);
+
+                const matchesStatus = !selectedStatus ||
+                    String(investment.status || "").toLowerCase() === selectedStatus;
+
+                const matchesPlan = !selectedPlan ||
+                    String(investment.plan || "").toLowerCase() === selectedPlan;
+
+                return matchesSearch && matchesStatus && matchesPlan;
+            });
+        }
+
+        function renderInvestments() {
+            const filtered = getFilteredInvestments();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const visibleInvestments = filtered.slice(startIndex, startIndex + pageSize);
+
+            document.getElementById("recordCount").textContent =
+                `${filtered.length} ${filtered.length === 1 ? "record" : "records"}`;
+
+            tableBody.innerHTML = "";
+
+            if (visibleInvestments.length === 0) {
+                emptyState.classList.remove("hidden");
+                pagination.classList.add("hidden");
+
+                const title = document.querySelector("#emptyState h3");
+                const description = document.querySelector("#emptyState p");
+
+                if (investments.length === 0) {
+                    title.textContent = "No investment records yet";
+                    description.textContent =
+                        "Investment records will appear here when the backend connects and supplies investment data.";
+                } else {
+                    title.textContent = "No matching investments";
+                    description.textContent =
+                        "Try changing your search term or filters to find an investment.";
+                }
+
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            pagination.classList.remove("hidden");
+
+            tableBody.innerHTML = visibleInvestments.map(investment => `
+                <tr>
+                    <td>
+                        <span class="font-semibold text-[#B8B0FF]">
+                            ${escapeHTML(investment.id)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-violet/15 text-[#B8B0FF] flex items-center justify-center font-semibold text-xs flex-shrink-0">
+                                ${escapeHTML((investment.user || "?").charAt(0).toUpperCase())}
+                            </div>
+
+                            <div>
+                                <p class="font-medium text-gray-200">
+                                    ${escapeHTML(investment.user)}
+                                </p>
+                                <p class="text-[10px] text-muted mt-1">
+                                    ${escapeHTML(investment.email)}
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="text-gray-300">${escapeHTML(investment.plan)}</span>
+                    </td>
+
+                    <td>
+                        <span class="font-semibold">
+                            ${formatCurrency(investment.amount, investment.currency || "USD")}
+                        </span>
+                    </td>
+
+                    <td class="text-muted">${formatDate(investment.startDate)}</td>
+
+                    <td class="text-muted">${formatDate(investment.maturityDate)}</td>
+
+                    <td>
+                        <span class="status ${getStatusClass(investment.status)}">
+                            ${escapeHTML(investment.status)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <button
+                            class="icon-btn"
+                            title="View investment details"
+                            aria-label="View investment details"
+                            onclick="viewInvestment('${escapeHTML(investment.id)}')"
+                        >
+                            <i class='bx bx-show'></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+
+            document.getElementById("pageInfo").textContent =
+                `Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, filtered.length)} of ${filtered.length} records`;
+
+            document.getElementById("pageNumber").textContent =
+                `${currentPage} / ${totalPages}`;
+
+            document.getElementById("prevPage").disabled = currentPage === 1;
+            document.getElementById("nextPage").disabled = currentPage === totalPages;
+
+            document.getElementById("prevPage").style.opacity =
+                currentPage === 1 ? ".45" : "1";
+
+            document.getElementById("nextPage").style.opacity =
+                currentPage === totalPages ? ".45" : "1";
+        }
+
+        function changePage(direction) {
+            const filtered = getFilteredInvestments();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+            currentPage = Math.min(
+                totalPages,
+                Math.max(1, currentPage + direction)
+            );
+
+            renderInvestments();
+        }
+
+        function resetFilters() {
+            searchInput.value = "";
+            statusFilter.value = "";
+            planFilter.value = "";
+            currentPage = 1;
+            renderInvestments();
+        }
+
+        searchInput.addEventListener("input", () => {
+            currentPage = 1;
+            renderInvestments();
+        });
+
+        statusFilter.addEventListener("change", () => {
+            currentPage = 1;
+            renderInvestments();
+        });
+
+        planFilter.addEventListener("change", () => {
+            currentPage = 1;
+            renderInvestments();
+        });
+
+        function viewInvestment(id) {
+            const investment = investments.find(item => item.id === id);
+
+            if (!investment) {
+                showNotice("The selected investment could not be found.");
+                return;
+            }
+
+            document.getElementById("modalInvestmentId").textContent =
+                investment.id || "Investment";
+
+            document.getElementById("modalAmount").textContent =
+                formatCurrency(investment.amount, investment.currency || "USD");
+
+            document.getElementById("modalUser").textContent =
+                investment.user || "—";
+
+            document.getElementById("modalEmail").textContent =
+                investment.email || "—";
+
+            document.getElementById("modalPlan").textContent =
+                investment.plan || "—";
+
+            document.getElementById("modalStartDate").textContent =
+                formatDate(investment.startDate);
+
+            document.getElementById("modalMaturityDate").textContent =
+                formatDate(investment.maturityDate);
+
+            document.getElementById("modalReturn").textContent =
+                investment.expectedReturn == null
+                    ? "Not configured"
+                    : formatCurrency(
+                        investment.expectedReturn,
+                        investment.currency || "USD"
+                    );
+
+            const modalStatus = document.getElementById("modalStatus");
+
+            modalStatus.className = `status ${getStatusClass(investment.status)}`;
+            modalStatus.textContent = investment.status || "Unknown";
+
+            document.getElementById("investmentModal").classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            document.getElementById("investmentModal").classList.remove("show");
+            document.body.style.overflow = "";
+        }
+
+        function closeModalOutside(event) {
+            if (event.target.id === "investmentModal") {
+                closeModal();
+            }
+        }
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeModal();
+                closeSidebar();
+            }
+        });
+
+        function exportInvestments() {
+            if (investments.length === 0) {
+                showNotice("There are no investment records to export yet.");
+                return;
+            }
+
+            const headers = [
+                "Investment ID",
+                "User",
+                "Email",
+                "Plan",
+                "Principal",
+                "Currency",
+                "Start Date",
+                "Maturity Date",
+                "Status",
+                "Expected Return"
+            ];
+
+            const rows = getFilteredInvestments().map(item => [
+                item.id,
+                item.user,
+                item.email,
+                item.plan,
+                item.amount,
+                item.currency || "USD",
+                item.startDate,
+                item.maturityDate,
+                item.status,
+                item.expectedReturn ?? ""
+            ]);
+
+            const csvCell = value =>
+                `"${String(value ?? "").replace(/"/g, '""')}"`;
+
+            const csv = [headers, ...rows]
+                .map(row => row.map(csvCell).join(","))
+                .join("\r\n");
+
+            const blob = new Blob(["\uFEFF" + csv], {
+                type: "text/csv;charset=utf-8;"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "nextchain-investments.csv";
+            link.click();
+
+            URL.revokeObjectURL(url);
+
+            showNotice("The filtered investment records have been exported.");
+        }
+
+        function showNotice(message) {
+            const toast = document.getElementById("toast");
+
+            document.getElementById("toastTitle").textContent = "Notice";
+            document.getElementById("toastMessage").textContent = message;
+
+            toast.classList.remove("hidden");
+
+            clearTimeout(toastTimer);
+
+            toastTimer = setTimeout(() => {
+                toast.classList.add("hidden");
+            }, 3500);
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+            document.getElementById("mobileOverlay").classList.toggle("show");
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").classList.remove("open");
+            document.getElementById("mobileOverlay").classList.remove("show");
+        }
+
+        function logoutNotice() {
+            showNotice("Connect your authentication system to enable secure logout.");
+        }
+
+        // Initial page rendering
+        renderInvestments();
+    </script>
+
+</body>
+</html>

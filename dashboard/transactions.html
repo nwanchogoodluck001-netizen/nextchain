@@ -1,0 +1,2735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transactions | NEXTCHAIN</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #080b16;
+            --sidebar: #0c1020;
+            --surface: #101629;
+            --surface-light: #151d34;
+            --surface-hover: #19223b;
+
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --primary-dark: #6d3ee8;
+
+            --blue: #60a5fa;
+            --green: #34d399;
+            --red: #fb7185;
+            --yellow: #fbbf24;
+
+            --text: #f4f5ff;
+            --muted: #8b95b2;
+            --border: rgba(148, 163, 184, 0.13);
+
+            --radius: 18px;
+            --sidebar-width: 258px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 3px;
+        }
+
+        /* Layout */
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--sidebar-width);
+            height: 100dvh;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 27px 17px 20px;
+            z-index: 130;
+            overflow-y: auto;
+            transition: transform 0.28s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 11px;
+            margin-bottom: 42px;
+        }
+
+        .brand-mark {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: linear-gradient(145deg, #a78bfa, #6d3ee8);
+            box-shadow: 0 7px 22px rgba(139, 92, 246, 0.23);
+            color: white;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-name span {
+            color: var(--primary-light);
+        }
+
+        .nav-label {
+            padding: 0 13px;
+            margin-bottom: 12px;
+            color: #65708e;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            list-style: none;
+        }
+
+        .nav-link {
+            min-height: 47px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 0 13px;
+            border-radius: 12px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 92, 246, 0.07);
+            color: white;
+        }
+
+        .nav-link.active {
+            color: white;
+            background: linear-gradient(
+                100deg,
+                rgba(139, 92, 246, 0.20),
+                rgba(139, 92, 246, 0.07)
+            );
+            border: 1px solid rgba(139, 92, 246, 0.14);
+        }
+
+        .nav-link.active i {
+            color: var(--primary-light);
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 25px 10px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 28px;
+        }
+
+        .security-card {
+            padding: 17px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            background: linear-gradient(
+                145deg,
+                rgba(139, 92, 246, 0.10),
+                rgba(16, 22, 41, 0.5)
+            );
+        }
+
+        .security-icon {
+            width: 35px;
+            height: 35px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary-light);
+            font-size: 20px;
+            margin-bottom: 13px;
+        }
+
+        .security-card h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .security-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .sidebar-footer {
+            margin-top: 19px;
+            text-align: center;
+            color: #626c88;
+            font-size: 10px;
+        }
+
+        /* Main area */
+
+        .main {
+            min-height: 100vh;
+            margin-left: var(--sidebar-width);
+        }
+
+        .topbar {
+            height: 82px;
+            padding: 0 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: rgba(8, 11, 22, 0.86);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(18px);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-heading h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-button {
+            width: 39px;
+            height: 39px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: #c7cce0;
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+            transition: 0.2s;
+        }
+
+        .icon-button:hover {
+            border-color: rgba(167, 139, 250, 0.4);
+            color: white;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 15px;
+            border-left: 1px solid var(--border);
+        }
+
+        .profile-avatar {
+            width: 37px;
+            height: 37px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(145deg, #31245e, #17294c);
+            border: 1px solid rgba(167, 139, 250, 0.24);
+            color: #c4b5fd;
+            font-size: 20px;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-info span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+            z-index: 110;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Content */
+
+        .content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px 38px 50px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .breadcrumb i {
+            font-size: 15px;
+        }
+
+        .breadcrumb .current {
+            color: var(--primary-light);
+        }
+
+        /* Hero */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            padding: 29px 30px;
+            margin-bottom: 27px;
+            border-radius: 21px;
+            border: 1px solid rgba(139, 92, 246, 0.19);
+            background:
+                radial-gradient(
+                    ellipse at 90% 0%,
+                    rgba(139, 92, 246, 0.19),
+                    transparent 43%
+                ),
+                linear-gradient(110deg, #131a30, #101629);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-light);
+            background: rgba(139, 92, 246, 0.11);
+            border: 1px solid rgba(139, 92, 246, 0.16);
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            margin-bottom: 17px;
+        }
+
+        .eyebrow i {
+            font-size: 15px;
+        }
+
+        .hero h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(22px, 2.4vw, 30px);
+            line-height: 1.4;
+            margin-bottom: 11px;
+            letter-spacing: -0.8px;
+        }
+
+        .hero h2 span {
+            color: var(--primary-light);
+        }
+
+        .hero p {
+            max-width: 560px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.9;
+        }
+
+        .hero-illustration {
+            width: 105px;
+            height: 105px;
+            flex-shrink: 0;
+            border-radius: 27px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(
+                145deg,
+                rgba(139, 92, 246, 0.2),
+                rgba(96, 165, 250, 0.08)
+            );
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            transform: rotate(4deg);
+        }
+
+        .hero-illustration i {
+            color: #c4b5fd;
+            font-size: 49px;
+        }
+
+        /* Summary cards */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 31px;
+        }
+
+        .summary-card {
+            min-width: 0;
+            padding: 21px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .summary-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-top span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .summary-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            font-size: 20px;
+        }
+
+        .summary-icon.purple {
+            color: var(--primary-light);
+            background: rgba(139, 92, 246, 0.12);
+        }
+
+        .summary-icon.green {
+            color: var(--green);
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .summary-icon.blue {
+            color: var(--blue);
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .summary-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: -0.6px;
+            margin-bottom: 8px;
+        }
+
+        .summary-note {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        /* Transactions section */
+
+        .transactions-panel {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            overflow: hidden;
+        }
+
+        .transactions-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 23px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .transactions-heading h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 15px;
+            margin-bottom: 7px;
+        }
+
+        .transactions-heading p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .export-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 39px;
+            padding: 0 14px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #e0e4f5;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .export-button:hover:not(:disabled) {
+            border-color: rgba(167, 139, 250, 0.4);
+            color: var(--primary-light);
+        }
+
+        .export-button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* Filters */
+
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 13px;
+            padding: 19px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 210px;
+            max-width: 330px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f89a7;
+            font-size: 18px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 41px;
+            padding: 0 13px 0 40px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #0c1121;
+            color: var(--text);
+            outline: none;
+            font-size: 11px;
+        }
+
+        .search-box input::placeholder {
+            color: #69738f;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.08);
+        }
+
+        .filter-controls {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-select {
+            height: 41px;
+            min-width: 135px;
+            padding: 0 30px 0 12px;
+            background: #0c1121;
+            color: #d9deef;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        .filter-select option {
+            background: #101629;
+        }
+
+        .clear-filters {
+            height: 39px;
+            padding: 0 9px;
+            background: transparent;
+            border: none;
+            color: var(--primary-light);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .clear-filters:hover {
+            color: white;
+        }
+
+        /* Table */
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .transactions-table {
+            width: 100%;
+            min-width: 770px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .transactions-table thead {
+            background: rgba(12, 17, 33, 0.7);
+        }
+
+        .transactions-table th {
+            padding: 15px 22px;
+            color: #7e89a8;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+        }
+
+        .transactions-table td {
+            padding: 17px 22px;
+            border-top: 1px solid var(--border);
+            color: #dce1f1;
+            font-size: 11px;
+            vertical-align: middle;
+        }
+
+        .transactions-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .transactions-table tbody tr:hover {
+            background: rgba(139, 92, 246, 0.035);
+        }
+
+        .type-cell {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 165px;
+        }
+
+        .type-icon {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            font-size: 19px;
+        }
+
+        .type-icon.deposit {
+            color: var(--green);
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .type-icon.withdraw {
+            color: var(--primary-light);
+            background: rgba(139, 92, 246, 0.12);
+        }
+
+        .type-icon.investment {
+            color: var(--blue);
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .type-icon.return {
+            color: var(--yellow);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .type-details strong {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .type-details span {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .amount-cell {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .amount-cell.incoming {
+            color: var(--green);
+        }
+
+        .amount-cell.outgoing {
+            color: #e5e7f2;
+        }
+
+        .date-cell strong {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .date-cell span {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 9px;
+            border-radius: 7px;
+            font-size: 9px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status.completed {
+            color: var(--green);
+            background: rgba(52, 211, 153, 0.09);
+        }
+
+        .status.pending {
+            color: var(--yellow);
+            background: rgba(251, 191, 36, 0.09);
+        }
+
+        .status.failed {
+            color: var(--red);
+            background: rgba(251, 113, 133, 0.09);
+        }
+
+        .status.processing {
+            color: var(--blue);
+            background: rgba(96, 165, 250, 0.09);
+        }
+
+        .transaction-id {
+            color: #9ca6c3;
+            font-family: monospace;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .action-button {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #121a2e;
+            color: #aeb7d0;
+            font-size: 17px;
+            transition: 0.2s;
+        }
+
+        .action-button:hover {
+            color: white;
+            border-color: rgba(167, 139, 250, 0.4);
+        }
+
+        /* Empty state */
+
+        .empty-state {
+            padding: 65px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 66px;
+            height: 66px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 18px;
+            border-radius: 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.12);
+            color: var(--primary-light);
+            font-size: 30px;
+        }
+
+        .empty-state h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            margin-bottom: 9px;
+        }
+
+        .empty-state p {
+            max-width: 360px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        .empty-state .empty-reset {
+            margin-top: 18px;
+            display: none;
+            color: var(--primary-light);
+            background: transparent;
+            border: none;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .empty-state.filtered .empty-reset {
+            display: inline-block;
+        }
+
+        /* Table footer */
+
+        .table-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 17px 23px;
+            border-top: 1px solid var(--border);
+        }
+
+        .results-text {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .page-button {
+            width: 32px;
+            height: 32px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #0c1121;
+            color: #aab4ce;
+            font-size: 11px;
+        }
+
+        .page-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Security note */
+
+        .security-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 18px 20px;
+            margin-top: 23px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(16, 22, 41, 0.65);
+        }
+
+        .security-note > i {
+            color: var(--primary-light);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .security-note h3 {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .security-note p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        /* Transaction details modal */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 250;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: 0.2s;
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            width: min(100%, 460px);
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            background: #101629;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+            transform: translateY(10px);
+            transition: transform 0.2s;
+        }
+
+        .modal.show .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 23px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 15px;
+        }
+
+        .modal-close {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface-light);
+            color: #b7bfd5;
+            font-size: 19px;
+        }
+
+        .modal-type {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 17px;
+            margin-bottom: 19px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #0c1121;
+        }
+
+        .modal-type h3 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .modal-type p {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .modal-amount {
+            font-family: 'Sora', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-detail-row span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .modal-detail-row strong {
+            max-width: 60%;
+            text-align: right;
+            overflow-wrap: anywhere;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .modal-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Toast */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 300;
+            width: min(380px, calc(100% - 32px));
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 14px;
+            background: #151d34;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition: 0.25s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .toast-icon {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--primary-light);
+            font-size: 19px;
+        }
+
+        .toast h4 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .toast p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .toast-close {
+            margin-left: auto;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        /* Footer */
+
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding-top: 25px;
+            margin-top: 35px;
+            border-top: 1px solid var(--border);
+            color: #69738f;
+            font-size: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1200px) {
+            .content {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .topbar {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .summary-card {
+                padding: 17px;
+            }
+
+            .summary-value {
+                font-size: 22px;
+            }
+
+            .transactions-table th,
+            .transactions-table td {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+
+        @media (max-width: 950px) {
+            .sidebar {
+                transform: translateX(-100%);
+                visibility: hidden;
+                pointer-events: none;
+                box-shadow: none;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                visibility: visible;
+                pointer-events: auto;
+                box-shadow: 20px 0 50px rgba(0, 0, 0, 0.3);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                z-index: 120;
+                padding-left: 22px;
+                padding-right: 22px;
+            }
+
+            .mobile-menu {
+                display: grid;
+            }
+
+            .summary-grid {
+                gap: 12px;
+            }
+
+            .summary-value {
+                font-size: 21px;
+            }
+
+            .transactions-header {
+                padding: 20px;
+            }
+
+            .filter-bar {
+                padding: 17px 20px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .topbar {
+                height: 72px;
+                padding: 0 16px;
+                gap: 10px;
+            }
+
+            .topbar-left {
+                gap: 11px;
+            }
+
+            .page-heading h1 {
+                font-size: 15px;
+            }
+
+            .page-heading p {
+                font-size: 10px;
+            }
+
+            .topbar-right {
+                gap: 9px;
+            }
+
+            .profile {
+                padding-left: 9px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .profile-avatar {
+                width: 35px;
+                height: 35px;
+            }
+
+            .content {
+                padding: 23px 15px 35px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 18px;
+            }
+
+            .hero {
+                padding: 23px 20px;
+                margin-bottom: 20px;
+                border-radius: 17px;
+            }
+
+            .hero h2 {
+                font-size: 23px;
+            }
+
+            .hero p {
+                font-size: 11px;
+            }
+
+            .hero-illustration {
+                width: 65px;
+                height: 65px;
+                border-radius: 18px;
+            }
+
+            .hero-illustration i {
+                font-size: 34px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                margin-bottom: 25px;
+            }
+
+            .summary-card {
+                padding: 17px;
+            }
+
+            .summary-top {
+                margin-bottom: 12px;
+            }
+
+            .summary-value {
+                font-size: 23px;
+            }
+
+            .transactions-header {
+                align-items: flex-start;
+                padding: 19px 16px;
+                gap: 12px;
+            }
+
+            .transactions-heading h2 {
+                font-size: 14px;
+            }
+
+            .export-button {
+                min-height: 36px;
+                padding: 0 10px;
+                font-size: 10px;
+            }
+
+            .filter-bar {
+                padding: 15px 16px;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+                max-width: none;
+            }
+
+            .filter-controls {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-select {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .clear-filters {
+                grid-column: 1 / -1;
+                justify-self: start;
+            }
+
+            .table-footer {
+                padding: 15px 16px;
+                flex-wrap: wrap;
+            }
+
+            .security-note {
+                padding: 16px;
+            }
+
+            .page-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                line-height: 1.8;
+            }
+
+            .toast {
+                right: 16px;
+                bottom: 16px;
+            }
+
+            .modal-card {
+                padding: 20px 17px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .page-heading p {
+                display: none;
+            }
+
+            .hero-illustration {
+                display: none;
+            }
+
+            .content {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .transactions-header {
+                flex-direction: column;
+            }
+
+            .export-button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+        <a href="dashboard.html" class="brand">
+            <div class="brand-mark">
+                <i class='bx bx-layer'></i>
+            </div>
+
+            <div class="brand-name">
+                NEXT<span>CHAIN</span>
+            </div>
+        </a>
+
+        <div class="nav-label">Workspace</div>
+
+        <ul class="nav-list">
+
+            <li>
+                <a href="dashboard.html" class="nav-link">
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="investments.html" class="nav-link">
+                    <i class='bx bx-line-chart'></i>
+                    <span>Investments</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="wallet.html" class="nav-link">
+                    <i class='bx bx-wallet-alt'></i>
+                    <span>My Wallet</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="deposit.html" class="nav-link">
+                    <i class='bx bx-plus-circle'></i>
+                    <span>Deposit</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="withdraw.html" class="nav-link">
+                    <i class='bx bx-transfer-alt'></i>
+                    <span>Withdraw</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="transactions.html" class="nav-link active" aria-current="page">
+                    <i class='bx bx-receipt'></i>
+                    <span>Transactions</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-label">Account</div>
+
+        <ul class="nav-list">
+
+            <li>
+                <a href="settings.html" class="nav-link">
+                    <i class='bx bx-cog'></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="support.html" class="nav-link">
+                    <i class='bx bx-support'></i>
+                    <span>Help & Support</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-bottom">
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    <i class='bx bx-shield-quarter'></i>
+                </div>
+
+                <h4>Transaction security</h4>
+
+                <p>
+                    Review transaction details carefully and keep your
+                    account credentials private.
+                </p>
+
+            </div>
+
+            <div class="sidebar-footer">
+                NEXTCHAIN &copy; <span class="current-year"></span>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="icon-button mobile-menu"
+                    id="menuToggle"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    <i class='bx bx-menu'></i>
+                </button>
+
+                <div class="page-heading">
+                    <h1>Transactions</h1>
+                    <p>Track your account activity in one place.</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <button
+                    class="icon-button"
+                    id="helpButton"
+                    type="button"
+                    aria-label="Transaction help"
+                    title="Transaction help"
+                >
+                    <i class='bx bx-help-circle'></i>
+                </button>
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+                        <i class='bx bx-user'></i>
+                    </div>
+
+                    <div class="profile-info">
+                        <strong>My Account</strong>
+                        <span>Account overview</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="content">
+
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a>
+                <i class='bx bx-chevron-right'></i>
+                <span class="current">Transactions</span>
+            </div>
+
+
+            <!-- Hero -->
+            <section class="hero">
+
+                <div class="hero-content">
+
+                    <div class="eyebrow">
+                        <i class='bx bx-history'></i>
+                        ACCOUNT ACTIVITY
+                    </div>
+
+                    <h2>
+                        Your activity, <span>all in one place.</span>
+                    </h2>
+
+                    <p>
+                        View and manage your transaction history, including
+                        deposits, withdrawals, investments, and other account
+                        activity. Your records will appear here when your
+                        account is connected.
+                    </p>
+
+                </div>
+
+                <div class="hero-illustration">
+                    <i class='bx bx-receipt'></i>
+                </div>
+
+            </section>
+
+
+            <!-- Summary cards -->
+            <section class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+                        <span>Total transactions</span>
+
+                        <div class="summary-icon purple">
+                            <i class='bx bx-transfer'></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-value" id="totalTransactions">—</div>
+
+                    <div class="summary-note">
+                        Transaction count will appear when records are available.
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+                        <span>Completed</span>
+
+                        <div class="summary-icon green">
+                            <i class='bx bx-check-circle'></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-value" id="completedTransactions">—</div>
+
+                    <div class="summary-note">
+                        Confirmed transactions from your account history.
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-top">
+                        <span>Pending</span>
+
+                        <div class="summary-icon blue">
+                            <i class='bx bx-time-five'></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-value" id="pendingTransactions">—</div>
+
+                    <div class="summary-note">
+                        Transactions awaiting a verified status update.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Transaction history -->
+            <section class="transactions-panel">
+
+                <div class="transactions-header">
+
+                    <div class="transactions-heading">
+                        <h2>Transaction history</h2>
+
+                        <p>
+                            Search, filter, and review your account transactions.
+                        </p>
+                    </div>
+
+                    <button
+                        class="export-button"
+                        id="exportButton"
+                        type="button"
+                        disabled
+                        title="Export becomes available when transaction records are connected"
+                    >
+                        <i class='bx bx-download'></i>
+                        Export CSV
+                    </button>
+
+                </div>
+
+
+                <!-- Search and filters -->
+                <div class="filter-bar">
+
+                    <div class="search-box">
+                        <i class='bx bx-search'></i>
+
+                        <input
+                            type="search"
+                            id="transactionSearch"
+                            placeholder="Search transaction ID or type..."
+                            aria-label="Search transactions"
+                            autocomplete="off"
+                        >
+                    </div>
+
+
+                    <div class="filter-controls">
+
+                        <select
+                            class="filter-select"
+                            id="typeFilter"
+                            aria-label="Filter by transaction type"
+                        >
+                            <option value="all">All types</option>
+                            <option value="deposit">Deposits</option>
+                            <option value="withdrawal">Withdrawals</option>
+                            <option value="investment">Investments</option>
+                            <option value="return">Returns</option>
+                        </select>
+
+
+                        <select
+                            class="filter-select"
+                            id="statusFilter"
+                            aria-label="Filter by transaction status"
+                        >
+                            <option value="all">All statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="failed">Failed</option>
+                        </select>
+
+
+                        <button
+                            type="button"
+                            class="clear-filters"
+                            id="clearFilters"
+                        >
+                            Clear filters
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Transaction table -->
+                <div class="table-wrap" id="tableWrap">
+
+                    <table class="transactions-table">
+
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Transaction ID</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="transactionBody">
+                            <!-- Real transaction records will be rendered here. -->
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- Empty state -->
+                <div class="empty-state" id="emptyState">
+
+                    <div class="empty-icon">
+                        <i class='bx bx-receipt'></i>
+                    </div>
+
+                    <h3 id="emptyTitle">No transactions yet</h3>
+
+                    <p id="emptyDescription">
+                        Your transaction history will appear here once your
+                        account is connected and transaction records are available.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="empty-reset"
+                        id="resetEmptyFilters"
+                    >
+                        Clear filters and try again
+                    </button>
+
+                </div>
+
+
+                <!-- Table footer -->
+                <div class="table-footer">
+
+                    <div class="results-text" id="resultsText">
+                        No transaction records available.
+                    </div>
+
+                    <div class="pagination">
+
+                        <button
+                            type="button"
+                            class="page-button"
+                            id="previousPage"
+                            aria-label="Previous page"
+                            disabled
+                        >
+                            <i class='bx bx-chevron-left'></i>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="page-button"
+                            id="nextPage"
+                            aria-label="Next page"
+                            disabled
+                        >
+                            <i class='bx bx-chevron-right'></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Security information -->
+            <div class="security-note">
+
+                <i class='bx bx-shield-quarter'></i>
+
+                <div>
+                    <h3>Keep your transaction records secure</h3>
+
+                    <p>
+                        Only trust transaction statuses confirmed by the platform's
+                        official transaction service. A transaction reference,
+                        screenshot, or notification alone does not prove that
+                        funds have been received or sent.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+            <footer class="page-footer">
+
+                <div>
+                    &copy; <span class="current-year"></span> NEXTCHAIN.
+                    All rights reserved.
+                </div>
+
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                    <a href="support.html">Support</a>
+                </div>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- Transaction details modal -->
+<div
+    class="modal"
+    id="transactionModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+    aria-hidden="true"
+>
+    <div class="modal-card">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">Transaction details</h2>
+
+            <button
+                type="button"
+                class="modal-close"
+                id="modalClose"
+                aria-label="Close transaction details"
+            >
+                <i class='bx bx-x'></i>
+            </button>
+
+        </div>
+
+        <div class="modal-type">
+
+            <div class="type-icon purple" id="modalTypeIcon">
+                <i class='bx bx-receipt'></i>
+            </div>
+
+            <div>
+                <h3 id="modalTypeName">Transaction</h3>
+                <p id="modalTypeSubtitle">Transaction details</p>
+            </div>
+
+        </div>
+
+        <div class="modal-amount" id="modalAmount">—</div>
+
+        <div class="modal-details">
+
+            <div class="modal-detail-row">
+                <span>Transaction ID</span>
+                <strong id="modalTransactionId">—</strong>
+            </div>
+
+            <div class="modal-detail-row">
+                <span>Date</span>
+                <strong id="modalDate">—</strong>
+            </div>
+
+            <div class="modal-detail-row">
+                <span>Payment method</span>
+                <strong id="modalMethod">—</strong>
+            </div>
+
+            <div class="modal-detail-row">
+                <span>Status</span>
+                <strong id="modalStatus">—</strong>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Notification -->
+<div
+    class="toast"
+    id="noticeToast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+>
+
+    <div class="toast-icon">
+        <i class='bx bx-info-circle'></i>
+    </div>
+
+    <div>
+        <h4 id="toastTitle">Information</h4>
+        <p id="toastMessage">Your transaction information will appear here.</p>
+    </div>
+
+    <button
+        class="toast-close"
+        id="toastClose"
+        type="button"
+        aria-label="Close notification"
+    >
+        <i class='bx bx-x'></i>
+    </button>
+
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ---------------------------------------
+           Mobile sidebar
+        --------------------------------------- */
+
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+            overlay.setAttribute('aria-hidden', 'false');
+
+            menuToggle.setAttribute('aria-expanded', 'true');
+            menuToggle.setAttribute('aria-label', 'Close navigation menu');
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            overlay.setAttribute('aria-hidden', 'true');
+
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.setAttribute('aria-label', 'Open navigation menu');
+
+            document.body.style.overflow = '';
+        }
+
+        menuToggle.addEventListener('click', function () {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 950) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 950) {
+                closeSidebar();
+            }
+        });
+
+
+        /* ---------------------------------------
+           Current year
+        --------------------------------------- */
+
+        document.querySelectorAll('.current-year').forEach(function (element) {
+            element.textContent = new Date().getFullYear();
+        });
+
+
+        /* ---------------------------------------
+           Toast notifications
+        --------------------------------------- */
+
+        const toast = document.getElementById('noticeToast');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastClose = document.getElementById('toastClose');
+
+        let toastTimer;
+
+        function showToast(title, message) {
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            toast.classList.add('show');
+
+            clearTimeout(toastTimer);
+
+            toastTimer = setTimeout(hideToast, 5000);
+        }
+
+        function hideToast() {
+            toast.classList.remove('show');
+            clearTimeout(toastTimer);
+        }
+
+        toastClose.addEventListener('click', hideToast);
+
+
+        /* ---------------------------------------
+           Transaction records
+
+           No sample transactions are added here.
+           Connect real, authenticated transaction
+           data to this array when the backend is ready.
+        --------------------------------------- */
+
+        const transactions = [];
+
+        const transactionBody = document.getElementById('transactionBody');
+        const emptyState = document.getElementById('emptyState');
+        const emptyTitle = document.getElementById('emptyTitle');
+        const emptyDescription = document.getElementById('emptyDescription');
+        const resultsText = document.getElementById('resultsText');
+
+        const totalTransactions =
+            document.getElementById('totalTransactions');
+
+        const completedTransactions =
+            document.getElementById('completedTransactions');
+
+        const pendingTransactions =
+            document.getElementById('pendingTransactions');
+
+        const searchInput = document.getElementById('transactionSearch');
+        const typeFilter = document.getElementById('typeFilter');
+        const statusFilter = document.getElementById('statusFilter');
+
+        const clearFilters = document.getElementById('clearFilters');
+        const resetEmptyFilters =
+            document.getElementById('resetEmptyFilters');
+
+        const exportButton = document.getElementById('exportButton');
+
+        const previousPage = document.getElementById('previousPage');
+        const nextPage = document.getElementById('nextPage');
+
+        const pageSize = 8;
+        let currentPage = 1;
+
+
+        /* ---------------------------------------
+           Transaction type helpers
+        --------------------------------------- */
+
+        function getTypeLabel(type) {
+            const labels = {
+                deposit: 'Deposit',
+                withdrawal: 'Withdrawal',
+                investment: 'Investment',
+                return: 'Investment Return'
+            };
+
+            return labels[type] || 'Transaction';
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                deposit: 'bx-down-arrow-alt',
+                withdrawal: 'bx-up-arrow-alt',
+                investment: 'bx-line-chart',
+                return: 'bx-trending-up'
+            };
+
+            return icons[type] || 'bx-receipt';
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                completed: 'Completed',
+                pending: 'Pending',
+                processing: 'Processing',
+                failed: 'Failed'
+            };
+
+            return labels[status] || 'Unknown';
+        }
+
+        function getStatusClass(status) {
+            const allowedStatuses = [
+                'completed',
+                'pending',
+                'processing',
+                'failed'
+            ];
+
+            return allowedStatuses.includes(status)
+                ? status
+                : 'pending';
+        }
+
+        function formatAmount(transaction) {
+            const amount = Number(transaction.amount);
+
+            if (!Number.isFinite(amount)) {
+                return '—';
+            }
+
+            const currency = transaction.currency || 'USD';
+
+            const formatted = amount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 8
+            });
+
+            const prefix = currency === 'USD' ? '$' : '';
+
+            return prefix + formatted +
+                (currency !== 'USD' ? ' ' + currency : '');
+        }
+
+        function formatDate(dateValue) {
+            const date = new Date(dateValue);
+
+            if (Number.isNaN(date.getTime())) {
+                return {
+                    date: '—',
+                    time: '—'
+                };
+            }
+
+            return {
+                date: date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }),
+
+                time: date.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+        }
+
+
+        /* ---------------------------------------
+           Filtering
+        --------------------------------------- */
+
+        function getFilteredTransactions() {
+            const query = searchInput.value.trim().toLowerCase();
+            const selectedType = typeFilter.value;
+            const selectedStatus = statusFilter.value;
+
+            return transactions.filter(function (transaction) {
+                const matchesSearch =
+                    !query ||
+                    String(transaction.id || '').toLowerCase().includes(query) ||
+                    getTypeLabel(transaction.type).toLowerCase().includes(query) ||
+                    String(transaction.method || '').toLowerCase().includes(query) ||
+                    String(transaction.asset || '').toLowerCase().includes(query);
+
+                const matchesType =
+                    selectedType === 'all' ||
+                    transaction.type === selectedType;
+
+                const matchesStatus =
+                    selectedStatus === 'all' ||
+                    transaction.status === selectedStatus;
+
+                return matchesSearch && matchesType && matchesStatus;
+            });
+        }
+
+
+        /* ---------------------------------------
+           Render transaction table
+        --------------------------------------- */
+
+        function renderTransactions() {
+            const filtered = getFilteredTransactions();
+
+            const totalPages = Math.max(
+                1,
+                Math.ceil(filtered.length / pageSize)
+            );
+
+            currentPage = Math.min(currentPage, totalPages);
+
+            const startIndex = (currentPage - 1) * pageSize;
+
+            const pageTransactions = filtered.slice(
+                startIndex,
+                startIndex + pageSize
+            );
+
+            transactionBody.replaceChildren();
+
+            pageTransactions.forEach(function (transaction) {
+                const row = document.createElement('tr');
+
+                const date = formatDate(transaction.date);
+
+                const typeCell = document.createElement('td');
+
+                const typeWrapper = document.createElement('div');
+                typeWrapper.className = 'type-cell';
+
+                const typeIcon = document.createElement('div');
+                typeIcon.className =
+                    'type-icon ' + transaction.type;
+
+                const icon = document.createElement('i');
+                icon.className = 'bx ' + getTypeIcon(transaction.type);
+
+                typeIcon.appendChild(icon);
+
+                const typeDetails = document.createElement('div');
+                typeDetails.className = 'type-details';
+
+                const typeName = document.createElement('strong');
+                typeName.textContent = getTypeLabel(transaction.type);
+
+                const typeSubtitle = document.createElement('span');
+                typeSubtitle.textContent =
+                    transaction.asset || transaction.method || 'Transaction';
+
+                typeDetails.append(typeName, typeSubtitle);
+                typeWrapper.append(typeIcon, typeDetails);
+                typeCell.appendChild(typeWrapper);
+
+
+                const idCell = document.createElement('td');
+
+                const idText = document.createElement('span');
+                idText.className = 'transaction-id';
+                idText.textContent = transaction.id || '—';
+
+                idCell.appendChild(idText);
+
+
+                const dateCell = document.createElement('td');
+                dateCell.className = 'date-cell';
+
+                const dateStrong = document.createElement('strong');
+                dateStrong.textContent = date.date;
+
+                const dateSpan = document.createElement('span');
+                dateSpan.textContent = date.time;
+
+                dateCell.append(dateStrong, dateSpan);
+
+
+                const amountCell = document.createElement('td');
+                amountCell.className =
+                    'amount-cell ' +
+                    (['deposit', 'return'].includes(transaction.type)
+                        ? 'incoming'
+                        : 'outgoing');
+
+                amountCell.textContent = formatAmount(transaction);
+
+
+                const statusCell = document.createElement('td');
+
+                const statusBadge = document.createElement('span');
+                statusBadge.className =
+                    'status ' + getStatusClass(transaction.status);
+
+                statusBadge.textContent =
+                    getStatusLabel(transaction.status);
+
+                statusCell.appendChild(statusBadge);
+
+
+                const actionCell = document.createElement('td');
+
+                const actionButton = document.createElement('button');
+                actionButton.type = 'button';
+                actionButton.className = 'action-button';
+                actionButton.setAttribute(
+                    'aria-label',
+                    'View details for transaction ' + (transaction.id || '')
+                );
+
+                const actionIcon = document.createElement('i');
+                actionIcon.className = 'bx bx-chevron-right';
+
+                actionButton.appendChild(actionIcon);
+
+                actionButton.addEventListener('click', function () {
+                    showTransactionDetails(transaction);
+                });
+
+                actionCell.appendChild(actionButton);
+
+                row.append(
+                    typeCell,
+                    idCell,
+                    dateCell,
+                    amountCell,
+                    statusCell,
+                    actionCell
+                );
+
+                transactionBody.appendChild(row);
+            });
+
+
+            const hasRecords = filtered.length > 0;
+
+            document.getElementById('tableWrap').hidden = !hasRecords;
+            emptyState.hidden = hasRecords;
+
+            if (!hasRecords) {
+                const hasActiveFilters =
+                    searchInput.value.trim() !== '' ||
+                    typeFilter.value !== 'all' ||
+                    statusFilter.value !== 'all';
+
+                emptyState.classList.toggle('filtered', hasActiveFilters);
+
+                emptyTitle.textContent = hasActiveFilters
+                    ? 'No matching transactions'
+                    : 'No transactions yet';
+
+                emptyDescription.textContent = hasActiveFilters
+                    ? 'Try changing your search or filters to find a transaction.'
+                    : 'Your transaction history will appear here once your account is connected and transaction records are available.';
+
+                resultsText.textContent = hasActiveFilters
+                    ? 'No transactions match your filters.'
+                    : 'No transaction records available.';
+            } else {
+                emptyState.classList.remove('filtered');
+
+                const firstResult = startIndex + 1;
+                const lastResult = Math.min(
+                    startIndex + pageSize,
+                    filtered.length
+                );
+
+                resultsText.textContent =
+                    'Showing ' + firstResult + '–' + lastResult +
+                    ' of ' + filtered.length + ' transactions';
+            }
+
+            previousPage.disabled = currentPage <= 1 || !hasRecords;
+            nextPage.disabled = currentPage >= totalPages || !hasRecords;
+
+            exportButton.disabled = filtered.length === 0;
+        }
+
+
+        /* ---------------------------------------
+           Update summary cards from real records
+        --------------------------------------- */
+
+        function updateSummary() {
+            totalTransactions.textContent = transactions.length;
+
+            completedTransactions.textContent =
+                transactions.filter(function (transaction) {
+                    return transaction.status === 'completed';
+                }).length;
+
+            pendingTransactions.textContent =
+                transactions.filter(function (transaction) {
+                    return transaction.status === 'pending' ||
+                        transaction.status === 'processing';
+                }).length;
+        }
+
+
+        /* ---------------------------------------
+           Transaction details modal
+        --------------------------------------- */
+
+        const transactionModal =
+            document.getElementById('transactionModal');
+
+        const modalClose = document.getElementById('modalClose');
+
+        let previouslyFocusedElement = null;
+
+        function showTransactionDetails(transaction) {
+            previouslyFocusedElement = document.activeElement;
+
+            const date = formatDate(transaction.date);
+
+            document.getElementById('modalTypeName').textContent =
+                getTypeLabel(transaction.type);
+
+            document.getElementById('modalTypeSubtitle').textContent =
+                transaction.asset || transaction.method || 'Transaction';
+
+            document.getElementById('modalAmount').textContent =
+                formatAmount(transaction);
+
+            document.getElementById('modalTransactionId').textContent =
+                transaction.id || '—';
+
+            document.getElementById('modalDate').textContent =
+                date.date + ' · ' + date.time;
+
+            document.getElementById('modalMethod').textContent =
+                transaction.method || '—';
+
+            document.getElementById('modalStatus').textContent =
+                getStatusLabel(transaction.status);
+
+            const modalIcon = document.getElementById('modalTypeIcon');
+            modalIcon.className = 'type-icon ' + transaction.type;
+
+            const icon = modalIcon.querySelector('i');
+            icon.className = 'bx ' + getTypeIcon(transaction.type);
+
+            transactionModal.classList.add('show');
+            transactionModal.setAttribute('aria-hidden', 'false');
+            modalClose.focus();
+        }
+
+        function closeTransactionModal() {
+            transactionModal.classList.remove('show');
+            transactionModal.setAttribute('aria-hidden', 'true');
+
+            if (previouslyFocusedElement) {
+                previouslyFocusedElement.focus();
+            }
+        }
+
+        modalClose.addEventListener('click', closeTransactionModal);
+
+        transactionModal.addEventListener('click', function (event) {
+            if (event.target === transactionModal) {
+                closeTransactionModal();
+            }
+        });
+
+
+        /* ---------------------------------------
+           Search and filter listeners
+        --------------------------------------- */
+
+        searchInput.addEventListener('input', function () {
+            currentPage = 1;
+            renderTransactions();
+        });
+
+        typeFilter.addEventListener('change', function () {
+            currentPage = 1;
+            renderTransactions();
+        });
+
+        statusFilter.addEventListener('change', function () {
+            currentPage = 1;
+            renderTransactions();
+        });
+
+        function resetFilters() {
+            searchInput.value = '';
+            typeFilter.value = 'all';
+            statusFilter.value = 'all';
+            currentPage = 1;
+
+            renderTransactions();
+        }
+
+        clearFilters.addEventListener('click', resetFilters);
+        resetEmptyFilters.addEventListener('click', resetFilters);
+
+
+        /* ---------------------------------------
+           Pagination
+        --------------------------------------- */
+
+        previousPage.addEventListener('click', function () {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTransactions();
+            }
+        });
+
+        nextPage.addEventListener('click', function () {
+            const totalPages = Math.ceil(
+                getFilteredTransactions().length / pageSize
+            );
+
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTransactions();
+            }
+        });
+
+
+        /* ---------------------------------------
+           Export CSV
+
+           Export is available when real records
+           are added to the transactions array.
+        --------------------------------------- */
+
+        function escapeCSV(value) {
+            const stringValue = String(value ?? '');
+
+            return '"' + stringValue.replace(/"/g, '""') + '"';
+        }
+
+        exportButton.addEventListener('click', function () {
+            const filtered = getFilteredTransactions();
+
+            if (!filtered.length) {
+                showToast(
+                    'Nothing to export',
+                    'There are no transaction records matching your current filters.'
+                );
+
+                return;
+            }
+
+            const headers = [
+                'Transaction ID',
+                'Type',
+                'Asset',
+                'Amount',
+                'Currency',
+                'Status',
+                'Method',
+                'Date'
+            ];
+
+            const rows = filtered.map(function (transaction) {
+                return [
+                    transaction.id,
+                    getTypeLabel(transaction.type),
+                    transaction.asset || '',
+                    transaction.amount,
+                    transaction.currency || 'USD',
+                    getStatusLabel(transaction.status),
+                    transaction.method || '',
+                    transaction.date
+                ];
+            });
+
+            const csv = [
+                headers.map(escapeCSV).join(','),
+                ...rows.map(function (row) {
+                    return row.map(escapeCSV).join(',');
+                })
+            ].join('\r\n');
+
+            const blob = new Blob(
+                ['\uFEFF' + csv],
+                { type: 'text/csv;charset=utf-8;' }
+            );
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+
+            link.href = url;
+            link.download = 'nextchain-transactions.csv';
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            URL.revokeObjectURL(url);
+
+            showToast(
+                'Export complete',
+                'Your filtered transaction records have been exported to CSV.'
+            );
+        });
+
+
+        /* ---------------------------------------
+           Help
+        --------------------------------------- */
+
+        document.getElementById('helpButton').addEventListener('click', function () {
+            showToast(
+                'Transaction support',
+                'If a transaction is missing or its status looks incorrect, contact the official support team.'
+            );
+        });
+
+
+        /* ---------------------------------------
+           Keyboard controls
+        --------------------------------------- */
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeSidebar();
+                closeTransactionModal();
+                hideToast();
+            }
+        });
+
+
+        /* ---------------------------------------
+           Initial rendering
+        --------------------------------------- */
+
+        updateSummary();
+        renderTransactions();
+
+    });
+</script>
+
+</body>
+</html>

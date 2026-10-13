@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | NEXTCHAIN</title>
+
+    <meta name="description" content="Create your NEXTCHAIN account and explore our investment platform.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: "#080B18",
+                        panel: "#101529",
+                        violet: "#8B5CF6",
+                        ice: "#7DD3FC"
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        heading: ["Sora", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            --background: #080B18;
+            --surface: #101529;
+            --border: rgba(148, 163, 184, 0.15);
+            --violet: #8B5CF6;
+            --ice: #7DD3FC;
+            --muted: #929BB2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 15% 15%,
+                    rgba(139, 92, 246, 0.13),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    circle at 85% 85%,
+                    rgba(125, 211, 252, 0.08),
+                    transparent 30%
+                ),
+                var(--background);
+            color: #F8FAFC;
+            font-family: "Inter", sans-serif;
+        }
+
+        .brand-font {
+            font-family: "Sora", sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(16, 21, 41, 0.92);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper > i:first-child {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #79849E;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            min-height: 49px;
+            padding: 12px 45px 12px 44px;
+            border: 1px solid rgba(148, 163, 184, 0.19);
+            border-radius: 11px;
+            outline: none;
+            background: #0B1021;
+            color: #F8FAFC;
+            font-family: "Inter", sans-serif;
+            font-size: 13px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input::placeholder {
+            color: #626D84;
+        }
+
+        .form-input:focus {
+            border-color: var(--violet);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8A94AA;
+            cursor: pointer;
+            font-size: 19px;
+            background: none;
+            border: none;
+        }
+
+        .password-toggle:hover {
+            color: white;
+        }
+
+        .primary-button {
+            background: linear-gradient(105deg, #8B5CF6, #6D5AEF);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+        }
+
+        .primary-button:disabled {
+            opacity: 0.65;
+            cursor: wait;
+            transform: none;
+        }
+
+        .plan-option {
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .plan-option.selected {
+            border-color: var(--violet);
+            background: rgba(139, 92, 246, 0.09);
+        }
+
+        .plan-option input {
+            accent-color: var(--violet);
+        }
+
+        .error-message {
+            display: none;
+            color: #FDA4AF;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            max-width: calc(100vw - 40px);
+            padding: 14px 18px;
+            border: 1px solid rgba(251, 113, 133, 0.3);
+            border-radius: 12px;
+            background: #21121E;
+            color: #FDA4AF;
+            font-size: 13px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            display: none;
+        }
+
+        .notification.visible {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: rgba(139, 92, 246, 0.13);
+            color: #B8A1FF;
+            font-size: 23px;
+        }
+
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 23px 18px;
+            }
+
+            .notification {
+                top: 12px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Notification -->
+    <div id="notification" class="notification" role="alert">
+        <i class="bx bx-error-circle text-xl"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Header -->
+    <header class="w-full px-5 sm:px-8 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+            <a href="../index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                     style="background: linear-gradient(135deg, #8B5CF6, #4F46E5);">
+                    <i class="bx bx-link-alt text-2xl text-white"></i>
+                </div>
+
+                <span class="brand-font text-xl font-bold tracking-tight">
+                    NEXT<span style="color: #A78BFA;">CHAIN</span>
+                </span>
+            </a>
+
+            <div class="text-sm text-slate-400">
+                Already a member?
+
+                <a href="login.html"
+                   class="font-semibold ml-1"
+                   style="color: #A78BFA;">
+                    Sign in
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="px-4 sm:px-6 py-8 sm:py-12">
+
+        <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+            <!-- Left Information Panel -->
+            <section class="hidden lg:block">
+
+                <div class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-violet-400/20 bg-violet-400/5 text-xs text-violet-200 mb-7">
+                    <span class="w-2 h-2 rounded-full bg-violet-400"></span>
+                    YOUR DIGITAL ASSET JOURNEY STARTS HERE
+                </div>
+
+                <h1 class="brand-font text-4xl xl:text-5xl font-bold leading-tight mb-6">
+                    Your next chapter
+                    <br>
+                    starts with
+                    <span style="background: linear-gradient(90deg, #A78BFA, #7DD3FC); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                        NEXTCHAIN.
+                    </span>
+                </h1>
+
+                <p class="text-slate-400 text-base leading-8 max-w-lg mb-9">
+                    Create your account to explore investment plans,
+                    track your portfolio, and manage your account from
+                    one intuitive dashboard.
+                </p>
+
+                <!-- Feature Cards -->
+                <div class="space-y-4">
+
+                    <div class="flex gap-4 items-start p-4 rounded-2xl border border-white/5 bg-white/[0.02]">
+                        <div class="security-icon">
+                            <i class="bx bx-line-chart"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-sm mb-1">
+                                Portfolio Overview
+                            </h3>
+
+                            <p class="text-slate-500 text-xs leading-6">
+                                View your investment information and account activity in one place.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 items-start p-4 rounded-2xl border border-white/5 bg-white/[0.02]">
+                        <div class="security-icon">
+                            <i class="bx bx-slider-alt"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-sm mb-1">
+                                Simple Account Management
+                            </h3>
+
+                            <p class="text-slate-500 text-xs leading-6">
+                                Access your account settings and transaction history from your dashboard.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 items-start p-4 rounded-2xl border border-white/5 bg-white/[0.02]">
+                        <div class="security-icon">
+                            <i class="bx bx-shield-quarter"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-sm mb-1">
+                                Security-Minded Design
+                            </h3>
+
+                            <p class="text-slate-500 text-xs leading-6">
+                                A clean account experience designed with privacy and security in mind.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p class="text-xs text-slate-600 mt-8 leading-6 max-w-lg">
+                    Cryptocurrency investments involve risk, including the possible
+                    loss of your investment. Returns are not guaranteed.
+                </p>
+
+            </section>
+
+            <!-- Registration Form -->
+            <section class="w-full max-w-xl mx-auto">
+
+                <div class="glass-card rounded-3xl p-6 sm:p-9">
+
+                    <!-- Form Heading -->
+                    <div class="mb-7">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div class="security-icon">
+                                <i class="bx bx-user-plus"></i>
+                            </div>
+
+                            <span class="text-xs text-slate-500 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                Create your account
+                            </span>
+
+                        </div>
+
+                        <h2 class="brand-font text-2xl sm:text-3xl font-bold mb-3">
+                            Join NEXTCHAIN
+                        </h2>
+
+                        <p class="text-sm text-slate-400 leading-6">
+                            Enter your details below to create your account.
+                        </p>
+
+                    </div>
+
+                    <!-- Selected Plan -->
+                    <div id="selectedPlanCard"
+                         class="rounded-2xl p-4 mb-7 border"
+                         style="background: rgba(139, 92, 246, 0.06); border-color: rgba(139, 92, 246, 0.25);">
+
+                        <div class="flex items-center justify-between gap-4">
+
+                            <div>
+                                <p class="text-xs text-slate-400 mb-1">
+                                    Selected investment plan
+                                </p>
+
+                                <h3 id="selectedPlanName"
+                                    class="font-semibold text-sm">
+                                    Starter Plan
+                                </h3>
+
+                                <p id="selectedPlanAmount"
+                                   class="text-xs text-slate-400 mt-1">
+                                    $50 – $499
+                                </p>
+                            </div>
+
+                            <div class="text-right">
+                                <span class="text-xs text-violet-300">
+                                    PLAN
+                                </span>
+
+                                <div class="brand-font text-lg font-bold"
+                                     style="color: #A78BFA;"
+                                     id="selectedPlanCode">
+                                    ST01
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <p class="text-xs text-slate-500 mt-3 leading-5">
+                            Selecting a plan here does not make an investment
+                            or guarantee any return.
+                        </p>
+
+                    </div>
+
+                    <!-- Form -->
+                    <form id="registerForm" novalidate>
+
+                        <!-- Full Name -->
+                        <div class="mb-5">
+
+                            <label for="fullName"
+                                   class="block text-xs font-semibold text-slate-300 mb-2">
+                                Full Name
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="bx bx-user"></i>
+
+                                <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    class="form-input"
+                                    placeholder="Enter your full name"
+                                    autocomplete="name"
+                                    required
+                                >
+                            </div>
+
+                            <p class="error-message" id="fullNameError"></p>
+
+                        </div>
+
+                        <!-- Email and Username -->
+                        <div class="grid sm:grid-cols-2 gap-5 mb-5">
+
+                            <div>
+
+                                <label for="email"
+                                       class="block text-xs font-semibold text-slate-300 mb-2">
+                                    Email Address
+                                </label>
+
+                                <div class="input-wrapper">
+                                    <i class="bx bx-envelope"></i>
+
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        class="form-input"
+                                        placeholder="you@example.com"
+                                        autocomplete="email"
+                                        required
+                                    >
+                                </div>
+
+                                <p class="error-message" id="emailError"></p>
+
+                            </div>
+
+                            <div>
+
+                                <label for="username"
+                                       class="block text-xs font-semibold text-slate-300 mb-2">
+                                    Username
+                                </label>
+
+                                <div class="input-wrapper">
+                                    <i class="bx bx-at"></i>
+
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        name="username"
+                                        class="form-input"
+                                        placeholder="Choose a username"
+                                        autocomplete="username"
+                                        minlength="3"
+                                        maxlength="20"
+                                        pattern="[A-Za-z0-9_]+"
+                                        required
+                                    >
+                                </div>
+
+                                <p class="error-message" id="usernameError"></p>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-5">
+
+                            <label for="password"
+                                   class="block text-xs font-semibold text-slate-300 mb-2">
+                                Password
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="bx bx-lock-alt"></i>
+
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-input"
+                                    placeholder="Create a strong password"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    data-target="password"
+                                    aria-label="Show password"
+                                >
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
+
+                            <p class="text-xs text-slate-500 mt-2">
+                                Use at least 8 characters.
+                            </p>
+
+                            <p class="error-message" id="passwordError"></p>
+
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-5">
+
+                            <label for="confirmPassword"
+                                   class="block text-xs font-semibold text-slate-300 mb-2">
+                                Confirm Password
+                            </label>
+
+                            <div class="input-wrapper">
+                                <i class="bx bx-lock-alt"></i>
+
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    class="form-input"
+                                    placeholder="Enter your password again"
+                                    autocomplete="new-password"
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    data-target="confirmPassword"
+                                    aria-label="Show password"
+                                >
+                                    <i class="bx bx-hide"></i>
+                                </button>
+                            </div>
+
+                            <p class="error-message" id="confirmPasswordError"></p>
+
+                        </div>
+
+                        <!-- Terms -->
+                        <div class="mb-6">
+
+                            <label class="flex items-start gap-3 cursor-pointer">
+
+                                <input
+                                    type="checkbox"
+                                    id="terms"
+                                    class="mt-1 shrink-0"
+                                    style="accent-color: #8B5CF6;"
+                                    required
+                                >
+
+                                <span class="text-xs text-slate-400 leading-6">
+                                    I agree to the
+                                    <a href="../pages/terms.html"
+                                       class="text-violet-300 hover:text-violet-200">
+                                        Terms and Conditions
+                                    </a>
+                                    and
+                                    <a href="../pages/privacy.html"
+                                       class="text-violet-300 hover:text-violet-200">
+                                        Privacy Policy
+                                    </a>.
+                                </span>
+
+                            </label>
+
+                            <p class="error-message" id="termsError"></p>
+
+                        </div>
+
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            id="registerButton"
+                            class="primary-button w-full py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+                        >
+                            <span id="buttonText">Create Account</span>
+                            <i class="bx bx-right-arrow-alt text-xl" id="buttonIcon"></i>
+                        </button>
+
+                        <p class="text-center text-xs text-slate-500 mt-5 leading-6">
+                            Already have an account?
+
+                            <a href="login.html"
+                               class="font-semibold text-violet-300 hover:text-violet-200">
+                                Sign in
+                            </a>
+                        </p>
+
+                    </form>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mt-6 text-xs text-slate-600">
+
+                    <span class="flex items-center gap-1">
+                        <i class="bx bx-lock-alt"></i>
+                        Secure form design
+                    </span>
+
+                    <span>© <span id="currentYear"></span> NEXTCHAIN</span>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // NEXTCHAIN REGISTRATION - DEMO PROTOTYPE
+        // ==========================================
+
+        const form = document.getElementById("registerForm");
+        const registerButton = document.getElementById("registerButton");
+        const buttonText = document.getElementById("buttonText");
+        const buttonIcon = document.getElementById("buttonIcon");
+
+        // Update footer year
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        // ==========================================
+        // INVESTMENT PLAN CONFIGURATION
+        // Keep this synchronized with js/plans.js
+        // ==========================================
+
+        const plans = {
+            starter: {
+                name: "Starter Plan",
+                amount: "$50 – $499",
+                code: "ST01"
+            },
+
+            standard: {
+                name: "Standard Plan",
+                amount: "$500 – $1,999",
+                code: "ST02"
+            },
+
+            premium: {
+                name: "Premium Plan",
+                amount: "$2,000 – $4,999",
+                code: "PR03"
+            },
+
+            vip: {
+                name: "VIP Plan",
+                amount: "$5,000+",
+                code: "VIP04"
+            }
+        };
+
+        // Read the selected plan from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const requestedPlan = (
+            urlParams.get("plan") || "starter"
+        ).toLowerCase();
+
+        const selectedPlan = plans[requestedPlan] || plans.starter;
+
+        // Display the selected plan
+        document.getElementById("selectedPlanName").textContent =
+            selectedPlan.name;
+
+        document.getElementById("selectedPlanAmount").textContent =
+            selectedPlan.amount;
+
+        document.getElementById("selectedPlanCode").textContent =
+            selectedPlan.code;
+
+        // ==========================================
+        // NOTIFICATIONS
+        // ==========================================
+
+        let notificationTimer;
+
+        function showNotification(message) {
+            const notification =
+                document.getElementById("notification");
+
+            document.getElementById("notificationText").textContent =
+                message;
+
+            notification.classList.add("visible");
+
+            clearTimeout(notificationTimer);
+
+            notificationTimer = setTimeout(() => {
+                notification.classList.remove("visible");
+            }, 4000);
+        }
+
+        // ==========================================
+        // FIELD ERROR HELPERS
+        // ==========================================
+
+        function showError(fieldId, message) {
+            const errorElement =
+                document.getElementById(fieldId + "Error");
+
+            if (!errorElement) return;
+
+            errorElement.textContent = message;
+            errorElement.classList.add("visible");
+        }
+
+        function clearError(fieldId) {
+            const errorElement =
+                document.getElementById(fieldId + "Error");
+
+            if (!errorElement) return;
+
+            errorElement.textContent = "";
+            errorElement.classList.remove("visible");
+        }
+
+        // Clear field errors as the user types
+        [
+            "fullName",
+            "email",
+            "username",
+            "password",
+            "confirmPassword"
+        ].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+
+            field.addEventListener("input", () => {
+                clearError(fieldId);
+            });
+        });
+
+        document.getElementById("terms").addEventListener("change", () => {
+            clearError("terms");
+        });
+
+        // ==========================================
+        // PASSWORD VISIBILITY
+        // ==========================================
+
+        document.querySelectorAll(".password-toggle").forEach(button => {
+            button.addEventListener("click", () => {
+                const targetId = button.dataset.target;
+                const input = document.getElementById(targetId);
+                const icon = button.querySelector("i");
+
+                const showPassword = input.type === "password";
+
+                input.type = showPassword ? "text" : "password";
+
+                icon.className = showPassword
+                    ? "bx bx-show"
+                    : "bx bx-hide";
+
+                button.setAttribute(
+                    "aria-label",
+                    showPassword ? "Hide password" : "Show password"
+                );
+            });
+        });
+
+        // ==========================================
+        // FORM VALIDATION
+        // ==========================================
+
+        function validateForm() {
+            let valid = true;
+
+            const fullName =
+                document.getElementById("fullName").value.trim();
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const username =
+                document.getElementById("username").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+            const termsAccepted =
+                document.getElementById("terms").checked;
+
+            // Full name
+            if (fullName.length < 2) {
+                showError(
+                    "fullName",
+                    "Please enter your full name."
+                );
+
+                valid = false;
+            }
+
+            // Email
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                showError(
+                    "email",
+                    "Please enter a valid email address."
+                );
+
+                valid = false;
+            }
+
+            // Username
+            const usernamePattern = /^[A-Za-z0-9_]{3,20}$/;
+
+            if (!usernamePattern.test(username)) {
+                showError(
+                    "username",
+                    "Use 3–20 letters, numbers, or underscores."
+                );
+
+                valid = false;
+            }
+
+            // Password
+            if (password.length < 8) {
+                showError(
+                    "password",
+                    "Your password must contain at least 8 characters."
+                );
+
+                valid = false;
+            }
+
+            // Confirm password
+            if (password !== confirmPassword) {
+                showError(
+                    "confirmPassword",
+                    "Your passwords do not match."
+                );
+
+                valid = false;
+            }
+
+            // Terms
+            if (!termsAccepted) {
+                showError(
+                    "terms",
+                    "Please accept the Terms and Conditions."
+                );
+
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        // ==========================================
+        // DEMO REGISTRATION
+        // ==========================================
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            if (!validateForm()) {
+                showNotification(
+                    "Please review the highlighted fields."
+                );
+
+                return;
+            }
+
+            // Disable button while processing the demo
+            registerButton.disabled = true;
+
+            buttonText.textContent = "Creating account...";
+
+            buttonIcon.className =
+                "bx bx-loader-alt bx-spin text-xl";
+
+            try {
+                // Simulate a short processing delay.
+                // This is NOT real account creation.
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                const demoUser = {
+                    fullName: document
+                        .getElementById("fullName")
+                        .value.trim(),
+
+                    username: document
+                        .getElementById("username")
+                        .value.trim(),
+
+                    email: document
+                        .getElementById("email")
+                        .value.trim(),
+
+                    selectedPlan: requestedPlan in plans
+                        ? requestedPlan
+                        : "starter",
+
+                    registeredAt: new Date().toISOString()
+                };
+
+                // Save demo profile only.
+                // Never store the password in localStorage.
+                localStorage.setItem(
+                    "nextchainDemoUser",
+                    JSON.stringify(demoUser)
+                );
+
+                // Redirect to the dashboard prototype
+                window.location.href = "../dashboard/index.html";
+
+            } catch (error) {
+                console.error("Demo registration error:", error);
+
+                showNotification(
+                    "Something went wrong. Please try again."
+                );
+
+                registerButton.disabled = false;
+
+                buttonText.textContent = "Create Account";
+
+                buttonIcon.className =
+                    "bx bx-right-arrow-alt text-xl";
+            }
+        });
+    </script>
+
+</body>
+</html>

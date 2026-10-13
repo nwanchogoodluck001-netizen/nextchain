@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | NEXTCHAIN Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            midnight: "#080D20",
+            panel: "#101831",
+            violet: "#7867FF",
+            ice: "#43D9FF"
+          },
+          fontFamily: { sans: ["Inter", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body { background: #080D20; color: #F1F5FF; font-family: Inter, sans-serif; }
+    .sidebar { background: #0B1228; border-right: 1px solid #1D2945; }
+    .panel { background: #101831; border: 1px solid #202C49; border-radius: 16px; }
+    .nav-link { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border-radius: 10px; color: #8D9AB8; font-size: 13px; font-weight: 500; transition: .2s; }
+    .nav-link:hover { background: #172341; color: #fff; }
+    .nav-link.active { background: rgba(120,103,255,.15); color: #A99EFF; border: 1px solid rgba(120,103,255,.2); }
+    .nav-link i { font-size: 19px; }
+    .field { width: 100%; background: #0B132A; border: 1px solid #293653; color: #EDF1FF; border-radius: 10px; padding: 11px 13px; outline: none; font-size: 13px; transition: .2s; }
+    .field:focus { border-color: #7867FF; box-shadow: 0 0 0 3px rgba(120,103,255,.1); }
+    .field::placeholder { color: #66738F; }
+    select.field option { background: #101831; }
+    .label { display: block; font-size: 12px; font-weight: 600; color: #C1CAE0; margin-bottom: 8px; }
+    .muted { color: #8794B1; }
+    .section-btn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 13px; border-radius: 10px; text-align: left; color: #929FBD; font-size: 13px; transition: .2s; }
+    .section-btn:hover { background: #172341; color: #fff; }
+    .section-btn.active { background: rgba(120,103,255,.14); color: #B3A9FF; }
+    .section-btn i { font-size: 19px; }
+    .toggle { position: relative; display: inline-block; width: 42px; height: 23px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background: #34415F; border-radius: 30px; transition: .2s; }
+    .slider:before { content: ""; position: absolute; width: 17px; height: 17px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+    .toggle input:checked + .slider { background: #7867FF; }
+    .toggle input:checked + .slider:before { transform: translateX(19px); }
+    .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 17px 0; border-bottom: 1px solid #202C49; }
+    .setting-row:last-child { border-bottom: 0; }
+    .primary-btn { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 9px; background: #7867FF; color: #fff; font-size: 12px; font-weight: 700; transition: .2s; }
+    .primary-btn:hover { background: #6755F2; }
+    .secondary-btn { display: inline-flex; justify-content: center; align-items: center; gap: 7px; padding: 10px 15px; border-radius: 9px; background: #17223E; border: 1px solid #293653; color: #C5CEE2; font-size: 12px; font-weight: 600; }
+    .secondary-btn:hover { background: #202D4B; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 100; display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: #14213C; border: 1px solid #344564; border-radius: 12px; color: #EDF3FF; box-shadow: 0 15px 40px #0005; opacity: 0; transform: translateY(12px); pointer-events: none; transition: .25s; font-size: 13px; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .avatar { display: flex; align-items: center; justify-content: center; border-radius: 12px; background: linear-gradient(135deg,#7867FF,#43D9FF); color: white; font-weight: 800; }
+    @media(max-width: 1023px) { .sidebar { transform: translateX(-100%); transition: transform .25s; position: fixed; z-index: 50; height: 100vh; top: 0; left: 0; width: 260px; } .sidebar.open { transform: translateX(0); } .overlay.show { display: block; } }
+    @media(max-width: 640px) { .setting-row { align-items: flex-start; } .main-content { padding: 17px !important; } }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div id="overlay" class="overlay hidden fixed inset-0 bg-black/60 z-40 lg:hidden"></div>
+
+  <aside id="sidebar" class="sidebar fixed left-0 top-0 bottom-0 w-[260px] flex flex-col p-5 overflow-y-auto">
+    <a href="index.html" class="flex items-center gap-3 px-2 mb-9 mt-1">
+      <div class="avatar w-10 h-10 text-xl"><i class='bx bx-link-alt'></i></div>
+      <div>
+        <div class="text-lg font-extrabold tracking-wide">NEXT<span class="text-violet-400">CHAIN</span></div>
+        <div class="text-[10px] muted tracking-[2px] mt-0.5">ADMINISTRATION</div>
+      </div>
+    </a>
+
+    <div class="text-[10px] font-bold muted uppercase tracking-[1.7px] px-3 mb-3">Workspace</div>
+    <nav class="space-y-1">
+      <a href="index.html" class="nav-link"><i class='bx bx-grid-alt'></i> Dashboard</a>
+      <a href="user.html" class="nav-link"><i class='bx bx-user'></i> Users</a>
+      <a href="investment.html" class="nav-link"><i class='bx bx-layer'></i> Investments</a>
+      <a href="deposit.html" class="nav-link"><i class='bx bx-wallet'></i> Deposits</a>
+      <a href="withdrawals.html" class="nav-link"><i class='bx bx-money-withdraw'></i> Withdrawals</a>
+      <a href="transaction.html" class="nav-link"><i class='bx bx-transfer-alt'></i> Transactions</a>
+      <a href="support.html" class="nav-link"><i class='bx bx-message-square-detail'></i> Support</a>
+      <a href="report-notification.html" class="nav-link"><i class='bx bx-bar-chart-alt-2'></i> Reports & Notifications</a>
+    </nav>
+
+    <div class="text-[10px] font-bold muted uppercase tracking-[1.7px] px-3 mb-3 mt-8">Preferences</div>
+    <nav class="space-y-1">
+      <a href="settings.html" class="nav-link active"><i class='bx bx-cog'></i> Settings</a>
+    </nav>
+
+    <div class="mt-auto pt-6">
+      <div class="rounded-xl border border-[#253252] bg-[#101831] p-4 mb-4">
+        <div class="flex items-center gap-2 text-xs font-semibold"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Admin workspace</div>
+        <p class="muted text-[11px] mt-2 leading-5">Frontend prototype mode. Changes are not connected to a live platform.</p>
+      </div>
+      <button id="logoutBtn" class="nav-link w-full"><i class='bx bx-log-out'></i> Log out</button>
+    </div>
+  </aside>
+
+  <main class="lg:ml-[260px] min-h-screen">
+    <header class="h-[76px] border-b border-[#1D2945] flex items-center justify-between px-5 md:px-8 sticky top-0 z-30 bg-[#080D20]/95 backdrop-blur">
+      <div class="flex items-center gap-3">
+        <button id="menuBtn" class="lg:hidden text-2xl text-slate-300" aria-label="Open menu"><i class='bx bx-menu'></i></button>
+        <div>
+          <div class="text-sm font-bold">Settings</div>
+          <div class="text-[11px] muted mt-1 hidden sm:block">Manage your administrator preferences</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:block text-right">
+          <div id="headerAdminName" class="text-xs font-semibold">Administrator</div>
+          <div class="text-[10px] muted mt-1">Platform Admin</div>
+        </div>
+        <div id="headerAvatar" class="avatar w-10 h-10 text-sm">A</div>
+      </div>
+    </header>
+
+    <div class="main-content p-6 md:p-8 max-w-[1450px] mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7">
+        <div>
+          <div class="flex items-center gap-2 text-[11px] muted mb-3"><span>Admin</span><i class='bx bx-chevron-right'></i><span class="text-violet-300">Settings</span></div>
+          <h1 class="text-2xl md:text-[30px] font-extrabold tracking-tight">Platform settings</h1>
+          <p class="muted text-sm mt-2">Configure your preferences and workspace details.</p>
+        </div>
+        <div class="flex items-center gap-2 text-[11px] border border-[#253252] bg-[#101831] rounded-lg px-3 py-2.5 text-slate-300">
+          <i class='bx bx-info-circle text-violet-300 text-base'></i>
+          <span>Local demo settings — not saved to a server</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-[230px_minmax(0,1fr)] gap-6">
+        <div class="panel p-3 h-fit">
+          <div class="px-3 py-3 text-[10px] uppercase tracking-[1.5px] muted font-bold">Settings menu</div>
+          <button class="section-btn active" data-tab="general"><i class='bx bx-sliders'></i><span>General</span></button>
+          <button class="section-btn" data-tab="profile"><i class='bx bx-user-circle'></i><span>Admin profile</span></button>
+          <button class="section-btn" data-tab="security"><i class='bx bx-shield-quarter'></i><span>Security</span></button>
+          <button class="section-btn" data-tab="notifications"><i class='bx bx-bell'></i><span>Notifications</span></button>
+          <button class="section-btn" data-tab="platform"><i class='bx bx-cog'></i><span>Platform configuration</span></button>
+          <button class="section-btn" data-tab="appearance"><i class='bx bx-palette'></i><span>Appearance</span></button>
+        </div>
+
+        <div class="min-w-0">
+          <!-- GENERAL -->
+          <section id="tab-general" class="tab-content active panel p-5 md:p-7">
+            <div class="mb-6">
+              <h2 class="font-bold text-base">General settings</h2>
+              <p class="muted text-xs mt-2">Basic information displayed across the admin workspace.</p>
+            </div>
+            <form id="generalForm">
+              <div class="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="label" for="platformName">Platform name</label>
+                  <input id="platformName" class="field" value="NEXTCHAIN" maxlength="60" required>
+                </div>
+                <div>
+                  <label class="label" for="supportEmail">Support email</label>
+                  <input id="supportEmail" type="email" class="field" placeholder="support@example.com">
+                </div>
+                <div>
+                  <label class="label" for="timezone">Timezone</label>
+                  <select id="timezone" class="field">
+                    <option value="Africa/Lagos">Africa/Lagos (WAT)</option>
+                    <option value="UTC">UTC</option>
+                    <option value="Europe/London">Europe/London</option>
+                    <option value="America/New_York">America/New_York</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="label" for="dateFormat">Date format</label>
+                  <select id="dateFormat" class="field">
+                    <option value="DD MMM YYYY">DD MMM YYYY</option>
+                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mt-6 flex justify-end"><button class="primary-btn" type="submit"><i class='bx bx-save'></i> Save general settings</button></div>
+            </form>
+          </section>
+
+          <!-- PROFILE -->
+          <section id="tab-profile" class="tab-content panel p-5 md:p-7">
+            <div class="mb-6">
+              <h2 class="font-bold text-base">Administrator profile</h2>
+              <p class="muted text-xs mt-2">Update the name and contact details displayed in this demo.</p>
+            </div>
+            <div class="flex items-center gap-4 mb-7">
+              <div id="profileAvatar" class="avatar w-16 h-16 text-xl">A</div>
+              <div>
+                <div id="profileDisplayName" class="font-bold">Administrator</div>
+                <div class="muted text-xs mt-1">Administrator account</div>
+                <div class="text-[10px] text-violet-300 mt-2">Profile preview</div>
+              </div>
+            </div>
+            <form id="profileForm">
+              <div class="grid sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="label" for="adminName">Display name</label>
+                  <input id="adminName" class="field" placeholder="Administrator" maxlength="70" value="Administrator" required>
+                </div>
+                <div>
+                  <label class="label" for="adminEmail">Email address</label>
+                  <input id="adminEmail" type="email" class="field" placeholder="admin@example.com">
+                </div>
+                <div>
+                  <label class="label" for="adminRole">Role</label>
+                  <input id="adminRole" class="field" value="Platform Administrator" disabled>
+                </div>
+                <div>
+                  <label class="label" for="adminPhone">Contact number (optional)</label>
+                  <input id="adminPhone" type="tel" class="field" placeholder="Enter contact number">
+                </div>
+              </div>
+              <div class="mt-6 flex justify-end"><button class="primary-btn" type="submit"><i class='bx bx-save'></i> Save profile</button></div>
+            </form>
+          </section>
+
+          <!-- SECURITY -->
+          <section id="tab-security" class="tab-content space-y-5">
+            <div class="panel p-5 md:p-7">
+              <div class="mb-5">
+                <h2 class="font-bold text-base">Security preferences</h2>
+                <p class="muted text-xs mt-2">Demo controls for the administrator workspace.</p>
+              </div>
+              <div class="setting-row">
+                <div class="min-w-0">
+                  <div class="text-sm font-semibold">Two-step verification</div>
+                  <p class="muted text-xs mt-1 leading-5">Preview a preference for requiring an additional sign-in step.</p>
+                </div>
+                <label class="toggle"><input id="twoFactor" type="checkbox"><span class="slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="min-w-0">
+                  <div class="text-sm font-semibold">Login alerts</div>
+                  <p class="muted text-xs mt-1 leading-5">Show a preference for notifications about new sign-ins.</p>
+                </div>
+                <label class="toggle"><input id="loginAlerts" type="checkbox" checked><span class="slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div class="min-w-0">
+                  <div class="text-sm font-semibold">Session timeout reminder</div>
+                  <p class="muted text-xs mt-1 leading-5">Display a preference for reminders about long sessions.</p>
+                </div>
+                <label class="toggle"><input id="sessionReminder" type="checkbox" checked><span class="slider"></span></label>
+              </div>
+              <div class="mt-5 flex justify-end"><button class="primary-btn" id="saveSecurity" type="button"><i class='bx bx-shield-quarter'></i> Save security preferences</button></div>
+              <p class="text-[11px] muted mt-4"><i class='bx bx-info-circle'></i> These switches do not enforce actual authentication or security policies.</p>
+            </div>
+
+            <div class="panel p-5 md:p-7">
+              <h2 class="font-bold text-base">Password management</h2>
+              <p class="muted text-xs mt-2 mb-5">Password changes require a connected authentication service, which is not included here.</p>
+              <button id="passwordInfo" class="secondary-btn" type="button"><i class='bx bx-lock-alt'></i> Password management information</button>
+            </div>
+          </section>
+
+          <!-- NOTIFICATIONS -->
+          <section id="tab-notifications" class="tab-content panel p-5 md:p-7">
+            <div class="mb-5">
+              <h2 class="font-bold text-base">Notification preferences</h2>
+              <p class="muted text-xs mt-2">Choose which notification preferences are enabled in this demo.</p>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">New user registrations</div><p class="muted text-xs mt-1">Preference for registration alerts.</p></div>
+              <label class="toggle"><input id="notifyUsers" type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">Deposit updates</div><p class="muted text-xs mt-1">Preference for deposit-related alerts.</p></div>
+              <label class="toggle"><input id="notifyDeposits" type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">Withdrawal requests</div><p class="muted text-xs mt-1">Preference for withdrawal-related alerts.</p></div>
+              <label class="toggle"><input id="notifyWithdrawals" type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">Support tickets</div><p class="muted text-xs mt-1">Preference for support inbox alerts.</p></div>
+              <label class="toggle"><input id="notifySupport" type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">Weekly summary</div><p class="muted text-xs mt-1">Preference for a weekly platform summary.</p></div>
+              <label class="toggle"><input id="notifyWeekly" type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="mt-6 flex justify-end"><button class="primary-btn" id="saveNotifications" type="button"><i class='bx bx-save'></i> Save notification preferences</button></div>
+          </section>
+
+          <!-- PLATFORM -->
+          <section id="tab-platform" class="tab-content panel p-5 md:p-7">
+            <div class="mb-6">
+              <h2 class="font-bold text-base">Platform configuration</h2>
+              <p class="muted text-xs mt-2">Preview high-level platform preferences. These do not change a live service.</p>
+            </div>
+            <div class="space-y-5">
+              <div>
+                <label class="label" for="platformMode">Platform mode</label>
+                <select id="platformMode" class="field">
+                  <option value="prototype">Frontend prototype</option>
+                  <option value="maintenance">Maintenance preview</option>
+                  <option value="development">Development preview</option>
+                </select>
+                <p class="muted text-[11px] mt-2">This selection only updates the local interface; it does not enable maintenance mode.</p>
+              </div>
+              <div>
+                <label class="label" for="defaultCurrency">Display currency</label>
+                <select id="defaultCurrency" class="field">
+                  <option value="USD">USD — US Dollar</option>
+                  <option value="NGN">NGN — Nigerian Naira</option>
+                  <option value="GBP">GBP — British Pound</option>
+                  <option value="EUR">EUR — Euro</option>
+                </select>
+              </div>
+              <div>
+                <label class="label" for="minWithdrawal">Minimum withdrawal display amount</label>
+                <input id="minWithdrawal" type="number" min="0" step="0.01" class="field" value="10">
+                <p class="muted text-[11px] mt-2">Demonstration value only. No withdrawal rules are enforced.</p>
+              </div>
+              <div>
+                <label class="label" for="maintenanceMessage">Maintenance message preview</label>
+                <textarea id="maintenanceMessage" rows="3" maxlength="300" class="field resize-y" placeholder="Enter a message to preview...">NEXTCHAIN is undergoing scheduled maintenance. Please check back soon.</textarea>
+              </div>
+            </div>
+            <div class="mt-6 flex justify-end"><button class="primary-btn" id="savePlatform" type="button"><i class='bx bx-save'></i> Save configuration</button></div>
+          </section>
+
+          <!-- APPEARANCE -->
+          <section id="tab-appearance" class="tab-content panel p-5 md:p-7">
+            <div class="mb-6">
+              <h2 class="font-bold text-base">Appearance</h2>
+              <p class="muted text-xs mt-2">Customize how this demo dashboard looks.</p>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">Compact sidebar</div><p class="muted text-xs mt-1">Use a narrower navigation sidebar on larger screens.</p></div>
+              <label class="toggle"><input id="compactSidebar" type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="text-sm font-semibold">Reduce decorative effects</div><p class="muted text-xs mt-1">Reduce transitions and decorative visual effects.</p></div>
+              <label class="toggle"><input id="reduceEffects" type="checkbox"><span class="slider"></span></label>
+            </div>
+            <div class="mt-6 flex justify-end"><button class="primary-btn" id="saveAppearance" type="button"><i class='bx bx-palette'></i> Apply appearance</button></div>
+          </section>
+
+          <div class="mt-5 flex items-start gap-3 rounded-xl border border-[#253252] bg-[#101831]/70 p-4">
+            <i class='bx bx-info-circle text-violet-300 text-lg mt-0.5'></i>
+            <div>
+              <div class="text-xs font-semibold text-slate-200">Prototype limitation</div>
+              <p class="muted text-[11px] leading-5 mt-1">Settings are stored only in this page's current browser session. They are not synchronized with other pages, accounts, or a server and may reset when you refresh or close the page.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-10 pt-5 border-t border-[#1D2945] flex flex-col sm:flex-row justify-between gap-2 text-[11px] muted">
+        <span>© <span id="year"></span> NEXTCHAIN. Admin workspace prototype.</span>
+        <span>Settings preview · No live platform connection</span>
+      </footer>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"><i class='bx bx-check-circle text-emerald-400 text-xl'></i><span id="toastMessage">Settings updated</span></div>
+
+  <script>
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+    $("#year").textContent = new Date().getFullYear();
+
+    // Settings are held in memory only. No backend or persistent storage.
+    let toastTimer;
+    function showToast(message) {
+      $("#toastMessage").textContent = message;
+      $("#toast").classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => $("#toast").classList.remove("show"), 2800);
+    }
+
+    // Sidebar on mobile
+    const sidebar = $("#sidebar");
+    const overlay = $("#overlay");
+    $("#menuBtn").addEventListener("click", () => {
+      sidebar.classList.add("open");
+      overlay.classList.remove("hidden");
+      overlay.classList.add("show");
+    });
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      overlay.classList.remove("show");
+      overlay.classList.add("hidden");
+    }
+    overlay.addEventListener("click", closeSidebar);
+
+    // Settings section navigation
+    $$(".section-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        $$(".section-btn").forEach(item => item.classList.remove("active"));
+        $$(".tab-content").forEach(section => section.classList.remove("active"));
+        button.classList.add("active");
+        $("#tab-" + button.dataset.tab).classList.add("active");
+        closeSidebar();
+      });
+    });
+
+    // Update the profile preview
+    function updateProfilePreview() {
+      const name = $("#adminName").value.trim() || "Administrator";
+      const initial = name.charAt(0).toUpperCase();
+      $("#profileDisplayName").textContent = name;
+      $("#headerAdminName").textContent = name;
+      $("#profileAvatar").textContent = initial;
+      $("#headerAvatar").textContent = initial;
+    }
+
+    $("#adminName").addEventListener("input", updateProfilePreview);
+
+    $("#generalForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (!event.currentTarget.reportValidity()) return;
+      showToast("General settings updated for this demo.");
+    });
+
+    $("#profileForm").addEventListener("submit", event => {
+      event.preventDefault();
+      if (!event.currentTarget.reportValidity()) return;
+      updateProfilePreview();
+      showToast("Profile preview updated.");
+    });
+
+    $("#saveSecurity").addEventListener("click", () => {
+      showToast("Security preferences updated for this demo.");
+    });
+
+    $("#saveNotifications").addEventListener("click", () => {
+      showToast("Notification preferences updated for this demo.");
+    });
+
+    $("#savePlatform").addEventListener("click", () => {
+      showToast("Platform configuration updated for this demo.");
+    });
+
+    $("#saveAppearance").addEventListener("click", () => {
+      if ($("#compactSidebar").checked) {
+        sidebar.style.width = "225px";
+        document.querySelector("main").style.marginLeft = "225px";
+      } else {
+        sidebar.style.width = "";
+        document.querySelector("main").style.marginLeft = "";
+      }
+
+      if ($("#reduceEffects").checked) {
+        document.documentElement.style.scrollBehavior = "auto";
+        document.querySelectorAll("*").forEach(element => {
+          element.style.transitionDuration = "0s";
+        });
+      } else {
+        document.documentElement.style.scrollBehavior = "";
+        document.querySelectorAll("*").forEach(element => {
+          element.style.transitionDuration = "";
+        });
+      }
+
+      showToast("Appearance updated in this page.");
+    });
+
+    $("#passwordInfo").addEventListener("click", () => {
+      showToast("Password changes require a connected authentication service.");
+    });
+
+    $("#logoutBtn").addEventListener("click", () => {
+      const confirmed = confirm("Return to the admin login page?");
+      if (confirmed) {
+        window.location.href = "Login.html";
+      }
+    });
+  </script>
+</body>
+</html>

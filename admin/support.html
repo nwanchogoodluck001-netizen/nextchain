@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080D20">
+  <title>Support Center | NEXTCHAIN Admin</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#080D20',
+            panel: '#101831',
+            panelLight: '#151F3D',
+            violet: '#7867FF',
+            ice: '#43D9FF',
+            muted: '#8994B5'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #080D20;
+      color: #F5F7FF;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .sidebar {
+      width: 258px;
+      background: #0B1229;
+      border-right: 1px solid rgba(255,255,255,.07);
+      transition: transform .25s ease;
+    }
+
+    .main-content {
+      margin-left: 258px;
+      min-height: 100vh;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 12px 14px;
+      border-radius: 11px;
+      color: #8994B5;
+      font-size: 13px;
+      font-weight: 500;
+      transition: .2s ease;
+    }
+
+    .nav-link i {
+      font-size: 19px;
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,.045);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(100deg, rgba(120,103,255,.2), rgba(67,217,255,.055));
+      color: #fff;
+      border: 1px solid rgba(120,103,255,.17);
+    }
+
+    .nav-link.active i {
+      color: #9B90FF;
+    }
+
+    .card {
+      background: #101831;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: #0B1229;
+      border: 1px solid rgba(255,255,255,.09);
+      color: #F5F7FF;
+      border-radius: 10px;
+      padding: 11px 13px;
+      outline: none;
+      font-size: 12px;
+      transition: border-color .2s;
+    }
+
+    .input-field:focus {
+      border-color: #7867FF;
+    }
+
+    .input-field::placeholder {
+      color: #687493;
+    }
+
+    select.input-field {
+      cursor: pointer;
+    }
+
+    select.input-field option {
+      background: #101831;
+      color: #fff;
+    }
+
+    textarea.input-field {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.6;
+    }
+
+    .stat-icon {
+      width: 43px;
+      height: 43px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #7867FF;
+      color: white;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+
+    .primary-btn:hover {
+      background: #6856F0;
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #151F3D;
+      color: #CFD6EB;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: .2s ease;
+    }
+
+    .secondary-btn:hover {
+      border-color: rgba(120,103,255,.55);
+      color: #fff;
+    }
+
+    .ticket-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .ticket-item {
+      padding: 17px 18px;
+      border-bottom: 1px solid rgba(255,255,255,.055);
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+      border-left: 2px solid transparent;
+    }
+
+    .ticket-item:hover {
+      background: rgba(255,255,255,.025);
+    }
+
+    .ticket-item.selected {
+      background: rgba(120,103,255,.07);
+      border-left-color: #7867FF;
+    }
+
+    .ticket-item:last-child {
+      border-bottom: none;
+    }
+
+    .ticket-id {
+      color: #9B90FF;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .03em;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-open {
+      color: #78B9FF;
+      background: rgba(120,185,255,.09);
+    }
+
+    .status-pending {
+      color: #F5C76B;
+      background: rgba(245,199,107,.09);
+    }
+
+    .status-resolved {
+      color: #4ADEA5;
+      background: rgba(74,222,165,.09);
+    }
+
+    .status-closed {
+      color: #A5AEC7;
+      background: rgba(165,174,199,.09);
+    }
+
+    .priority {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .priority-low {
+      color: #78B9FF;
+    }
+
+    .priority-medium {
+      color: #F5C76B;
+    }
+
+    .priority-high {
+      color: #FF8585;
+    }
+
+    .priority-urgent {
+      color: #FF6262;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th {
+      text-align: left;
+      color: #7884A5;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 15px 18px;
+      white-space: nowrap;
+      background: rgba(255,255,255,.018);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    td {
+      padding: 15px 18px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.045);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      transition: background .2s;
+      cursor: pointer;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,.025);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(120,103,255,.15);
+      color: #B6AEFF;
+    }
+
+    .conversation {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      max-width: 88%;
+      padding: 13px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .message.user {
+      align-self: flex-start;
+      background: #151F3D;
+      border: 1px solid rgba(255,255,255,.055);
+      border-top-left-radius: 4px;
+    }
+
+    .message.admin {
+      align-self: flex-end;
+      background: rgba(120,103,255,.14);
+      border: 1px solid rgba(120,103,255,.16);
+      border-top-right-radius: 4px;
+    }
+
+    .message-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      font-size: 10px;
+    }
+
+    .empty-state {
+      padding: 45px 20px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(120,103,255,.1);
+      border: 1px solid rgba(120,103,255,.15);
+      border-radius: 17px;
+      color: #A69AFF;
+      font-size: 27px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(2,5,16,.8);
+      backdrop-filter: blur(7px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 650px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: #101831;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      box-shadow: 0 25px 100px rgba(0,0,0,.4);
+      animation: modalIn .2s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      font-size: 12px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: #8994B5;
+    }
+
+    .detail-value {
+      text-align: right;
+      color: #E8ECF8;
+      overflow-wrap: anywhere;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 200;
+      max-width: calc(100% - 40px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 17px;
+      background: #172440;
+      border: 1px solid rgba(120,103,255,.35);
+      border-radius: 12px;
+      color: #E9EDFF;
+      font-size: 12px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.3);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: .25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .pagination-btn {
+      min-width: 31px;
+      height: 31px;
+      padding: 0 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      color: #9BA6C4;
+      background: #101831;
+      font-size: 11px;
+    }
+
+    .pagination-btn.active {
+      background: #7867FF;
+      border-color: #7867FF;
+      color: white;
+    }
+
+    .pagination-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .mobile-overlay {
+      display: none;
+    }
+
+    @media (max-width: 1200px) {
+      .ticket-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        z-index: 80;
+        inset: 0 auto 0 0;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-overlay.show {
+        display: block;
+        position: fixed;
+        z-index: 70;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-padding {
+        padding: 19px 14px !important;
+      }
+
+      .mobile-title {
+        font-size: 20px !important;
+      }
+
+      .stat-card {
+        padding: 15px !important;
+      }
+
+      .stat-number {
+        font-size: 20px !important;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .top-actions {
+        width: 100%;
+      }
+
+      .top-actions button {
+        flex: 1;
+      }
+
+      .ticket-item {
+        padding: 15px 13px;
+      }
+
+      .toast {
+        right: 12px;
+        bottom: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mobileOverlay" class="mobile-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar fixed top-0 left-0 bottom-0 flex flex-col p-5 overflow-y-auto">
+    <a href="index.html" class="flex items-center gap-3 px-1 mb-9">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+           style="background:linear-gradient(135deg,#7867FF,#43D9FF)">
+        <i class="bx bx-cube-alt text-white text-2xl"></i>
+      </div>
+      <div>
+        <div class="font-extrabold tracking-widest text-white text-lg">NEXTCHAIN</div>
+        <div class="text-[9px] tracking-[.2em] text-muted uppercase mt-0.5">Admin Console</div>
+      </div>
+    </a>
+
+    <div class="text-[10px] text-slate-600 font-semibold tracking-[.16em] uppercase px-3 mb-3">
+      Main Menu
+    </div>
+
+    <nav class="space-y-1">
+      <a href="index.html" class="nav-link">
+        <i class="bx bx-grid-alt"></i><span>Dashboard</span>
+      </a>
+      <a href="user.html" class="nav-link">
+        <i class="bx bx-user"></i><span>Users</span>
+      </a>
+      <a href="investment.html" class="nav-link">
+        <i class="bx bx-trending-up"></i><span>Investments</span>
+      </a>
+    </nav>
+
+    <div class="text-[10px] text-slate-600 font-semibold tracking-[.16em] uppercase px-3 mt-8 mb-3">
+      Finance
+    </div>
+
+    <nav class="space-y-1">
+      <a href="deposit.html" class="nav-link">
+        <i class="bx bx-wallet"></i><span>Deposits</span>
+      </a>
+      <a href="withdrawals.html" class="nav-link">
+        <i class="bx bx-money-withdraw"></i><span>Withdrawals</span>
+      </a>
+      <a href="transaction.html" class="nav-link">
+        <i class="bx bx-transfer-alt"></i><span>Transactions</span>
+      </a>
+    </nav>
+
+    <div class="text-[10px] text-slate-600 font-semibold tracking-[.16em] uppercase px-3 mt-8 mb-3">
+      Management
+    </div>
+
+    <nav class="space-y-1">
+      <a href="support.html" class="nav-link active">
+        <i class="bx bx-message-square-detail"></i><span>Support</span>
+      </a>
+      <a href="report-notification.html" class="nav-link">
+        <i class="bx bx-bar-chart-alt-2"></i><span>Reports</span>
+      </a>
+      <a href="settings.html" class="nav-link">
+        <i class="bx bx-cog"></i><span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="mt-auto pt-6">
+      <div class="rounded-xl p-4 mb-5"
+           style="background:linear-gradient(140deg,rgba(120,103,255,.12),rgba(67,217,255,.04));border:1px solid rgba(120,103,255,.14)">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="text-[11px] font-semibold text-slate-200">Support Workspace</span>
+        </div>
+        <p class="text-[10px] text-muted leading-relaxed">
+          Manage customer inquiries and support requests from one place.
+        </p>
+      </div>
+
+      <a href="settings.html" class="nav-link">
+        <i class="bx bx-user-circle"></i><span>Admin Profile</span>
+      </a>
+
+      <button onclick="showToast('Connect your authentication system to enable logout.')"
+              class="nav-link w-full text-left mt-1">
+        <i class="bx bx-log-out"></i><span>Logout</span>
+      </button>
+
+      <div class="border-t border-white/5 mt-5 pt-4 px-3 text-[10px] text-slate-600">
+        NEXTCHAIN Admin · UI Preview
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 px-5 md:px-8 py-4 flex items-center justify-between gap-4"
+            style="background:rgba(8,13,32,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)">
+      <div class="flex items-center gap-3 min-w-0">
+        <button onclick="openSidebar()"
+                class="lg:hidden w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-white/10 text-slate-300">
+          <i class="bx bx-menu text-2xl"></i>
+        </button>
+
+        <div class="min-w-0">
+          <div class="text-[10px] text-muted mb-1">Management / Support</div>
+          <h1 class="mobile-title text-xl font-bold tracking-tight">Support Center</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="showToast('No new notifications in this preview.')"
+                class="relative w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-white/10 text-slate-300 hover:text-white">
+          <i class="bx bx-bell text-xl"></i>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-3 pl-3 border-l border-white/10">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
+               style="background:linear-gradient(135deg,#7867FF,#43D9FF)">A</div>
+          <div>
+            <div class="text-xs font-semibold">Administrator</div>
+            <div class="text-[10px] text-muted mt-1">Platform Manager</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-padding p-5 md:p-8 max-w-[1600px] mx-auto">
+      <!-- Page Intro -->
+      <section class="flex flex-col xl:flex-row xl:items-center justify-between gap-5 mb-7">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2 h-2 rounded-full bg-violet"></span>
+            <span class="text-[10px] text-violet-300 tracking-[.16em] uppercase font-semibold">
+              Customer Experience
+            </span>
+          </div>
+
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">Support Management</h2>
+
+          <p class="text-xs text-muted mt-2 leading-relaxed max-w-xl">
+            Review support requests, manage ticket priorities, and keep track of customer conversations.
+          </p>
+        </div>
+
+        <div class="top-actions flex flex-wrap items-center gap-2">
+          <button onclick="resetFilters()" class="secondary-btn">
+            <i class="bx bx-refresh text-base"></i> Reset Filters
+          </button>
+
+          <button onclick="openNewTicketModal()" class="primary-btn">
+            <i class="bx bx-plus text-base"></i> New Ticket
+          </button>
+        </div>
+      </section>
+
+      <!-- Preview Notice -->
+      <div class="flex items-start gap-3 p-4 rounded-xl mb-6"
+           style="background:rgba(120,103,255,.07);border:1px solid rgba(120,103,255,.16)">
+        <i class="bx bx-info-circle text-violet-300 text-xl mt-0.5"></i>
+        <div>
+          <p class="text-xs font-semibold text-slate-200">Support preview mode</p>
+          <p class="text-[11px] text-muted leading-relaxed mt-1">
+            This page uses temporary browser-side data. Tickets, replies, and status changes are not saved to a server,
+            and no messages are delivered to customers.
+          </p>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Total Tickets</p>
+              <h3 id="totalTickets" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">All support requests</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(120,103,255,.13);color:#A69AFF">
+              <i class="bx bx-message-square-detail"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Open Tickets</p>
+              <h3 id="openTickets" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">Awaiting support</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(120,185,255,.1);color:#78B9FF">
+              <i class="bx bx-envelope-open"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Pending Replies</p>
+              <h3 id="pendingTickets" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">Needs attention</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(245,199,107,.1);color:#F5C76B">
+              <i class="bx bx-time-five"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Resolved</p>
+              <h3 id="resolvedTickets" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">Resolved requests</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(74,222,165,.1);color:#4ADEA5">
+              <i class="bx bx-check-circle"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ticket Filters -->
+      <section class="card p-5 mb-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div>
+            <h3 class="font-semibold text-sm">Support Tickets</h3>
+            <p class="text-[11px] text-muted mt-1">Find and manage customer requests</p>
+          </div>
+
+          <span id="ticketCount"
+                class="text-[10px] rounded-lg px-3 py-2"
+                style="background:rgba(255,255,255,.04);color:#A7B2D1">
+            0 tickets
+          </span>
+        </div>
+
+        <div class="filter-grid grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+          <div class="relative">
+            <i class="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg"></i>
+            <input id="searchInput" type="search" class="input-field pl-10"
+                   placeholder="Search tickets, users..."
+                   oninput="applyFilters()">
+          </div>
+
+          <select id="statusFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All statuses</option>
+            <option value="Open">Open</option>
+            <option value="Pending">Pending</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+
+          <select id="priorityFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All priorities</option>
+            <option value="Urgent">Urgent</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+
+          <select id="categoryFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All categories</option>
+            <option value="Account">Account</option>
+            <option value="Deposit">Deposit</option>
+            <option value="Withdrawal">Withdrawal</option>
+            <option value="Investment">Investment</option>
+            <option value="Security">Security</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Ticket List + Details -->
+      <section class="ticket-layout">
+        <!-- Ticket List -->
+        <div class="card overflow-hidden">
+          <div class="flex items-center justify-between gap-3 p-5"
+               style="border-bottom:1px solid rgba(255,255,255,.06)">
+            <div>
+              <h3 class="font-semibold text-sm">Ticket Inbox</h3>
+              <p class="text-[11px] text-muted mt-1">Select a ticket to view its details</p>
+            </div>
+            <i class="bx bx-inbox text-xl text-slate-500"></i>
+          </div>
+
+          <div id="ticketList">
+            <!-- Generated by JavaScript -->
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4"
+               style="border-top:1px solid rgba(255,255,255,.06)">
+            <p id="paginationInfo" class="text-[11px] text-muted">Showing 0 tickets</p>
+            <div id="pagination" class="flex items-center gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Ticket Detail Panel -->
+        <aside class="card overflow-hidden">
+          <div class="flex items-center justify-between gap-3 p-5"
+               style="border-bottom:1px solid rgba(255,255,255,.06)">
+            <div>
+              <h3 class="font-semibold text-sm">Ticket Details</h3>
+              <p class="text-[11px] text-muted mt-1">Request information</p>
+            </div>
+            <i class="bx bx-detail text-xl text-slate-500"></i>
+          </div>
+
+          <div id="ticketDetails" class="p-5">
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="bx bx-message-square-detail"></i>
+              </div>
+              <h3 class="text-sm font-semibold text-slate-200">No ticket selected</h3>
+              <p class="text-[11px] text-muted mt-2 leading-relaxed">
+                Select a support ticket to review its information and conversation.
+              </p>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <!-- Footer -->
+      <footer class="flex flex-col sm:flex-row items-center justify-between gap-3 py-7 mt-2">
+        <p class="text-[10px] text-slate-600">
+          © <span id="currentYear"></span> NEXTCHAIN. All rights reserved.
+        </p>
+        <div class="flex items-center gap-2 text-[10px] text-slate-600">
+          <i class="bx bx-shield-quarter text-base"></i>
+          <span>Support management · Frontend preview</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- New Ticket Modal -->
+  <div id="newTicketModal" class="modal-overlay" onclick="handleModalBackdrop(event, 'newTicketModal')">
+    <div class="modal">
+      <div class="flex items-center justify-between gap-3 p-5 md:p-6"
+           style="border-bottom:1px solid rgba(255,255,255,.07)">
+        <div>
+          <h3 class="font-bold text-base">Create Support Ticket</h3>
+          <p class="text-[11px] text-muted mt-1">Create a local preview ticket</p>
+        </div>
+
+        <button onclick="closeNewTicketModal()"
+                class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-white"
+                style="background:rgba(255,255,255,.05)">
+          <i class="bx bx-x text-xl"></i>
+        </button>
+      </div>
+
+      <form id="newTicketForm" class="p-5 md:p-6 space-y-4">
+        <div>
+          <label class="block text-xs text-slate-300 mb-2">Customer Name</label>
+          <input id="newCustomerName" class="input-field" placeholder="Enter customer name" required>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-300 mb-2">Customer Email</label>
+          <input id="newCustomerEmail" type="email" class="input-field" placeholder="customer@example.com" required>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-300 mb-2">Subject</label>
+          <input id="newTicketSubject" class="input-field" placeholder="Briefly describe the issue" required>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs text-slate-300 mb-2">Category</label>
+            <select id="newTicketCategory" class="input-field" required>
+              <option value="Account">Account</option>
+              <option value="Deposit">Deposit</option>
+              <option value="Withdrawal">Withdrawal</option>
+              <option value="Investment">Investment</option>
+              <option value="Security">Security</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-300 mb-2">Priority</label>
+            <select id="newTicketPriority" class="input-field" required>
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-slate-300 mb-2">Message</label>
+          <textarea id="newTicketMessage" class="input-field" placeholder="Describe the customer's issue..." required></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeNewTicketModal()" class="secondary-btn">Cancel</button>
+          <button type="submit" class="primary-btn">
+            <i class="bx bx-plus"></i> Create Ticket
+          </button>
+        </div>
+
+        <p class="text-[10px] text-muted leading-relaxed">
+          This creates a temporary ticket in this page only. It does not send an email or save information to a server.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <i class="bx bx-info-circle text-violet-300 text-lg"></i>
+    <span id="toastMessage">Notice</span>
+  </div>
+
+  <script>
+    /*
+      NEXTCHAIN SUPPORT CENTER
+
+      Frontend-only prototype.
+      Tickets and replies are stored in memory while this page remains open.
+      Reloading the page clears tickets created in this preview.
+      No Firebase, backend, email delivery, or customer messaging is configured.
+    */
+
+    const tickets = [];
+
+    const pageSize = 6;
+    let currentPage = 1;
+    let filteredTickets = [];
+    let selectedTicketId = null;
+    let toastTimer;
+
+    const statusClasses = {
+      Open: 'status-open',
+      Pending: 'status-pending',
+      Resolved: 'status-resolved',
+      Closed: 'status-closed'
+    };
+
+    const priorityClasses = {
+      Low: 'priority-low',
+      Medium: 'priority-medium',
+      High: 'priority-high',
+      Urgent: 'priority-urgent'
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[character]);
+    }
+
+    function formatDate(value) {
+      if (!value) return '—';
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) return String(value);
+
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function shortDate(value) {
+      if (!value) return '—';
+
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) return String(value);
+
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    function initials(name) {
+      return String(name || 'U')
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0))
+        .join('')
+        .toUpperCase() || 'U';
+    }
+
+    function statusClass(status) {
+      return statusClasses[status] || 'status-open';
+    }
+
+    function priorityClass(priority) {
+      return priorityClasses[priority] || 'priority-medium';
+    }
+
+    function renderStats() {
+      document.getElementById('totalTickets').textContent = tickets.length;
+
+      document.getElementById('openTickets').textContent =
+        tickets.filter(ticket => ticket.status === 'Open').length;
+
+      document.getElementById('pendingTickets').textContent =
+        tickets.filter(ticket => ticket.status === 'Pending').length;
+
+      document.getElementById('resolvedTickets').textContent =
+        tickets.filter(ticket =>
+          ticket.status === 'Resolved' || ticket.status === 'Closed'
+        ).length;
+    }
+
+    function applyFilters() {
+      const search = document.getElementById('searchInput').value.trim().toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      const priority = document.getElementById('priorityFilter').value;
+      const category = document.getElementById('categoryFilter').value;
+
+      filteredTickets = tickets.filter(ticket => {
+        const searchable = [
+          ticket.id,
+          ticket.customerName,
+          ticket.customerEmail,
+          ticket.subject,
+          ticket.category,
+          ticket.message
+        ].join(' ').toLowerCase();
+
+        if (search && !searchable.includes(search)) return false;
+        if (status && ticket.status !== status) return false;
+        if (priority && ticket.priority !== priority) return false;
+        if (category && ticket.category !== category) return false;
+
+        return true;
+      });
+
+      currentPage = 1;
+
+      if (
+        selectedTicketId &&
+        !filteredTickets.some(ticket => ticket.id === selectedTicketId)
+      ) {
+        selectedTicketId = null;
+      }
+
+      renderTicketList();
+      renderTicketDetails();
+    }
+
+    function renderTicketList() {
+      const container = document.getElementById('ticketList');
+      const total = filteredTickets.length;
+      const totalPages = Math.ceil(total / pageSize);
+      const start = (currentPage - 1) * pageSize;
+      const visibleTickets = filteredTickets.slice(start, start + pageSize);
+
+      document.getElementById('ticketCount').textContent =
+        `${total} ${total === 1 ? 'ticket' : 'tickets'}`;
+
+      if (!total) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="bx bx-inbox"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-slate-200">No support tickets</h3>
+            <p class="text-[11px] text-muted max-w-sm mx-auto mt-2 leading-relaxed">
+              No tickets match your current filters. Create a preview ticket or connect your support data source.
+            </p>
+            <button onclick="openNewTicketModal()" class="primary-btn mt-5">
+              <i class="bx bx-plus"></i> Create Ticket
+            </button>
+          </div>
+        `;
+
+        document.getElementById('paginationInfo').textContent = 'Showing 0 tickets';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = visibleTickets.map(ticket => `
+        <div class="ticket-item ${selectedTicketId === ticket.id ? 'selected' : ''}"
+             onclick="selectTicket('${escapeHTML(ticket.id)}')">
+          <div class="flex items-start gap-3">
+            <div class="avatar">${escapeHTML(initials(ticket.customerName))}</div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-3">
+                <p class="text-xs font-semibold text-slate-200 truncate">
+                  ${escapeHTML(ticket.customerName)}
+                </p>
+                <span class="text-[10px] text-muted flex-shrink-0">
+                  ${escapeHTML(shortDate(ticket.createdAt))}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                <span class="ticket-id">${escapeHTML(ticket.id)}</span>
+                <span class="text-[10px] text-slate-600">·</span>
+                <span class="text-[10px] text-muted">${escapeHTML(ticket.category)}</span>
+              </div>
+
+              <p class="text-xs text-slate-300 font-medium mt-3 truncate">
+                ${escapeHTML(ticket.subject)}
+              </p>
+
+              <p class="text-[11px] text-muted mt-1.5 leading-relaxed"
+                 style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">
+                ${escapeHTML(ticket.message)}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-3 mt-3">
+                <span class="status ${statusClass(ticket.status)}">
+                  ${escapeHTML(ticket.status)}
+                </span>
+                <span class="priority ${priorityClass(ticket.priority)}">
+                  <i class="bx bx-flag"></i>${escapeHTML(ticket.priority)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('paginationInfo').textContent =
+        `Showing ${start + 1}–${Math.min(start + pageSize, total)} of ${total} tickets`;
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const container = document.getElementById('pagination');
+
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let html = `
+        <button class="pagination-btn"
+                onclick="changePage(${currentPage - 1})"
+                ${currentPage === 1 ? 'disabled' : ''}
+                aria-label="Previous page">
+          <i class="bx bx-chevron-left"></i>
+        </button>
+      `;
+
+      for (let page = 1; page <= totalPages; page++) {
+        html += `
+          <button class="pagination-btn ${page === currentPage ? 'active' : ''}"
+                  onclick="changePage(${page})">${page}</button>
+        `;
+      }
+
+      html += `
+        <button class="pagination-btn"
+                onclick="changePage(${currentPage + 1})"
+                ${currentPage === totalPages ? 'disabled' : ''}
+                aria-label="Next page">
+          <i class="bx bx-chevron-right"></i>
+        </button>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function changePage(page) {
+      const totalPages = Math.ceil(filteredTickets.length / pageSize);
+
+      if (page < 1 || page > totalPages) return;
+
+      currentPage = page;
+      renderTicketList();
+    }
+
+    function selectTicket(id) {
+      const ticket = tickets.find(item => item.id === id);
+
+      if (!ticket) {
+        showToast('Ticket could not be found.');
+        return;
+      }
+
+      selectedTicketId = id;
+      renderTicketList();
+      renderTicketDetails();
+    }
+
+    function renderTicketDetails() {
+      const container = document.getElementById('ticketDetails');
+      const ticket = tickets.find(item => item.id === selectedTicketId);
+
+      if (!ticket) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="bx bx-message-square-detail"></i>
+            </div>
+            <h3 class="text-sm font-semibold text-slate-200">No ticket selected</h3>
+            <p class="text-[11px] text-muted mt-2 leading-relaxed">
+              Select a support ticket to review its information and conversation.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="flex items-start gap-3 mb-5">
+          <div class="avatar">${escapeHTML(initials(ticket.customerName))}</div>
+          <div class="min-w-0 flex-1">
+            <h3 class="text-sm font-semibold text-slate-100 break-words">
+              ${escapeHTML(ticket.customerName)}
+            </h3>
+            <p class="text-[11px] text-muted mt-1 break-all">
+              ${escapeHTML(ticket.customerEmail)}
+            </p>
+            <p class="ticket-id mt-2">${escapeHTML(ticket.id)}</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-[10px] text-muted uppercase tracking-wider mb-2">
+              Subject
+            </label>
+            <p class="text-xs text-slate-200 leading-relaxed">
+              ${escapeHTML(ticket.subject)}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] text-muted uppercase tracking-wider mb-2">
+                Category
+              </label>
+              <p class="text-xs text-slate-300">${escapeHTML(ticket.category)}</p>
+            </div>
+
+            <div>
+              <label class="block text-[10px] text-muted uppercase tracking-wider mb-2">
+                Created
+              </label>
+              <p class="text-xs text-slate-300">${escapeHTML(shortDate(ticket.createdAt))}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[10px] text-muted uppercase tracking-wider mb-2">
+                Priority
+              </label>
+              <select id="detailPriority" class="input-field" onchange="updateTicketField('priority', this.value)">
+                ${['Low', 'Medium', 'High', 'Urgent'].map(value => `
+                  <option value="${value}" ${ticket.priority === value ? 'selected' : ''}>
+                    ${value}
+                  </option>
+                `).join('')}
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[10px] text-muted uppercase tracking-wider mb-2">
+                Status
+              </label>
+              <select id="detailStatus" class="input-field" onchange="updateTicketField('status', this.value)">
+                ${['Open', 'Pending', 'Resolved', 'Closed'].map(value => `
+                  <option value="${value}" ${ticket.status === value ? 'selected' : ''}>
+                    ${value}
+                  </option>
+                `).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-4" style="border-top:1px solid rgba(255,255,255,.06)">
+            <div class="flex items-center justify-between gap-3 mb-3">
+              <h4 class="text-xs font-semibold">Conversation</h4>
+              <span class="text-[10px] text-muted">
+                ${(ticket.messages || []).length} messages
+              </span>
+            </div>
+
+            <div class="conversation mb-4">
+              ${(ticket.messages || []).map(message => `
+                <div class="message ${message.sender === 'Admin' ? 'admin' : 'user'}">
+                  <div class="message-meta">
+                    <span class="font-semibold text-slate-200">${escapeHTML(message.sender)}</span>
+                    <span class="text-slate-500">${escapeHTML(formatDate(message.date))}</span>
+                  </div>
+                  <p>${escapeHTML(message.text)}</p>
+                </div>
+              `).join('')}
+            </div>
+
+            <form onsubmit="sendReply(event)" class="space-y-3">
+              <label class="block text-[10px] text-muted uppercase tracking-wider">
+                Write a reply
+              </label>
+
+              <textarea id="replyMessage" class="input-field"
+                        placeholder="Type your response..." required></textarea>
+
+              <div class="flex flex-col gap-2">
+                <button type="submit" class="primary-btn w-full">
+                  <i class="bx bx-send"></i> Add Reply
+                </button>
+
+                <button type="button" onclick="markTicketResolved()" class="secondary-btn w-full">
+                  <i class="bx bx-check-circle"></i> Mark as Resolved
+                </button>
+              </div>
+
+              <p class="text-[10px] text-muted leading-relaxed">
+                Replies are only added to this temporary preview. They are not sent to the customer.
+              </p>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateTicketField(field, value) {
+      const ticket = tickets.find(item => item.id === selectedTicketId);
+
+      if (!ticket) return;
+
+      if (field === 'status' && !['Open', 'Pending', 'Resolved', 'Closed'].includes(value)) return;
+      if (field === 'priority' && !['Low', 'Medium', 'High', 'Urgent'].includes(value)) return;
+
+      ticket[field] = value;
+      ticket.updatedAt = new Date().toISOString();
+
+      renderStats();
+      renderTicketList();
+      renderTicketDetails();
+
+      showToast(`${field === 'status' ? 'Status' : 'Priority'} updated in this preview.`);
+    }
+
+    function sendReply(event) {
+      event.preventDefault();
+
+      const ticket = tickets.find(item => item.id === selectedTicketId);
+      const textarea = document.getElementById('replyMessage');
+
+      if (!ticket || !textarea) return;
+
+      const message = textarea.value.trim();
+
+      if (!message) {
+        showToast('Enter a reply before submitting.');
+        return;
+      }
+
+      if (!Array.isArray(ticket.messages)) {
+        ticket.messages = [];
+      }
+
+      ticket.messages.push({
+        sender: 'Admin',
+        text: message,
+        date: new Date().toISOString()
+      });
+
+      if (ticket.status === 'Open') {
+        ticket.status = 'Pending';
+      }
+
+      ticket.updatedAt = new Date().toISOString();
+
+      renderStats();
+      renderTicketList();
+      renderTicketDetails();
+
+      showToast('Reply added to the local preview.');
+    }
+
+    function markTicketResolved() {
+      const ticket = tickets.find(item => item.id === selectedTicketId);
+
+      if (!ticket) {
+        showToast('Select a ticket first.');
+        return;
+      }
+
+      ticket.status = 'Resolved';
+      ticket.updatedAt = new Date().toISOString();
+
+      renderStats();
+      renderTicketList();
+      renderTicketDetails();
+
+      showToast('Ticket marked as resolved in this preview.');
+    }
+
+    function openNewTicketModal() {
+      document.getElementById('newTicketModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeNewTicketModal() {
+      document.getElementById('newTicketModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function handleModalBackdrop(event, modalId) {
+      if (event.target.id === modalId) {
+        if (modalId === 'newTicketModal') {
+          closeNewTicketModal();
+        }
+      }
+    }
+
+    document.getElementById('newTicketForm').addEventListener('submit', event => {
+      event.preventDefault();
+
+      const customerName = document.getElementById('newCustomerName').value.trim();
+      const customerEmail = document.getElementById('newCustomerEmail').value.trim();
+      const subject = document.getElementById('newTicketSubject').value.trim();
+      const category = document.getElementById('newTicketCategory').value;
+      const priority = document.getElementById('newTicketPriority').value;
+      const message = document.getElementById('newTicketMessage').value.trim();
+
+      if (!customerName || !customerEmail || !subject || !message) {
+        showToast('Please complete all required fields.');
+        return;
+      }
+
+      const now = new Date().toISOString();
+      const nextNumber = Date.now().toString().slice(-7);
+
+      const ticket = {
+        id: `NX-${nextNumber}`,
+        customerName,
+        customerEmail,
+        subject,
+        category,
+        priority,
+        status: 'Open',
+        message,
+        createdAt: now,
+        updatedAt: now,
+        messages: [
+          {
+            sender: customerName,
+            text: message,
+            date: now
+          }
+        ]
+      };
+
+      tickets.unshift(ticket);
+      selectedTicketId = ticket.id;
+
+      event.target.reset();
+      closeNewTicketModal();
+
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('priorityFilter').value = '';
+      document.getElementById('categoryFilter').value = '';
+
+      applyFilters();
+      showToast('Preview ticket created successfully.');
+    });
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('priorityFilter').value = '';
+      document.getElementById('categoryFilter').value = '';
+
+      applyFilters();
+      showToast('Filters have been reset.');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.add('show');
+
+      clearTimeout(toastTimer);
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('mobileOverlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeNewTicketModal();
+        closeSidebar();
+      }
+    });
+
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Initialize the page.
+    renderStats();
+    applyFilters();
+  </script>
+</body>
+</html>

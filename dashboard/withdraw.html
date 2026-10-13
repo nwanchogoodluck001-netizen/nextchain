@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Withdraw | NEXTCHAIN</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #080b16;
+            --sidebar: #0c1020;
+            --surface: #101629;
+            --surface-light: #151d34;
+            --surface-hover: #19223b;
+
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --primary-dark: #6d3ee8;
+
+            --blue: #60a5fa;
+            --green: #34d399;
+            --red: #fb7185;
+            --yellow: #fbbf24;
+
+            --text: #f4f5ff;
+            --muted: #8b95b2;
+            --border: rgba(148, 163, 184, 0.13);
+
+            --radius: 18px;
+            --sidebar-width: 258px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 3px;
+        }
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--sidebar-width);
+            height: 100dvh;
+            background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 27px 17px 20px;
+            z-index: 130;
+            overflow-y: auto;
+            transition: transform 0.28s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 11px;
+            margin-bottom: 42px;
+        }
+
+        .brand-mark {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: linear-gradient(145deg, #a78bfa, #6d3ee8);
+            box-shadow: 0 7px 22px rgba(139, 92, 246, 0.23);
+            color: white;
+            font-size: 23px;
+        }
+
+        .brand-name {
+            font-family: 'Sora', sans-serif;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-name span {
+            color: var(--primary-light);
+        }
+
+        .nav-label {
+            padding: 0 13px;
+            margin-bottom: 12px;
+            color: #65708e;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+        }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            list-style: none;
+        }
+
+        .nav-link {
+            min-height: 47px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 0 13px;
+            border-radius: 12px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 92, 246, 0.07);
+            color: white;
+        }
+
+        .nav-link.active {
+            color: white;
+            background: linear-gradient(
+                100deg,
+                rgba(139, 92, 246, 0.20),
+                rgba(139, 92, 246, 0.07)
+            );
+            border: 1px solid rgba(139, 92, 246, 0.14);
+        }
+
+        .nav-link.active i {
+            color: var(--primary-light);
+        }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 25px 10px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 28px;
+        }
+
+        .security-card {
+            padding: 17px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            background: linear-gradient(
+                145deg,
+                rgba(139, 92, 246, 0.10),
+                rgba(16, 22, 41, 0.5)
+            );
+        }
+
+        .security-icon {
+            width: 35px;
+            height: 35px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary-light);
+            font-size: 20px;
+            margin-bottom: 13px;
+        }
+
+        .security-card h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .security-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .sidebar-footer {
+            margin-top: 19px;
+            text-align: center;
+            color: #626c88;
+            font-size: 10px;
+        }
+
+        /* Main layout */
+
+        .main {
+            min-height: 100vh;
+            margin-left: var(--sidebar-width);
+        }
+
+        .topbar {
+            height: 82px;
+            padding: 0 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: rgba(8, 11, 22, 0.86);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(18px);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .page-heading h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-button {
+            width: 39px;
+            height: 39px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: #c7cce0;
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+            transition: 0.2s;
+        }
+
+        .icon-button:hover {
+            border-color: rgba(167, 139, 250, 0.4);
+            color: white;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 15px;
+            border-left: 1px solid var(--border);
+        }
+
+        .profile-avatar {
+            width: 37px;
+            height: 37px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(145deg, #31245e, #17294c);
+            border: 1px solid rgba(167, 139, 250, 0.24);
+            color: #c4b5fd;
+            font-size: 20px;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-info span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+            z-index: 110;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Page content */
+
+        .content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px 38px 50px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .breadcrumb i {
+            font-size: 15px;
+        }
+
+        .breadcrumb .current {
+            color: var(--primary-light);
+        }
+
+        /* Hero */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+            padding: 29px 30px;
+            margin-bottom: 27px;
+            border-radius: 21px;
+            border: 1px solid rgba(139, 92, 246, 0.19);
+            background:
+                radial-gradient(
+                    ellipse at 90% 0%,
+                    rgba(139, 92, 246, 0.19),
+                    transparent 43%
+                ),
+                linear-gradient(110deg, #131a30, #101629);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 610px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-light);
+            background: rgba(139, 92, 246, 0.11);
+            border: 1px solid rgba(139, 92, 246, 0.16);
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            margin-bottom: 17px;
+        }
+
+        .eyebrow i {
+            font-size: 15px;
+        }
+
+        .hero h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(22px, 2.4vw, 30px);
+            line-height: 1.4;
+            margin-bottom: 11px;
+            letter-spacing: -0.8px;
+        }
+
+        .hero h2 span {
+            color: var(--primary-light);
+        }
+
+        .hero p {
+            max-width: 520px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.9;
+        }
+
+        .hero-illustration {
+            width: 112px;
+            height: 112px;
+            flex-shrink: 0;
+            border-radius: 27px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(
+                145deg,
+                rgba(139, 92, 246, 0.2),
+                rgba(96, 165, 250, 0.08)
+            );
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            transform: rotate(4deg);
+        }
+
+        .hero-illustration i {
+            color: #c4b5fd;
+            font-size: 54px;
+        }
+
+        /* General cards */
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 15px;
+            margin-bottom: 17px;
+        }
+
+        .section-heading h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        /* Available balance */
+
+        .balance-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 21px 24px;
+            margin-bottom: 31px;
+        }
+
+        .balance-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        .balance-label i {
+            font-size: 17px;
+            color: var(--primary-light);
+        }
+
+        .balance-value {
+            font-family: 'Sora', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+        }
+
+        .balance-note {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .balance-note i {
+            font-size: 15px;
+            color: var(--blue);
+        }
+
+        .balance-badge {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            color: var(--primary-light);
+            font-size: 25px;
+        }
+
+        /* Withdrawal methods */
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 30px;
+        }
+
+        .method-card {
+            min-width: 0;
+            position: relative;
+            padding: 20px;
+            text-align: left;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: 0.2s ease;
+        }
+
+        .method-card:hover {
+            background: var(--surface-light);
+            border-color: rgba(167, 139, 250, 0.36);
+            transform: translateY(-2px);
+        }
+
+        .method-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(
+                145deg,
+                rgba(139, 92, 246, 0.13),
+                var(--surface)
+            );
+            box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.07);
+        }
+
+        .method-card.selected::after {
+            content: "✓";
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .method-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            margin-bottom: 17px;
+            font-size: 23px;
+        }
+
+        .method-icon.crypto {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.11);
+        }
+
+        .method-icon.bank {
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.12);
+        }
+
+        .method-icon.card {
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.14);
+        }
+
+        .method-card h3 {
+            font-size: 13px;
+            margin-bottom: 8px;
+            padding-right: 22px;
+        }
+
+        .method-card p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+            min-height: 36px;
+        }
+
+        .method-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 15px;
+            padding-top: 13px;
+            border-top: 1px solid var(--border);
+            color: #a6aec6;
+            font-size: 10px;
+        }
+
+        .method-meta i {
+            font-size: 15px;
+            color: var(--primary-light);
+        }
+
+        /* Main withdrawal layout */
+
+        .withdraw-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(270px, 0.8fr);
+            align-items: start;
+            gap: 22px;
+        }
+
+        .form-panel {
+            padding: 25px;
+            min-width: 0;
+        }
+
+        .form-header {
+            padding-bottom: 20px;
+            margin-bottom: 23px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-header h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: #e4e7f4;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .field-label .muted-label {
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 400;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap > i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7e89a9;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            min-height: 48px;
+            padding: 0 15px;
+            border-radius: 11px;
+            border: 1px solid rgba(148, 163, 184, 0.17);
+            background: #0c1121;
+            color: var(--text);
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input.with-icon {
+            padding-left: 43px;
+        }
+
+        .input::placeholder {
+            color: #56617f;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.09);
+        }
+
+        .select {
+            cursor: pointer;
+            appearance: none;
+            padding-right: 40px;
+        }
+
+        .select option {
+            background: #101629;
+            color: white;
+        }
+
+        .select-wrap {
+            position: relative;
+        }
+
+        .select-wrap::after {
+            content: "\e9ac";
+            font-family: 'boxicons';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 19px;
+            color: #8b95b2;
+            pointer-events: none;
+        }
+
+        .amount-wrap {
+            position: relative;
+        }
+
+        .amount-prefix {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b5bdd4;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .amount-input {
+            padding-left: 38px;
+            padding-right: 75px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .amount-currency {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .field-help {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        /* Coin picker */
+
+        .coin-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .coin-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            padding: 12px;
+            background: #0c1121;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .coin-option:hover {
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
+        .coin-option.selected {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.09);
+        }
+
+        .coin-logo {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .coin-logo.btc {
+            background: rgba(247, 147, 26, 0.13);
+            color: #f7931a;
+        }
+
+        .coin-logo.eth {
+            background: rgba(129, 140, 248, 0.13);
+            color: #a5b4fc;
+        }
+
+        .coin-logo.usdt {
+            background: rgba(52, 211, 153, 0.12);
+            color: #34d399;
+        }
+
+        .coin-logo.usdc {
+            background: rgba(96, 165, 250, 0.12);
+            color: #60a5fa;
+        }
+
+        .coin-logo.sol {
+            background: rgba(167, 139, 250, 0.12);
+            color: #c4b5fd;
+        }
+
+        .coin-info {
+            min-width: 0;
+        }
+
+        .coin-info strong {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .coin-info span {
+            display: block;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .coin-check {
+            margin-left: auto;
+            color: var(--primary-light);
+            font-size: 17px;
+            display: none;
+        }
+
+        .coin-option.selected .coin-check {
+            display: block;
+        }
+
+        /* Dynamic information panel */
+
+        .method-fields {
+            margin-top: 4px;
+        }
+
+        .notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: rgba(96, 165, 250, 0.07);
+            border: 1px solid rgba(96, 165, 250, 0.15);
+        }
+
+        .notice > i {
+            flex-shrink: 0;
+            font-size: 19px;
+            color: var(--blue);
+            margin-top: 1px;
+        }
+
+        .notice strong {
+            display: block;
+            color: #dbeafe;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .notice p {
+            color: #9caac6;
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .warning-notice {
+            background: rgba(251, 191, 36, 0.06);
+            border-color: rgba(251, 191, 36, 0.16);
+        }
+
+        .warning-notice > i {
+            color: var(--yellow);
+        }
+
+        .warning-notice strong {
+            color: #fde68a;
+        }
+
+        .empty-method {
+            padding: 22px 17px;
+            border: 1px dashed rgba(148, 163, 184, 0.22);
+            border-radius: 13px;
+            text-align: center;
+            background: rgba(12, 17, 33, 0.45);
+            margin-bottom: 21px;
+        }
+
+        .empty-method-icon {
+            width: 45px;
+            height: 45px;
+            margin: 0 auto 13px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(139, 92, 246, 0.11);
+            color: var(--primary-light);
+            font-size: 22px;
+        }
+
+        .empty-method h3 {
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .empty-method p {
+            max-width: 350px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .checkbox-row input {
+            margin-top: 2px;
+            accent-color: var(--primary);
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+            cursor: pointer;
+        }
+
+        .primary-button {
+            width: 100%;
+            min-height: 49px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            background: linear-gradient(100deg, #7c3aed, #8b5cf6);
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 8px 22px rgba(109, 62, 232, 0.15);
+            transition: 0.2s;
+        }
+
+        .primary-button:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 10px 28px rgba(109, 62, 232, 0.22);
+        }
+
+        .primary-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .primary-button i {
+            font-size: 18px;
+        }
+
+        .form-footnote {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 15px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .form-footnote i {
+            color: var(--green);
+            font-size: 15px;
+        }
+
+        /* Right-hand cards */
+
+        .side-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+        }
+
+        .summary-panel {
+            padding: 22px;
+        }
+
+        .summary-panel h3 {
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .summary-panel .subtext {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .summary-row span {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        .summary-row strong {
+            max-width: 58%;
+            text-align: right;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .summary-row .unset {
+            color: #7883a0;
+            font-weight: 500;
+        }
+
+        .summary-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 7px 0;
+        }
+
+        .summary-total {
+            padding-top: 17px;
+            margin-top: 4px;
+        }
+
+        .summary-total span {
+            color: #dfe3f4;
+            font-weight: 600;
+        }
+
+        .summary-total strong {
+            color: var(--primary-light);
+            font-family: 'Sora', sans-serif;
+            font-size: 15px;
+        }
+
+        .security-panel {
+            padding: 22px;
+            background:
+                radial-gradient(
+                    ellipse at top right,
+                    rgba(52, 211, 153, 0.07),
+                    transparent 60%
+                ),
+                var(--surface);
+        }
+
+        .security-title {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 17px;
+        }
+
+        .security-title-icon {
+            width: 39px;
+            height: 39px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--green);
+            font-size: 21px;
+        }
+
+        .security-title h3 {
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .security-title p {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .security-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            list-style: none;
+        }
+
+        .security-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #aeb7d0;
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .security-list i {
+            color: var(--green);
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .help-panel {
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .help-icon {
+            width: 37px;
+            height: 37px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--blue);
+            font-size: 19px;
+        }
+
+        .help-panel h3 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .help-panel p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .help-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary-light);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .help-link i {
+            font-size: 15px;
+        }
+
+        /* Toast */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 300;
+            width: min(380px, calc(100% - 32px));
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 14px;
+            background: #151d34;
+            border: 1px solid rgba(251, 191, 36, 0.24);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition: 0.25s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .toast-icon {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--yellow);
+            font-size: 19px;
+        }
+
+        .toast h4 {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .toast p {
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .toast-close {
+            margin-left: auto;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        /* Footer */
+
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding-top: 25px;
+            margin-top: 35px;
+            border-top: 1px solid var(--border);
+            color: #69738f;
+            font-size: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1200px) {
+            .content {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .topbar {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .withdraw-layout {
+                grid-template-columns: minmax(0, 1.2fr) minmax(245px, 0.8fr);
+                gap: 17px;
+            }
+
+            .form-panel {
+                padding: 21px;
+            }
+
+            .method-card {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 950px) {
+            :root {
+                --sidebar-width: 245px;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                visibility: hidden;
+                pointer-events: none;
+                box-shadow: none;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                visibility: visible;
+                pointer-events: auto;
+                box-shadow: 20px 0 50px rgba(0, 0, 0, 0.3);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                z-index: 120;
+                padding-left: 22px;
+                padding-right: 22px;
+            }
+
+            .mobile-menu {
+                display: grid;
+            }
+
+            .withdraw-layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .side-stack {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .help-panel {
+                grid-column: 1 / -1;
+            }
+
+            .methods-grid {
+                gap: 11px;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .topbar {
+                height: 72px;
+                padding: 0 16px;
+                gap: 10px;
+            }
+
+            .topbar-left {
+                gap: 11px;
+            }
+
+            .page-heading h1 {
+                font-size: 15px;
+            }
+
+            .page-heading p {
+                font-size: 10px;
+            }
+
+            .topbar-right {
+                gap: 9px;
+            }
+
+            .profile {
+                padding-left: 9px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .profile-avatar {
+                width: 35px;
+                height: 35px;
+            }
+
+            .content {
+                padding: 23px 15px 35px;
+            }
+
+            .breadcrumb {
+                margin-bottom: 18px;
+            }
+
+            .hero {
+                padding: 23px 20px;
+                margin-bottom: 22px;
+                border-radius: 17px;
+            }
+
+            .hero h2 {
+                font-size: 23px;
+            }
+
+            .hero p {
+                font-size: 11px;
+            }
+
+            .hero-illustration {
+                width: 70px;
+                height: 70px;
+                border-radius: 19px;
+            }
+
+            .hero-illustration i {
+                font-size: 36px;
+            }
+
+            .balance-card {
+                padding: 19px;
+                margin-bottom: 26px;
+            }
+
+            .balance-value {
+                font-size: 25px;
+            }
+
+            .balance-badge {
+                width: 43px;
+                height: 43px;
+                font-size: 21px;
+            }
+
+            .methods-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .method-card {
+                display: grid;
+                grid-template-columns: 45px minmax(0, 1fr);
+                align-items: center;
+                column-gap: 13px;
+                padding: 15px;
+            }
+
+            .method-icon {
+                grid-row: 1 / span 2;
+                margin-bottom: 0;
+            }
+
+            .method-card h3 {
+                margin-bottom: 5px;
+                font-size: 12px;
+            }
+
+            .method-card p {
+                min-height: auto;
+                padding-right: 16px;
+            }
+
+            .method-meta {
+                grid-column: 2;
+                margin-top: 11px;
+                padding-top: 10px;
+            }
+
+            .section-heading h2 {
+                font-size: 15px;
+            }
+
+            .form-panel {
+                padding: 18px 15px;
+            }
+
+            .form-header {
+                margin-bottom: 20px;
+            }
+
+            .coin-list {
+                grid-template-columns: 1fr;
+            }
+
+            .field-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .side-stack {
+                grid-template-columns: 1fr;
+            }
+
+            .help-panel {
+                grid-column: auto;
+            }
+
+            .summary-panel,
+            .security-panel {
+                padding: 19px;
+            }
+
+            .page-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                line-height: 1.8;
+            }
+
+            .toast {
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .page-heading p {
+                display: none;
+            }
+
+            .hero-illustration {
+                display: none;
+            }
+
+            .content {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+
+            .form-panel {
+                padding: 16px 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- Mobile sidebar overlay -->
+    <div class="overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+
+        <a href="dashboard.html" class="brand">
+            <div class="brand-mark">
+                <i class='bx bx-layer'></i>
+            </div>
+
+            <div class="brand-name">
+                NEXT<span>CHAIN</span>
+            </div>
+        </a>
+
+        <div class="nav-label">Workspace</div>
+
+        <ul class="nav-list">
+
+            <li>
+                <a href="dashboard.html" class="nav-link">
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="investments.html" class="nav-link">
+                    <i class='bx bx-line-chart'></i>
+                    <span>Investments</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="wallet.html" class="nav-link">
+                    <i class='bx bx-wallet-alt'></i>
+                    <span>My Wallet</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="deposit.html" class="nav-link">
+                    <i class='bx bx-plus-circle'></i>
+                    <span>Deposit</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="withdraw.html" class="nav-link active" aria-current="page">
+                    <i class='bx bx-transfer-alt'></i>
+                    <span>Withdraw</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="transactions.html" class="nav-link">
+                    <i class='bx bx-receipt'></i>
+                    <span>Transactions</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-label">Account</div>
+
+        <ul class="nav-list">
+
+            <li>
+                <a href="settings.html" class="nav-link">
+                    <i class='bx bx-cog'></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="support.html" class="nav-link">
+                    <i class='bx bx-support'></i>
+                    <span>Help & Support</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-bottom">
+
+            <div class="security-card">
+
+                <div class="security-icon">
+                    <i class='bx bx-shield-quarter'></i>
+                </div>
+
+                <h4>Your security matters</h4>
+
+                <p>
+                    Always verify withdrawal details before confirming a
+                    transaction. Never share your wallet's private keys.
+                </p>
+
+            </div>
+
+            <div class="sidebar-footer">
+                NEXTCHAIN &copy; <span class="current-year"></span>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="icon-button mobile-menu"
+                    id="menuToggle"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    <i class='bx bx-menu'></i>
+                </button>
+
+                <div class="page-heading">
+                    <h1>Withdraw Funds</h1>
+                    <p>Move your available funds securely.</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <button
+                    class="icon-button"
+                    id="helpButton"
+                    type="button"
+                    aria-label="Withdrawal help"
+                    title="Withdrawal help"
+                >
+                    <i class='bx bx-help-circle'></i>
+                </button>
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+                        <i class='bx bx-user'></i>
+                    </div>
+
+                    <div class="profile-info">
+                        <strong>My Account</strong>
+                        <span>Account overview</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Page content -->
+        <div class="content">
+
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a>
+                <i class='bx bx-chevron-right'></i>
+                <span class="current">Withdraw</span>
+            </div>
+
+
+            <!-- Hero -->
+            <section class="hero">
+
+                <div class="hero-content">
+
+                    <div class="eyebrow">
+                        <i class='bx bx-shield-quarter'></i>
+                        SECURE WITHDRAWALS
+                    </div>
+
+                    <h2>
+                        Your funds, <span>your choice.</span>
+                    </h2>
+
+                    <p>
+                        Choose how you would like to receive your funds.
+                        Review your withdrawal details carefully before
+                        proceeding.
+                    </p>
+
+                </div>
+
+                <div class="hero-illustration">
+                    <i class='bx bx-transfer-alt'></i>
+                </div>
+
+            </section>
+
+
+            <!-- Available balance -->
+            <section class="panel balance-card">
+
+                <div>
+
+                    <div class="balance-label">
+                        <i class='bx bx-wallet'></i>
+                        Available to withdraw
+                    </div>
+
+                    <div class="balance-value">— — —</div>
+
+                    <div class="balance-note">
+                        <i class='bx bx-info-circle'></i>
+                        Your available balance will appear here when your
+                        account is connected.
+                    </div>
+
+                </div>
+
+                <div class="balance-badge">
+                    <i class='bx bx-wallet-alt'></i>
+                </div>
+
+            </section>
+
+
+            <!-- Method selection -->
+            <section>
+
+                <div class="section-heading">
+
+                    <div>
+                        <h2>Choose withdrawal method</h2>
+                        <p>Select your preferred way to receive your funds.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="methods-grid">
+
+                    <button
+                        class="method-card selected"
+                        type="button"
+                        data-method="crypto"
+                        aria-pressed="true"
+                    >
+
+                        <div class="method-icon crypto">
+                            <i class='bx bx-bitcoin'></i>
+                        </div>
+
+                        <div>
+                            <h3>Cryptocurrency</h3>
+                            <p>
+                                Withdraw to a compatible external crypto wallet.
+                            </p>
+                        </div>
+
+                        <div class="method-meta">
+                            <i class='bx bx-check-circle'></i>
+                            BTC, ETH, USDT & more
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="method-card"
+                        type="button"
+                        data-method="bank"
+                        aria-pressed="false"
+                    >
+
+                        <div class="method-icon bank">
+                            <i class='bx bx-buildings'></i>
+                        </div>
+
+                        <div>
+                            <h3>Bank Transfer</h3>
+                            <p>
+                                Receive funds through an eligible bank account.
+                            </p>
+                        </div>
+
+                        <div class="method-meta">
+                            <i class='bx bx-check-circle'></i>
+                            Bank account
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="method-card"
+                        type="button"
+                        data-method="card"
+                        aria-pressed="false"
+                    >
+
+                        <div class="method-icon card">
+                            <i class='bx bx-credit-card'></i>
+                        </div>
+
+                        <div>
+                            <h3>Card Payout</h3>
+                            <p>
+                                Check availability for supported debit or credit cards.
+                            </p>
+                        </div>
+
+                        <div class="method-meta">
+                            <i class='bx bx-check-circle'></i>
+                            Provider dependent
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- Form and sidebar -->
+            <section class="withdraw-layout">
+
+                <!-- Withdrawal form -->
+                <div class="panel form-panel">
+
+                    <div class="form-header">
+
+                        <h2 id="formTitle">Crypto withdrawal</h2>
+
+                        <p id="formDescription">
+                            Select your asset and destination wallet.
+                            Make sure the receiving network matches your wallet.
+                        </p>
+
+                    </div>
+
+
+                    <form id="withdrawForm" novalidate>
+
+                        <!-- Amount -->
+                        <div class="field">
+
+                            <label class="field-label" for="withdrawAmount">
+                                Withdrawal amount
+                                <span class="muted-label">Required</span>
+                            </label>
+
+                            <div class="amount-wrap">
+
+                                <span class="amount-prefix">$</span>
+
+                                <input
+                                    type="number"
+                                    class="input amount-input"
+                                    id="withdrawAmount"
+                                    name="withdrawAmount"
+                                    placeholder="0.00"
+                                    min="0"
+                                    step="any"
+                                    inputmode="decimal"
+                                    autocomplete="off"
+                                    required
+                                >
+
+                                <span class="amount-currency">USD</span>
+
+                            </div>
+
+                            <p class="field-help">
+                                Enter the amount you want to withdraw.
+                                Available balance and limits must be verified
+                                by the connected account service.
+                            </p>
+
+                        </div>
+
+
+                        <!-- Cryptocurrency fields -->
+                        <div class="method-fields" id="cryptoFields">
+
+                            <div class="field">
+
+                                <label class="field-label">
+                                    Select cryptocurrency
+                                </label>
+
+                                <div class="coin-list" id="coinList">
+
+                                    <button
+                                        type="button"
+                                        class="coin-option selected"
+                                        data-coin="BTC"
+                                        data-coin-name="Bitcoin"
+                                        aria-pressed="true"
+                                    >
+
+                                        <span class="coin-logo btc">₿</span>
+
+                                        <span class="coin-info">
+                                            <strong>Bitcoin</strong>
+                                            <span>BTC</span>
+                                        </span>
+
+                                        <i class='bx bx-check-circle coin-check'></i>
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="coin-option"
+                                        data-coin="ETH"
+                                        data-coin-name="Ethereum"
+                                        aria-pressed="false"
+                                    >
+
+                                        <span class="coin-logo eth">◆</span>
+
+                                        <span class="coin-info">
+                                            <strong>Ethereum</strong>
+                                            <span>ETH</span>
+                                        </span>
+
+                                        <i class='bx bx-check-circle coin-check'></i>
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="coin-option"
+                                        data-coin="USDT"
+                                        data-coin-name="Tether"
+                                        aria-pressed="false"
+                                    >
+
+                                        <span class="coin-logo usdt">₮</span>
+
+                                        <span class="coin-info">
+                                            <strong>Tether</strong>
+                                            <span>USDT</span>
+                                        </span>
+
+                                        <i class='bx bx-check-circle coin-check'></i>
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="coin-option"
+                                        data-coin="USDC"
+                                        data-coin-name="USD Coin"
+                                        aria-pressed="false"
+                                    >
+
+                                        <span class="coin-logo usdc">$</span>
+
+                                        <span class="coin-info">
+                                            <strong>USD Coin</strong>
+                                            <span>USDC</span>
+                                        </span>
+
+                                        <i class='bx bx-check-circle coin-check'></i>
+
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="coin-option"
+                                        data-coin="SOL"
+                                        data-coin-name="Solana"
+                                        aria-pressed="false"
+                                    >
+
+                                        <span class="coin-logo sol">◎</span>
+
+                                        <span class="coin-info">
+                                            <strong>Solana</strong>
+                                            <span>SOL</span>
+                                        </span>
+
+                                        <i class='bx bx-check-circle coin-check'></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label class="field-label" for="cryptoNetwork">
+                                    Network
+                                </label>
+
+                                <div class="select-wrap">
+
+                                    <select
+                                        class="select"
+                                        id="cryptoNetwork"
+                                        name="cryptoNetwork"
+                                        required
+                                    >
+                                    </select>
+
+                                </div>
+
+                                <p class="field-help">
+                                    The selected network must match the network
+                                    supported by your receiving wallet.
+                                </p>
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label class="field-label" for="walletAddress">
+                                    Destination wallet address
+                                </label>
+
+                                <div class="input-wrap">
+
+                                    <i class='bx bx-wallet'></i>
+
+                                    <input
+                                        type="text"
+                                        class="input with-icon"
+                                        id="walletAddress"
+                                        name="walletAddress"
+                                        placeholder="Enter your receiving wallet address"
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                        required
+                                    >
+
+                                </div>
+
+                                <p class="field-help">
+                                    Double-check the address before proceeding.
+                                    Cryptocurrency transfers may be irreversible.
+                                </p>
+
+                            </div>
+
+
+                            <div class="notice warning-notice">
+
+                                <i class='bx bx-error-circle'></i>
+
+                                <div>
+                                    <strong>Verify your network and address</strong>
+
+                                    <p>
+                                        Sending assets to an incompatible address
+                                        or network may result in permanent loss.
+                                        Only continue after verifying all details.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Bank transfer fields -->
+                        <div class="method-fields" id="bankFields" hidden>
+
+                            <div class="field-grid">
+
+                                <div class="field">
+
+                                    <label class="field-label" for="bankCountry">
+                                        Bank country
+                                    </label>
+
+                                    <div class="select-wrap">
+
+                                        <select
+                                            class="select"
+                                            id="bankCountry"
+                                            name="bankCountry"
+                                        >
+                                            <option value="">Select country</option>
+                                            <option value="NG">Nigeria</option>
+                                            <option value="US">United States</option>
+                                            <option value="GB">United Kingdom</option>
+                                            <option value="CA">Canada</option>
+                                            <option value="GH">Ghana</option>
+                                            <option value="KE">Kenya</option>
+                                            <option value="ZA">South Africa</option>
+                                            <option value="OTHER">Other</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="field">
+
+                                    <label class="field-label" for="bankCurrency">
+                                        Payout currency
+                                    </label>
+
+                                    <div class="select-wrap">
+
+                                        <select
+                                            class="select"
+                                            id="bankCurrency"
+                                            name="bankCurrency"
+                                        >
+                                            <option value="">Select currency</option>
+                                            <option value="USD">USD</option>
+                                            <option value="NGN">NGN</option>
+                                            <option value="GBP">GBP</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="CAD">CAD</option>
+                                            <option value="GHS">GHS</option>
+                                            <option value="KES">KES</option>
+                                            <option value="ZAR">ZAR</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label class="field-label" for="accountName">
+                                    Account holder name
+                                </label>
+
+                                <div class="input-wrap">
+
+                                    <i class='bx bx-user'></i>
+
+                                    <input
+                                        type="text"
+                                        class="input with-icon"
+                                        id="accountName"
+                                        name="accountName"
+                                        placeholder="Name on your bank account"
+                                        autocomplete="name"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label class="field-label" for="bankName">
+                                    Bank name
+                                </label>
+
+                                <div class="input-wrap">
+
+                                    <i class='bx bx-buildings'></i>
+
+                                    <input
+                                        type="text"
+                                        class="input with-icon"
+                                        id="bankName"
+                                        name="bankName"
+                                        placeholder="Enter your bank name"
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label class="field-label" for="accountNumber">
+                                    Account number / IBAN
+                                </label>
+
+                                <div class="input-wrap">
+
+                                    <i class='bx bx-credit-card-front'></i>
+
+                                    <input
+                                        type="text"
+                                        class="input with-icon"
+                                        id="accountNumber"
+                                        name="accountNumber"
+                                        placeholder="Enter account number or IBAN"
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="notice warning-notice">
+
+                                <i class='bx bx-info-circle'></i>
+
+                                <div>
+                                    <strong>Bank payouts are not connected</strong>
+
+                                    <p>
+                                        No transfer will be initiated from this page.
+                                        Bank payout processing and account verification
+                                        must be configured before this method can be used.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Card payout fields -->
+                        <div class="method-fields" id="cardFields" hidden>
+
+                            <div class="field">
+
+                                <label class="field-label" for="cardCountry">
+                                    Card issuing country
+                                </label>
+
+                                <div class="select-wrap">
+
+                                    <select
+                                        class="select"
+                                        id="cardCountry"
+                                        name="cardCountry"
+                                    >
+                                        <option value="">Select country</option>
+                                        <option value="NG">Nigeria</option>
+                                        <option value="US">United States</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="empty-method">
+
+                                <div class="empty-method-icon">
+                                    <i class='bx bx-credit-card'></i>
+                                </div>
+
+                                <h3>Card payouts require a supported provider</h3>
+
+                                <p>
+                                    Sending withdrawals to debit or credit cards
+                                    depends on the payment provider, issuing bank,
+                                    and country. No card payout provider is connected
+                                    to this frontend yet.
+                                </p>
+
+                            </div>
+
+
+                            <div class="notice">
+
+                                <i class='bx bx-lock-alt'></i>
+
+                                <div>
+                                    <strong>Your card security comes first</strong>
+
+                                    <p>
+                                        This page does not collect card numbers,
+                                        expiry dates, security codes, or other card
+                                        credentials. Card payout setup must be handled
+                                        through a suitable secure payment provider.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- User confirmation -->
+                        <div class="checkbox-row">
+
+                            <input
+                                type="checkbox"
+                                id="confirmDetails"
+                                name="confirmDetails"
+                                required
+                            >
+
+                            <label for="confirmDetails">
+                                I confirm that I have reviewed the withdrawal
+                                details and understand that fees, minimum amounts,
+                                processing times, and availability must be verified
+                                before a withdrawal can be completed.
+                            </label>
+
+                        </div>
+
+
+                        <button type="submit" class="primary-button" id="submitButton">
+                            <span>Review withdrawal</span>
+                            <i class='bx bx-right-arrow-alt'></i>
+                        </button>
+
+
+                        <div class="form-footnote">
+                            <i class='bx bx-shield-quarter'></i>
+                            Your withdrawal will not be submitted by this demo page.
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Summary and security -->
+                <div class="side-stack">
+
+                    <div class="panel summary-panel">
+
+                        <h3>Withdrawal summary</h3>
+
+                        <p class="subtext">
+                            Review the details you have selected.
+                        </p>
+
+
+                        <div class="summary-row">
+                            <span>Withdrawal method</span>
+                            <strong id="summaryMethod">Cryptocurrency</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Asset</span>
+                            <strong id="summaryAsset">Bitcoin (BTC)</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Network</span>
+                            <strong id="summaryNetwork" class="unset">
+                                Select network
+                            </strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Amount</span>
+                            <strong id="summaryAmount" class="unset">
+                                Not entered
+                            </strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Withdrawal fee</span>
+                            <strong class="unset">Not available</strong>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Estimated arrival</span>
+                            <strong class="unset">Not available</strong>
+                        </div>
+
+                        <div class="summary-row summary-total">
+                            <span>Estimated payout</span>
+                            <strong id="summaryTotal">— — —</strong>
+                        </div>
+
+                        <div class="notice" style="margin: 16px 0 0;">
+
+                            <i class='bx bx-info-circle'></i>
+
+                            <div>
+                                <strong>Estimates unavailable</strong>
+
+                                <p>
+                                    Fees, exchange rates, payout amounts, and
+                                    processing times will only be displayed after
+                                    the withdrawal service is configured.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel security-panel">
+
+                        <div class="security-title">
+
+                            <div class="security-title-icon">
+                                <i class='bx bx-shield-quarter'></i>
+                            </div>
+
+                            <div>
+                                <h3>Withdrawal safety</h3>
+                                <p>Important things to remember</p>
+                            </div>
+
+                        </div>
+
+
+                        <ul class="security-list">
+
+                            <li>
+                                <i class='bx bx-check-circle'></i>
+                                <span>
+                                    Check your destination details carefully
+                                    before authorizing a real withdrawal.
+                                </span>
+                            </li>
+
+                            <li>
+                                <i class='bx bx-check-circle'></i>
+                                <span>
+                                    Never share your password, private key,
+                                    or recovery phrase with anyone.
+                                </span>
+                            </li>
+
+                            <li>
+                                <i class='bx bx-check-circle'></i>
+                                <span>
+                                    Review any fees and the final payout amount
+                                    before confirming a transaction.
+                                </span>
+                            </li>
+
+                            <li>
+                                <i class='bx bx-check-circle'></i>
+                                <span>
+                                    Use only withdrawal methods officially
+                                    supported by the platform.
+                                </span>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="panel help-panel">
+
+                        <div class="help-icon">
+                            <i class='bx bx-support'></i>
+                        </div>
+
+                        <div>
+                            <h3>Need help withdrawing?</h3>
+
+                            <p>
+                                If a withdrawal method is unavailable or you
+                                need assistance, contact the platform's
+                                official support team.
+                            </p>
+
+                            <a href="support.html" class="help-link">
+                                Visit support
+                                <i class='bx bx-right-arrow-alt'></i>
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Footer -->
+            <footer class="page-footer">
+
+                <div>
+                    &copy; <span class="current-year"></span> NEXTCHAIN.
+                    All rights reserved.
+                </div>
+
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                    <a href="support.html">Support</a>
+                </div>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- Notification -->
+<div
+    class="toast"
+    id="noticeToast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+>
+
+    <div class="toast-icon">
+        <i class='bx bx-info-circle'></i>
+    </div>
+
+    <div>
+        <h4 id="toastTitle">Withdrawal unavailable</h4>
+        <p id="toastMessage">
+            Withdrawal processing has not been connected yet.
+        </p>
+    </div>
+
+    <button
+        class="toast-close"
+        id="toastClose"
+        type="button"
+        aria-label="Close notification"
+    >
+        <i class='bx bx-x'></i>
+    </button>
+
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ---------------------------------------
+           Mobile sidebar
+        --------------------------------------- */
+
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+            overlay.setAttribute('aria-hidden', 'false');
+
+            menuToggle.setAttribute('aria-expanded', 'true');
+            menuToggle.setAttribute('aria-label', 'Close navigation menu');
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            overlay.setAttribute('aria-hidden', 'true');
+
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.setAttribute('aria-label', 'Open navigation menu');
+
+            document.body.style.overflow = '';
+        }
+
+        menuToggle.addEventListener('click', function () {
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        overlay.addEventListener('click', closeSidebar);
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeSidebar();
+                hideToast();
+            }
+        });
+
+        sidebar.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 950) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 950) {
+                closeSidebar();
+            }
+        });
+
+
+        /* ---------------------------------------
+           Current year
+        --------------------------------------- */
+
+        document.querySelectorAll('.current-year').forEach(function (element) {
+            element.textContent = new Date().getFullYear();
+        });
+
+
+        /* ---------------------------------------
+           Notification
+        --------------------------------------- */
+
+        const toast = document.getElementById('noticeToast');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastClose = document.getElementById('toastClose');
+
+        let toastTimer;
+
+        function showToast(title, message) {
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            toast.classList.add('show');
+
+            clearTimeout(toastTimer);
+
+            toastTimer = setTimeout(function () {
+                hideToast();
+            }, 5500);
+        }
+
+        function hideToast() {
+            toast.classList.remove('show');
+            clearTimeout(toastTimer);
+        }
+
+        toastClose.addEventListener('click', hideToast);
+
+
+        /* ---------------------------------------
+           Withdrawal method selection
+        --------------------------------------- */
+
+        const methodCards = document.querySelectorAll('.method-card');
+
+        const cryptoFields = document.getElementById('cryptoFields');
+        const bankFields = document.getElementById('bankFields');
+        const cardFields = document.getElementById('cardFields');
+
+        const formTitle = document.getElementById('formTitle');
+        const formDescription = document.getElementById('formDescription');
+
+        const summaryMethod = document.getElementById('summaryMethod');
+        const summaryAsset = document.getElementById('summaryAsset');
+        const summaryNetwork = document.getElementById('summaryNetwork');
+        const summaryAmount = document.getElementById('summaryAmount');
+        const summaryTotal = document.getElementById('summaryTotal');
+
+        const withdrawAmount = document.getElementById('withdrawAmount');
+
+        let selectedMethod = 'crypto';
+        let selectedCoin = 'BTC';
+
+        const methodSettings = {
+            crypto: {
+                title: 'Crypto withdrawal',
+                description:
+                    'Select your asset and destination wallet. Make sure the receiving network matches your wallet.',
+                summary: 'Cryptocurrency'
+            },
+
+            bank: {
+                title: 'Bank transfer withdrawal',
+                description:
+                    'Choose your payout country and currency, then enter your bank account details.',
+                summary: 'Bank Transfer'
+            },
+
+            card: {
+                title: 'Card payout',
+                description:
+                    'Check whether a supported card payout option is available for your country.',
+                summary: 'Card Payout'
+            }
+        };
+
+        function setMethod(method) {
+            selectedMethod = method;
+
+            methodCards.forEach(function (card) {
+                const isSelected = card.dataset.method === method;
+
+                card.classList.toggle('selected', isSelected);
+                card.setAttribute('aria-pressed', String(isSelected));
+            });
+
+            cryptoFields.hidden = method !== 'crypto';
+            bankFields.hidden = method !== 'bank';
+            cardFields.hidden = method !== 'card';
+
+            formTitle.textContent = methodSettings[method].title;
+            formDescription.textContent = methodSettings[method].description;
+            summaryMethod.textContent = methodSettings[method].summary;
+
+            summaryAsset.classList.remove('unset');
+
+            if (method === 'crypto') {
+                updateCoinSummary();
+                updateNetworkOptions();
+            }
+
+            if (method === 'bank') {
+                summaryAsset.textContent = 'Bank payout';
+                summaryNetwork.textContent = 'Not applicable';
+                summaryNetwork.classList.add('unset');
+            }
+
+            if (method === 'card') {
+                summaryAsset.textContent = 'Card payout';
+                summaryNetwork.textContent = 'Not applicable';
+                summaryNetwork.classList.add('unset');
+            }
+
+            updateAmountSummary();
+        }
+
+        methodCards.forEach(function (card) {
+            card.addEventListener('click', function () {
+                setMethod(card.dataset.method);
+            });
+        });
+
+
+        /* ---------------------------------------
+           Cryptocurrency selection
+        --------------------------------------- */
+
+        const coinOptions = document.querySelectorAll('.coin-option');
+        const cryptoNetwork = document.getElementById('cryptoNetwork');
+
+        const coinNetworks = {
+            BTC: [
+                {
+                    value: 'bitcoin',
+                    label: 'Bitcoin network'
+                }
+            ],
+
+            ETH: [
+                {
+                    value: 'ethereum',
+                    label: 'Ethereum (ERC-20)'
+                }
+            ],
+
+            USDT: [
+                {
+                    value: 'ethereum',
+                    label: 'Ethereum (ERC-20)'
+                },
+                {
+                    value: 'tron',
+                    label: 'Tron (TRC-20)'
+                },
+                {
+                    value: 'solana',
+                    label: 'Solana network'
+                }
+            ],
+
+            USDC: [
+                {
+                    value: 'ethereum',
+                    label: 'Ethereum (ERC-20)'
+                },
+                {
+                    value: 'solana',
+                    label: 'Solana network'
+                }
+            ],
+
+            SOL: [
+                {
+                    value: 'solana',
+                    label: 'Solana network'
+                }
+            ]
+        };
+
+        function updateCoinSummary() {
+            const selected = document.querySelector(
+                '.coin-option[data-coin="' + selectedCoin + '"]'
+            );
+
+            if (selected) {
+                summaryAsset.textContent =
+                    selected.dataset.coinName + ' (' + selectedCoin + ')';
+            }
+        }
+
+        function updateNetworkOptions() {
+            const networks = coinNetworks[selectedCoin] || [];
+
+            cryptoNetwork.innerHTML = '';
+
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = 'Select network';
+            cryptoNetwork.appendChild(placeholder);
+
+            networks.forEach(function (network) {
+                const option = document.createElement('option');
+                option.value = network.value;
+                option.textContent = network.label;
+                cryptoNetwork.appendChild(option);
+            });
+
+            cryptoNetwork.value = '';
+
+            summaryNetwork.textContent = 'Select network';
+            summaryNetwork.classList.add('unset');
+        }
+
+        coinOptions.forEach(function (option) {
+            option.addEventListener('click', function () {
+                selectedCoin = option.dataset.coin;
+
+                coinOptions.forEach(function (coin) {
+                    const isSelected = coin === option;
+
+                    coin.classList.toggle('selected', isSelected);
+                    coin.setAttribute('aria-pressed', String(isSelected));
+                });
+
+                updateCoinSummary();
+                updateNetworkOptions();
+            });
+        });
+
+        cryptoNetwork.addEventListener('change', function () {
+            const selectedOption =
+                cryptoNetwork.options[cryptoNetwork.selectedIndex];
+
+            if (cryptoNetwork.value) {
+                summaryNetwork.textContent = selectedOption.textContent;
+                summaryNetwork.classList.remove('unset');
+            } else {
+                summaryNetwork.textContent = 'Select network';
+                summaryNetwork.classList.add('unset');
+            }
+        });
+
+
+        /* ---------------------------------------
+           Amount summary
+        --------------------------------------- */
+
+        function updateAmountSummary() {
+            const amount = Number(withdrawAmount.value);
+
+            if (
+                withdrawAmount.value.trim() !== '' &&
+                Number.isFinite(amount) &&
+                amount > 0
+            ) {
+                summaryAmount.textContent = '$' + amount.toLocaleString(
+                    'en-US',
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 8
+                    }
+                );
+
+                summaryAmount.classList.remove('unset');
+            } else {
+                summaryAmount.textContent = 'Not entered';
+                summaryAmount.classList.add('unset');
+            }
+
+            // The actual fee and payout must come from the withdrawal service.
+            summaryTotal.textContent = '— — —';
+        }
+
+        withdrawAmount.addEventListener('input', updateAmountSummary);
+
+
+        /* ---------------------------------------
+           Bank summary updates
+        --------------------------------------- */
+
+        const bankCurrency = document.getElementById('bankCurrency');
+
+        bankCurrency.addEventListener('change', function () {
+            if (selectedMethod !== 'bank') {
+                return;
+            }
+
+            if (bankCurrency.value) {
+                summaryAsset.textContent =
+                    'Bank payout (' + bankCurrency.value + ')';
+            } else {
+                summaryAsset.textContent = 'Bank payout';
+            }
+        });
+
+
+        /* ---------------------------------------
+           Help button
+        --------------------------------------- */
+
+        document.getElementById('helpButton').addEventListener('click', function () {
+            showToast(
+                'Withdrawal help',
+                'Withdrawal processing must be connected before funds can be sent. Contact official support if you need assistance.'
+            );
+        });
+
+
+        /* ---------------------------------------
+           Form validation and safe frontend behavior
+        --------------------------------------- */
+
+        const withdrawForm = document.getElementById('withdrawForm');
+
+        withdrawForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const amount = Number(withdrawAmount.value);
+            const confirmDetails =
+                document.getElementById('confirmDetails');
+
+            if (
+                withdrawAmount.value.trim() === '' ||
+                !Number.isFinite(amount) ||
+                amount <= 0
+            ) {
+                withdrawAmount.focus();
+
+                showToast(
+                    'Enter a valid amount',
+                    'Enter a withdrawal amount greater than zero.'
+                );
+
+                return;
+            }
+
+            if (selectedMethod === 'crypto') {
+                const address =
+                    document.getElementById('walletAddress').value.trim();
+
+                if (!cryptoNetwork.value) {
+                    cryptoNetwork.focus();
+
+                    showToast(
+                        'Select a network',
+                        'Choose the network that matches your receiving wallet.'
+                    );
+
+                    return;
+                }
+
+                if (!address) {
+                    document.getElementById('walletAddress').focus();
+
+                    showToast(
+                        'Wallet address required',
+                        'Enter the destination wallet address to continue reviewing your details.'
+                    );
+
+                    return;
+                }
+            }
+
+            if (selectedMethod === 'bank') {
+                const requiredBankFields = [
+                    {
+                        id: 'bankCountry',
+                        label: 'Select your bank country.'
+                    },
+                    {
+                        id: 'bankCurrency',
+                        label: 'Select your payout currency.'
+                    },
+                    {
+                        id: 'accountName',
+                        label: 'Enter the account holder name.'
+                    },
+                    {
+                        id: 'bankName',
+                        label: 'Enter your bank name.'
+                    },
+                    {
+                        id: 'accountNumber',
+                        label: 'Enter your account number or IBAN.'
+                    }
+                ];
+
+                for (const field of requiredBankFields) {
+                    const element = document.getElementById(field.id);
+
+                    if (!element.value.trim()) {
+                        element.focus();
+
+                        showToast(
+                            'Complete your bank details',
+                            field.label
+                        );
+
+                        return;
+                    }
+                }
+            }
+
+            if (selectedMethod === 'card') {
+                showToast(
+                    'Card payouts unavailable',
+                    'A supported and secure card payout provider must be connected before this withdrawal method can be used.'
+                );
+
+                return;
+            }
+
+            if (!confirmDetails.checked) {
+                confirmDetails.focus();
+
+                showToast(
+                    'Confirmation required',
+                    'Please confirm that you have reviewed the withdrawal details.'
+                );
+
+                return;
+            }
+
+            /*
+             * FRONTEND ONLY:
+             * This page does not send a withdrawal request, connect to a wallet,
+             * contact a bank, or initiate a transaction.
+             *
+             * A trusted backend must verify authentication, available funds,
+             * permissions, fees, withdrawal limits, destination details and
+             * transaction status before any real withdrawal is processed.
+             */
+
+            showToast(
+                'Withdrawal service not connected',
+                'Your details have not been submitted and no funds have been moved. Connect a secure withdrawal service before processing real transactions.'
+            );
+        });
+
+
+        /* Initialize */
+        setMethod('crypto');
+        updateAmountSummary();
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposits | NEXTCHAIN Admin</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: "#080D20",
+                        panel: "#101831",
+                        violet: "#7867FF",
+                        ice: "#43D9FF",
+                        muted: "#8993B5"
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080D20;
+            color: #F3F5FF;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand {
+            font-family: 'Sora', sans-serif;
+        }
+
+        .sidebar {
+            width: 258px;
+            position: fixed;
+            inset: 0 auto 0 0;
+            background: #0B1228;
+            border-right: 1px solid rgba(255, 255, 255, .07);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            transition: transform .3s ease;
+        }
+
+        .main {
+            margin-left: 258px;
+            min-height: 100vh;
+        }
+
+        .brand-mark {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: white;
+            font-size: 24px;
+            background: linear-gradient(135deg, #7867FF, #43D9FF);
+            box-shadow: 0 5px 24px rgba(120, 103, 255, .22);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 12px 14px;
+            color: #8993B5;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, .045);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: rgba(120, 103, 255, .15);
+            box-shadow: inset 3px 0 #7867FF;
+        }
+
+        .nav-link.active i {
+            color: #A69BFF;
+        }
+
+        .card {
+            background: #101831;
+            border: 1px solid rgba(255, 255, 255, .065);
+            border-radius: 16px;
+        }
+
+        .stat-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #0B1228;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 10px;
+            padding: 11px 13px;
+            color: #F3F5FF;
+            outline: none;
+            font-size: 13px;
+        }
+
+        .form-control:focus {
+            border-color: #7867FF;
+            box-shadow: 0 0 0 3px rgba(120, 103, 255, .1);
+        }
+
+        .form-control::placeholder {
+            color: #66708F;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #101831;
+            color: white;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            text-align: left;
+            color: #8993B5;
+            background: rgba(255, 255, 255, .018);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            padding: 16px 20px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 17px 20px;
+            border-top: 1px solid rgba(255, 255, 255, .055);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            transition: background .2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, .025);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 7px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-pending {
+            color: #F5C76A;
+            background: rgba(245, 199, 106, .09);
+        }
+
+        .status-approved {
+            color: #48D9A4;
+            background: rgba(72, 217, 164, .09);
+        }
+
+        .status-rejected {
+            color: #FF8290;
+            background: rgba(255, 130, 144, .09);
+        }
+
+        .status-review {
+            color: #43D9FF;
+            background: rgba(67, 217, 255, .09);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #7867FF;
+            color: white;
+            padding: 11px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 0;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-primary:hover {
+            background: #6654F5;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .09);
+            color: #C8CEE5;
+            padding: 10px 13px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, .08);
+            color: white;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .04);
+            color: #A8B1CE;
+            border: 1px solid rgba(255, 255, 255, .07);
+            cursor: pointer;
+            font-size: 18px;
+            transition: .2s;
+        }
+
+        .icon-btn:hover {
+            color: white;
+            background: rgba(120, 103, 255, .15);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 5, 16, .78);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 200;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 540px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #101831;
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 18px;
+            padding: 25px;
+            animation: modalIn .2s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #8993B5;
+            font-size: 12px;
+        }
+
+        .detail-value {
+            color: #F3F5FF;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .mobile-overlay {
+            display: none;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            background: rgba(120, 103, 255, .1);
+            color: #A69BFF;
+            font-size: 28px;
+        }
+
+        .notice {
+            border: 1px solid rgba(67, 217, 255, .15);
+            background: rgba(67, 217, 255, .04);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .mobile-overlay.show {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, .6);
+                z-index: 90;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page-content {
+                padding: 20px 15px !important;
+            }
+
+            .topbar {
+                padding: 15px !important;
+            }
+
+            .stat-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .stat-card {
+                padding: 15px !important;
+            }
+
+            .stat-value {
+                font-size: 20px !important;
+            }
+
+            .modal {
+                padding: 19px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Mobile overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="px-6 py-6 flex items-center gap-3 border-b border-white/[0.06]">
+            <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40">
+                    <path d="M8 30V10h5l14 16V10h5v20h-5L13 14v16z" fill="currentColor" />
+                    <path d="M27 10h5v5" fill="none" stroke="#43D9FF" stroke-width="2.5" stroke-linecap="round" />
+                </svg></span>
+
+            <div>
+                <h1 class="brand text-lg font-bold tracking-wide">NEXTCHAIN</h1>
+                <p class="text-[10px] text-muted tracking-[2px] uppercase mt-1">Admin Console</p>
+            </div>
+        </div>
+
+        <div class="px-5 pt-6 pb-2">
+            <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#64708F] px-3">
+                Main Menu
+            </p>
+        </div>
+
+        <nav class="px-4 space-y-1">
+            <a href="index.html" class="nav-link">
+                <i class='bx bx-grid-alt'></i>
+                Dashboard
+            </a>
+
+            <a href="user.html" class="nav-link">
+                <i class='bx bx-user'></i>
+                Users
+            </a>
+
+            <a href="investment.html" class="nav-link">
+                <i class='bx bx-trending-up'></i>
+                Investments
+            </a>
+        </nav>
+
+        <div class="px-5 pt-7 pb-2">
+            <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#64708F] px-3">
+                Finance
+            </p>
+        </div>
+
+        <nav class="px-4 space-y-1">
+            <a href="deposit.html" class="nav-link active">
+                <i class='bx bx-wallet'></i>
+                Deposits
+            </a>
+
+            <a href="withdrawals.html" class="nav-link">
+                <i class='bx bx-money-withdraw'></i>
+                Withdrawals
+            </a>
+
+            <a href="transaction.html" class="nav-link">
+                <i class='bx bx-transfer-alt'></i>
+                Transactions
+            </a>
+        </nav>
+
+        <div class="px-5 pt-7 pb-2">
+            <p class="text-[10px] font-semibold uppercase tracking-[1.5px] text-[#64708F] px-3">
+                Platform
+            </p>
+        </div>
+
+        <nav class="px-4 space-y-1">
+            <a href="support.html" class="nav-link">
+                <i class='bx bx-support'></i>
+                Support
+            </a>
+
+            <a href="report-notification.html" class="nav-link">
+                <i class='bx bx-bar-chart-alt-2'></i>
+                Reports & Notifications
+            </a>
+
+            <a href="settings.html" class="nav-link">
+                <i class='bx bx-cog'></i>
+                Settings & Profile
+            </a>
+        </nav>
+
+        <div class="mt-auto p-4">
+            <div class="rounded-xl p-4 border border-white/[0.07] bg-white/[0.02]">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span class="text-xs font-medium text-gray-300">Admin Workspace</span>
+                </div>
+
+                <p class="text-[10px] text-muted leading-relaxed">
+                    Frontend preview. Deposit records are not connected to a live data source.
+                </p>
+            </div>
+
+            <button onclick="logoutNotice()" class="nav-link w-full mt-3">
+                <i class='bx bx-log-out'></i>
+                Logout
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <header
+            class="topbar sticky top-0 z-40 flex items-center justify-between gap-4 px-8 py-5 border-b border-white/[0.06] bg-[#080D20]/95 backdrop-blur-xl">
+
+            <div class="flex items-center gap-3 min-w-0">
+                <button onclick="toggleSidebar()" class="icon-btn lg:hidden flex-shrink-0" aria-label="Open menu">
+                    <i class='bx bx-menu'></i>
+                </button>
+
+                <div>
+                    <div class="flex items-center gap-2 text-[11px] text-muted mb-1">
+                        <span>Admin</span>
+                        <i class='bx bx-chevron-right'></i>
+                        <span class="text-[#B8B0FF]">Deposits</span>
+                    </div>
+
+                    <h2 class="text-lg sm:text-xl font-semibold">Deposit Management</h2>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <button class="icon-btn relative" onclick="showNotice('Notifications are not connected yet.')"
+                    aria-label="Notifications">
+                    <i class='bx bx-bell'></i>
+                </button>
+
+                <div class="hidden sm:flex items-center gap-3 pl-3 border-l border-white/[0.09]">
+                    <div
+                        class="w-9 h-9 rounded-full flex items-center justify-center bg-violet/20 text-[#B9B0FF] font-semibold text-sm">
+                        A
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-semibold">Administrator</p>
+                        <p class="text-[10px] text-muted mt-1">Platform Admin</p>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <div class="page-content p-8">
+
+            <!-- Heading -->
+            <section class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+                <div>
+                    <p class="text-xs text-ice font-medium mb-2">FINANCIAL OPERATIONS</p>
+
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
+                        Deposits
+                    </h1>
+
+                    <p class="text-sm text-muted mt-2 max-w-xl leading-relaxed">
+                        Review deposit requests, inspect payment information, and track deposit statuses.
+                    </p>
+                </div>
+
+                <button class="btn-secondary self-start sm:self-auto" onclick="exportDeposits()">
+                    <i class='bx bx-download text-lg'></i>
+                    Export CSV
+                </button>
+            </section>
+
+            <!-- Frontend notice -->
+            <div class="notice flex items-start gap-3 rounded-xl px-4 py-3.5 mb-6">
+                <i class='bx bx-info-circle text-ice text-xl mt-0.5'></i>
+
+                <div>
+                    <p class="text-xs font-semibold text-gray-200">
+                        Deposit records are not connected
+                    </p>
+
+                    <p class="text-[11px] text-muted mt-1 leading-relaxed">
+                        This page is a frontend prototype. It does not verify payments, change user balances, or approve
+                        real deposits.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <section class="stat-grid grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-7">
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Total Deposits</p>
+
+                        <div class="stat-icon bg-violet/10 text-[#A69BFF]">
+                            <i class='bx bx-wallet'></i>
+                        </div>
+                    </div>
+
+                    <h3 id="totalDeposits" class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Total Amount</p>
+
+                        <div class="stat-icon bg-ice/10 text-ice">
+                            <i class='bx bx-money'></i>
+                        </div>
+                    </div>
+
+                    <h3 id="totalAmount" class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Pending Review</p>
+
+                        <div class="stat-icon bg-amber-400/10 text-amber-300">
+                            <i class='bx bx-time-five'></i>
+                        </div>
+                    </div>
+
+                    <h3 id="pendingDeposits" class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+                <div class="card stat-card p-5">
+                    <div class="flex items-center justify-between gap-3 mb-5">
+                        <p class="text-xs text-muted">Approved Deposits</p>
+
+                        <div class="stat-icon bg-emerald-400/10 text-emerald-400">
+                            <i class='bx bx-check-circle'></i>
+                        </div>
+                    </div>
+
+                    <h3 id="approvedDeposits" class="stat-value text-2xl font-bold">—</h3>
+                    <p class="text-[10px] text-muted mt-2">Awaiting connected data</p>
+                </div>
+
+            </section>
+
+            <!-- Payment method overview -->
+            <section class="card p-5 sm:p-6 mb-7">
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                    <div>
+                        <h2 class="text-base font-semibold">Deposit Methods</h2>
+                        <p class="text-xs text-muted mt-1">
+                            Overview of payment channels configured for the platform.
+                        </p>
+                    </div>
+
+                    <a href="settings.html" class="btn-secondary self-start sm:self-auto">
+                        <i class='bx bx-cog text-lg'></i>
+                        Platform Settings
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <div class="rounded-xl p-4 border border-white/[0.07] bg-white/[0.015]">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-violet/10 text-[#A69BFF] flex items-center justify-center text-xl">
+                                <i class='bx bx-transfer'></i>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-semibold">Bank Transfer</h3>
+                                <p class="text-[11px] text-muted mt-1">Configuration not connected</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/[0.06] flex justify-between items-center">
+                            <span class="text-xs text-muted">Status</span>
+                            <span class="text-[10px] text-amber-300">Not verified</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl p-4 border border-white/[0.07] bg-white/[0.015]">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-ice/10 text-ice flex items-center justify-center text-xl">
+                                <i class='bx bx-credit-card'></i>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-semibold">Card Payment</h3>
+                                <p class="text-[11px] text-muted mt-1">Configuration not connected</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/[0.06] flex justify-between items-center">
+                            <span class="text-xs text-muted">Status</span>
+                            <span class="text-[10px] text-amber-300">Not verified</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl p-4 border border-white/[0.07] bg-white/[0.015]">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-11 h-11 rounded-xl bg-emerald-400/10 text-emerald-400 flex items-center justify-center text-xl">
+                                <i class='bx bx-globe'></i>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-semibold">Other Methods</h3>
+                                <p class="text-[11px] text-muted mt-1">No active configuration</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-white/[0.06] flex justify-between items-center">
+                            <span class="text-xs text-muted">Status</span>
+                            <span class="text-[10px] text-amber-300">Not configured</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Deposit records -->
+            <section class="card overflow-hidden">
+
+                <div class="p-5 sm:p-6 border-b border-white/[0.06]">
+
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-base font-semibold">Deposit Requests</h2>
+                            <p class="text-xs text-muted mt-1">
+                                Search and inspect deposit submissions.
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-muted">
+                            <span class="w-2 h-2 rounded-full bg-amber-300"></span>
+                            <span id="recordCount">0 records</span>
+                        </div>
+                    </div>
+
+                    <!-- Search and filters -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+
+                        <div class="relative sm:col-span-2">
+                            <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg'></i>
+
+                            <input type="text" id="searchInput" class="form-control pl-10"
+                                placeholder="Search user, email or deposit ID...">
+                        </div>
+
+                        <select id="statusFilter" class="form-control">
+                            <option value="">All statuses</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Under Review">Under Review</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+
+                        <select id="methodFilter" class="form-control">
+                            <option value="">All payment methods</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Card">Card</option>
+                            <option value="Crypto">Crypto</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Table -->
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Deposit ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Reference</th>
+                                <th>Date Submitted</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="depositTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Empty state -->
+                <div id="emptyState" class="py-14 px-5 text-center">
+                    <div class="empty-icon">
+                        <i class='bx bx-wallet'></i>
+                    </div>
+
+                    <h3 class="text-sm font-semibold">No deposit requests yet</h3>
+
+                    <p class="text-xs text-muted mt-2 max-w-sm mx-auto leading-relaxed">
+                        Deposit requests will appear here when the backend supplies actual records.
+                    </p>
+
+                    <button onclick="resetFilters()" class="btn-secondary mt-5">
+                        <i class='bx bx-refresh text-lg'></i>
+                        Reset filters
+                    </button>
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination"
+                    class="hidden p-5 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <p id="pageInfo" class="text-xs text-muted"></p>
+
+                    <div class="flex items-center gap-2">
+                        <button id="prevPage" class="btn-secondary" onclick="changePage(-1)">
+                            <i class='bx bx-chevron-left'></i>
+                            Previous
+                        </button>
+
+                        <span id="pageNumber" class="text-xs text-muted px-2"></span>
+
+                        <button id="nextPage" class="btn-secondary" onclick="changePage(1)">
+                            Next
+                            <i class='bx bx-chevron-right'></i>
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-8 pb-4 flex flex-col sm:flex-row justify-between gap-2 text-[10px] text-muted">
+                <p>© <span id="currentYear"></span> NEXTCHAIN. Admin Console.</p>
+                <p>Deposit figures remain unavailable until a data source is connected.</p>
+            </footer>
+
+        </div>
+
+    </main>
+
+    <!-- Deposit details modal -->
+    <div class="modal-overlay" id="depositModal" onclick="closeModalOutside(event)">
+
+        <div class="modal">
+
+            <div class="flex items-start justify-between gap-4 mb-5">
+                <div>
+                    <p class="text-[10px] text-ice tracking-[1.5px] uppercase mb-2">
+                        Deposit Details
+                    </p>
+
+                    <h2 class="text-lg font-semibold" id="modalDepositId">
+                        Deposit
+                    </h2>
+
+                    <p class="text-xs text-muted mt-1">
+                        Submission information
+                    </p>
+                </div>
+
+                <button onclick="closeModal()" class="icon-btn" aria-label="Close details">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <div class="rounded-xl p-4 bg-white/[0.025] border border-white/[0.06] mb-5">
+                <p class="text-xs text-muted mb-2">Deposit Amount</p>
+
+                <h3 id="modalAmount" class="text-2xl font-bold">—</h3>
+
+                <div class="mt-3">
+                    <span id="modalStatus" class="status status-pending">Pending</span>
+                </div>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">User</span>
+                <span class="detail-value" id="modalUser">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value" id="modalEmail">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Payment Method</span>
+                <span class="detail-value" id="modalMethod">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Payment Reference</span>
+                <span class="detail-value" id="modalReference">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Date Submitted</span>
+                <span class="detail-value" id="modalDate">—</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Admin Note</span>
+                <span class="detail-value" id="modalNote">—</span>
+            </div>
+
+            <div class="rounded-xl border border-amber-300/15 bg-amber-300/[0.04] p-3 mt-5">
+                <p class="text-[11px] text-amber-200 leading-relaxed">
+                    Viewing a deposit does not verify that a payment was received. Payment verification and balance
+                    updates require a secure backend.
+                </p>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button onclick="closeModal()" class="btn-secondary">
+                    Close
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"
+        class="fixed bottom-5 right-5 z-[300] hidden max-w-sm rounded-xl border border-white/10 bg-[#151F3B] px-4 py-3 shadow-2xl">
+        <div class="flex items-start gap-3">
+            <i class='bx bx-info-circle text-ice text-xl'></i>
+
+            <div>
+                <p id="toastTitle" class="text-xs font-semibold">Notice</p>
+                <p id="toastMessage" class="text-[11px] text-muted mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /*
+         * NEXTCHAIN DEPOSIT MANAGEMENT
+         *
+         * Frontend only.
+         * No Firebase, API, database, or backend integration.
+         *
+         * Keep this array empty until genuine deposit records
+         * are supplied by your backend.
+         */
+
+        const deposits = [];
+
+        const pageSize = 8;
+        let currentPage = 1;
+        let toastTimer;
+
+        const tableBody = document.getElementById("depositTableBody");
+        const emptyState = document.getElementById("emptyState");
+        const pagination = document.getElementById("pagination");
+        const searchInput = document.getElementById("searchInput");
+        const statusFilter = document.getElementById("statusFilter");
+        const methodFilter = document.getElementById("methodFilter");
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+        function formatCurrency(value, currency = "USD") {
+            const amount = Number(value);
+
+            if (!Number.isFinite(amount)) {
+                return "—";
+            }
+
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency,
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[character]);
+        }
+
+        function formatDate(value) {
+            if (!value) return "—";
+
+            const date = new Date(value);
+
+            if (Number.isNaN(date.getTime())) {
+                return "—";
+            }
+
+            return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+        }
+
+        function getStatusClass(status) {
+            const normalized = String(status || "").toLowerCase();
+
+            if (normalized === "approved") return "status-approved";
+            if (normalized === "rejected") return "status-rejected";
+            if (normalized === "under review") return "status-review";
+
+            return "status-pending";
+        }
+
+        function getFilteredDeposits() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const selectedStatus = statusFilter.value.toLowerCase();
+            const selectedMethod = methodFilter.value.toLowerCase();
+
+            return deposits.filter(deposit => {
+                const searchableText = [
+                    deposit.id,
+                    deposit.user,
+                    deposit.email,
+                    deposit.reference
+                ].join(" ").toLowerCase();
+
+                const matchesSearch =
+                    !searchTerm || searchableText.includes(searchTerm);
+
+                const matchesStatus =
+                    !selectedStatus ||
+                    String(deposit.status || "").toLowerCase() === selectedStatus;
+
+                const matchesMethod =
+                    !selectedMethod ||
+                    String(deposit.method || "").toLowerCase() === selectedMethod;
+
+                return matchesSearch && matchesStatus && matchesMethod;
+            });
+        }
+
+        function renderStatistics() {
+            const approved = deposits.filter(item =>
+                String(item.status).toLowerCase() === "approved"
+            );
+
+            const pending = deposits.filter(item =>
+                String(item.status).toLowerCase() === "pending"
+            );
+
+            const totalApprovedAmount = approved.reduce((sum, item) => {
+                return sum + (Number(item.amount) || 0);
+            }, 0);
+
+            document.getElementById("totalDeposits").textContent =
+                deposits.length.toLocaleString();
+
+            document.getElementById("totalAmount").textContent =
+                formatCurrency(totalApprovedAmount);
+
+            document.getElementById("pendingDeposits").textContent =
+                pending.length.toLocaleString();
+
+            document.getElementById("approvedDeposits").textContent =
+                approved.length.toLocaleString();
+        }
+
+        function renderDeposits() {
+            const filtered = getFilteredDeposits();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
+            const startIndex = (currentPage - 1) * pageSize;
+            const visibleDeposits = filtered.slice(
+                startIndex,
+                startIndex + pageSize
+            );
+
+            document.getElementById("recordCount").textContent =
+                `${filtered.length} ${filtered.length === 1 ? "record" : "records"}`;
+
+            tableBody.innerHTML = "";
+
+            if (visibleDeposits.length === 0) {
+                emptyState.classList.remove("hidden");
+                pagination.classList.add("hidden");
+
+                const title = emptyState.querySelector("h3");
+                const description = emptyState.querySelector("p");
+
+                if (deposits.length === 0) {
+                    title.textContent = "No deposit requests yet";
+                    description.textContent =
+                        "Deposit requests will appear here when the backend supplies actual records.";
+                } else {
+                    title.textContent = "No matching deposits";
+                    description.textContent =
+                        "Try changing your search term or filters.";
+                }
+
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            pagination.classList.remove("hidden");
+
+            tableBody.innerHTML = visibleDeposits.map(deposit => `
+                <tr>
+                    <td>
+                        <span class="font-semibold text-[#B8B0FF]">
+                            ${escapeHTML(deposit.id)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-violet/15 text-[#B8B0FF] flex items-center justify-center font-semibold text-xs flex-shrink-0">
+                                ${escapeHTML((deposit.user || "?").charAt(0).toUpperCase())}
+                            </div>
+
+                            <div>
+                                <p class="font-medium text-gray-200">
+                                    ${escapeHTML(deposit.user)}
+                                </p>
+
+                                <p class="text-[10px] text-muted mt-1">
+                                    ${escapeHTML(deposit.email)}
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="font-semibold">
+                            ${formatCurrency(deposit.amount, deposit.currency || "USD")}
+                        </span>
+                    </td>
+
+                    <td class="text-gray-300">
+                        ${escapeHTML(deposit.method || "—")}
+                    </td>
+
+                    <td class="text-muted">
+                        ${escapeHTML(deposit.reference || "—")}
+                    </td>
+
+                    <td class="text-muted">
+                        ${formatDate(deposit.date)}
+                    </td>
+
+                    <td>
+                        <span class="status ${getStatusClass(deposit.status)}">
+                            ${escapeHTML(deposit.status || "Pending")}
+                        </span>
+                    </td>
+
+                    <td>
+                        <button
+                            class="icon-btn"
+                            title="View deposit details"
+                            aria-label="View deposit details"
+                            onclick="viewDeposit('${escapeHTML(deposit.id)}')"
+                        >
+                            <i class='bx bx-show'></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+
+            document.getElementById("pageInfo").textContent =
+                `Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, filtered.length)} of ${filtered.length} records`;
+
+            document.getElementById("pageNumber").textContent =
+                `${currentPage} / ${totalPages}`;
+
+            document.getElementById("prevPage").disabled = currentPage === 1;
+            document.getElementById("nextPage").disabled =
+                currentPage === totalPages;
+
+            document.getElementById("prevPage").style.opacity =
+                currentPage === 1 ? ".45" : "1";
+
+            document.getElementById("nextPage").style.opacity =
+                currentPage === totalPages ? ".45" : "1";
+        }
+
+        function changePage(direction) {
+            const filtered = getFilteredDeposits();
+            const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+
+            currentPage = Math.min(
+                totalPages,
+                Math.max(1, currentPage + direction)
+            );
+
+            renderDeposits();
+        }
+
+        function resetFilters() {
+            searchInput.value = "";
+            statusFilter.value = "";
+            methodFilter.value = "";
+            currentPage = 1;
+
+            renderDeposits();
+        }
+
+        searchInput.addEventListener("input", () => {
+            currentPage = 1;
+            renderDeposits();
+        });
+
+        statusFilter.addEventListener("change", () => {
+            currentPage = 1;
+            renderDeposits();
+        });
+
+        methodFilter.addEventListener("change", () => {
+            currentPage = 1;
+            renderDeposits();
+        });
+
+        function viewDeposit(id) {
+            const deposit = deposits.find(item => item.id === id);
+
+            if (!deposit) {
+                showNotice("The selected deposit could not be found.");
+                return;
+            }
+
+            document.getElementById("modalDepositId").textContent =
+                deposit.id || "Deposit";
+
+            document.getElementById("modalAmount").textContent =
+                formatCurrency(deposit.amount, deposit.currency || "USD");
+
+            document.getElementById("modalUser").textContent =
+                deposit.user || "—";
+
+            document.getElementById("modalEmail").textContent =
+                deposit.email || "—";
+
+            document.getElementById("modalMethod").textContent =
+                deposit.method || "—";
+
+            document.getElementById("modalReference").textContent =
+                deposit.reference || "—";
+
+            document.getElementById("modalDate").textContent =
+                formatDate(deposit.date);
+
+            document.getElementById("modalNote").textContent =
+                deposit.note || "No note provided";
+
+            const modalStatus = document.getElementById("modalStatus");
+
+            modalStatus.className =
+                `status ${getStatusClass(deposit.status)}`;
+
+            modalStatus.textContent = deposit.status || "Pending";
+
+            document.getElementById("depositModal").classList.add("show");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+            document.getElementById("depositModal").classList.remove("show");
+            document.body.style.overflow = "";
+        }
+
+        function closeModalOutside(event) {
+            if (event.target.id === "depositModal") {
+                closeModal();
+            }
+        }
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") {
+                closeModal();
+                closeSidebar();
+            }
+        });
+
+        function exportDeposits() {
+            const filtered = getFilteredDeposits();
+
+            if (filtered.length === 0) {
+                showNotice("There are no deposit records to export.");
+                return;
+            }
+
+            const headers = [
+                "Deposit ID",
+                "User",
+                "Email",
+                "Amount",
+                "Currency",
+                "Payment Method",
+                "Reference",
+                "Date",
+                "Status",
+                "Admin Note"
+            ];
+
+            const rows = filtered.map(item => [
+                item.id,
+                item.user,
+                item.email,
+                item.amount,
+                item.currency || "USD",
+                item.method,
+                item.reference,
+                item.date,
+                item.status,
+                item.note
+            ]);
+
+            const csvCell = value =>
+                `"${String(value ?? "").replace(/"/g, '""')}"`;
+
+            const csv = [headers, ...rows]
+                .map(row => row.map(csvCell).join(","))
+                .join("\r\n");
+
+            const blob = new Blob(["\uFEFF" + csv], {
+                type: "text/csv;charset=utf-8;"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "nextchain-deposits.csv";
+            link.click();
+
+            URL.revokeObjectURL(url);
+
+            showNotice("The filtered deposit records have been exported.");
+        }
+
+        function showNotice(message) {
+            const toast = document.getElementById("toast");
+
+            document.getElementById("toastTitle").textContent = "Notice";
+            document.getElementById("toastMessage").textContent = message;
+
+            toast.classList.remove("hidden");
+
+            clearTimeout(toastTimer);
+
+            toastTimer = setTimeout(() => {
+                toast.classList.add("hidden");
+            }, 3500);
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+            document.getElementById("mobileOverlay").classList.toggle("show");
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").classList.remove("open");
+            document.getElementById("mobileOverlay").classList.remove("show");
+        }
+
+        function logoutNotice() {
+            showNotice("Connect your authentication system to enable secure logout.");
+        }
+
+        // Initial rendering
+        renderStatistics();
+        renderDeposits();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | NEXTCHAIN</title>
+    <meta
+        name="description"
+        content="Manage your NEXTCHAIN account, investments, transactions, and profile."
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --background: #080b18;
+            --surface: #101528;
+            --surface-light: #151b32;
+            --surface-hover: #1a2140;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f4f6ff;
+            --muted: #929bb6;
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --blue: #60a5fa;
+            --green: #34d399;
+            --red: #fb7185;
+            --sidebar-width: 255px;
+            --radius: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background);
+            color: var(--text);
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--primary-light);
+            outline-offset: 3px;
+        }
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            width: var(--sidebar-width);
+            padding: 25px 17px;
+            background: #0d1122;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            transition: transform 0.25s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 10px 29px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand img {
+            display: block;
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .brand-name {
+            font-family: "Sora", sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .brand-name span {
+            color: var(--primary-light);
+        }
+
+        .nav-label {
+            margin: 27px 12px 12px;
+            color: #69738f;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            display: grid;
+            gap: 5px;
+            list-style: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 46px;
+            padding: 0 13px;
+            color: var(--muted);
+            border: 1px solid transparent;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav-link i {
+            font-size: 20px;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: rgba(139, 92, 246, 0.14);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        .nav-link.active i {
+            color: var(--primary-light);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 24px;
+        }
+
+        .support-card {
+            padding: 17px;
+            background: linear-gradient(
+                145deg,
+                rgba(139, 92, 246, 0.17),
+                rgba(96, 165, 250, 0.06)
+            );
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            border-radius: 15px;
+        }
+
+        .support-card i {
+            color: var(--primary-light);
+            font-size: 24px;
+        }
+
+        .support-card h4 {
+            margin: 12px 0 6px;
+            font-size: 13px;
+        }
+
+        .support-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .support-card a {
+            display: inline-flex;
+            margin-top: 13px;
+            color: var(--primary-light);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            display: none;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(3px);
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* MAIN AREA */
+
+        .main {
+            min-width: 0;
+            min-height: 100vh;
+            margin-left: var(--sidebar-width);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 78px;
+            padding: 15px 32px;
+            background: rgba(8, 11, 24, 0.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(18px);
+        }
+
+        .topbar-left,
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            color: var(--text);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 23px;
+        }
+
+        .page-context h1 {
+            font-family: "Sora", sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .page-context p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .icon-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            color: #c2c9df;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 21px;
+        }
+
+        .icon-button:hover {
+            background: var(--surface-hover);
+        }
+
+        .profile-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            padding: 4px 8px 4px 4px;
+            background: transparent;
+            border: 0;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 39px;
+            height: 39px;
+            color: white;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border-radius: 13px;
+            font-family: "Sora", sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .profile-details {
+            min-width: 0;
+        }
+
+        .profile-details strong {
+            display: block;
+            max-width: 150px;
+            overflow: hidden;
+            font-size: 12px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .profile-details span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .profile-button > i {
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        /* CONTENT */
+
+        .content {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px 32px 40px;
+        }
+
+        .welcome-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 27px;
+        }
+
+        .welcome-row h2 {
+            font-family: "Sora", sans-serif;
+            font-size: clamp(20px, 2.2vw, 27px);
+            line-height: 1.45;
+            letter-spacing: -0.8px;
+        }
+
+        .welcome-row p {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .date-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 11px 13px;
+            color: #c0c7df;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            font-size: 11px;
+        }
+
+        .date-display i {
+            color: var(--primary-light);
+            font-size: 17px;
+        }
+
+        .notice {
+            display: none;
+            margin-bottom: 22px;
+            padding: 13px 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .notice.show {
+            display: block;
+        }
+
+        .notice.error {
+            color: #fecdd3;
+            background: rgba(251, 113, 133, 0.08);
+            border-color: rgba(251, 113, 133, 0.2);
+        }
+
+        .notice.info {
+            color: #bfdbfe;
+            background: rgba(96, 165, 250, 0.08);
+            border-color: rgba(96, 165, 250, 0.2);
+        }
+
+        /* SUMMARY CARDS */
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            min-width: 0;
+            padding: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .summary-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .summary-card-top > span {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .summary-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 39px;
+            height: 39px;
+            border-radius: 12px;
+            font-size: 20px;
+        }
+
+        .purple {
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .blue {
+            color: #93c5fd;
+            background: rgba(96, 165, 250, 0.13);
+        }
+
+        .green {
+            color: #6ee7b7;
+            background: rgba(52, 211, 153, 0.12);
+        }
+
+        .orange {
+            color: #fdba74;
+            background: rgba(251, 146, 60, 0.12);
+        }
+
+        .summary-card h3 {
+            margin-top: 19px;
+            overflow-wrap: anywhere;
+            font-family: "Sora", sans-serif;
+            font-size: clamp(19px, 2vw, 25px);
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .summary-card-bottom {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .summary-card-bottom i {
+            color: var(--primary-light);
+            font-size: 15px;
+        }
+
+        /* ACTIONS */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+
+        .section-heading h3 {
+            font-family: "Sora", sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .section-heading p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .text-link {
+            color: var(--primary-light);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .actions-section {
+            margin-bottom: 28px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .action-card {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            padding: 17px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .action-card:hover {
+            background: var(--surface-light);
+            border-color: rgba(167, 139, 250, 0.4);
+        }
+
+        .action-card .summary-icon {
+            width: 43px;
+            height: 43px;
+        }
+
+        .action-card h4 {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .action-card p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* LOWER CONTENT */
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(270px, 0.85fr);
+            gap: 20px;
+        }
+
+        .panel {
+            min-width: 0;
+            padding: 22px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .panel-heading h3 {
+            font-family: "Sora", sans-serif;
+            font-size: 14px;
+        }
+
+        .panel-heading p {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .period-select {
+            max-width: 120px;
+            padding: 9px 10px;
+            color: #cbd5e1;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: 10px;
+        }
+
+        /* PORTFOLIO */
+
+        .portfolio-total {
+            margin-bottom: 22px;
+        }
+
+        .portfolio-total span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .portfolio-total h4 {
+            margin-top: 8px;
+            overflow-wrap: anywhere;
+            font-family: "Sora", sans-serif;
+            font-size: 25px;
+            letter-spacing: -0.8px;
+        }
+
+        .portfolio-bar {
+            display: flex;
+            width: 100%;
+            height: 9px;
+            overflow: hidden;
+            background: #202741;
+            border-radius: 20px;
+        }
+
+        .portfolio-bar span {
+            display: block;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .portfolio-bar .invested-segment {
+            background: var(--primary);
+        }
+
+        .portfolio-bar .available-segment {
+            background: var(--blue);
+        }
+
+        .portfolio-legend {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+            margin-top: 21px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .legend-dot {
+            flex-shrink: 0;
+            width: 9px;
+            height: 9px;
+            margin-top: 4px;
+            border-radius: 50%;
+        }
+
+        .legend-item span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .legend-item strong {
+            display: block;
+            margin-top: 5px;
+            overflow-wrap: anywhere;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            padding: 28px 12px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .empty-state i {
+            display: block;
+            margin-bottom: 10px;
+            color: #687391;
+            font-size: 30px;
+        }
+
+        .empty-state p {
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        /* TRANSACTIONS */
+
+        .transactions-panel {
+            margin-top: 21px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .transaction-table th {
+            padding: 13px 12px;
+            color: #77819e;
+            border-bottom: 1px solid var(--border);
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .transaction-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .transaction-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .transaction-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .transaction-type-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            font-size: 17px;
+        }
+
+        .transaction-type strong {
+            display: block;
+            font-size: 11px;
+        }
+
+        .transaction-type span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .amount-positive {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .amount-negative {
+            color: #fda4af;
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .status::before {
+            width: 5px;
+            height: 5px;
+            background: currentColor;
+            border-radius: 50%;
+            content: "";
+        }
+
+        .status.completed {
+            color: #6ee7b7;
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .status.pending {
+            color: #fcd34d;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .status.failed,
+        .status.rejected {
+            color: #fda4af;
+            background: rgba(251, 113, 133, 0.1);
+        }
+
+        .status.processing {
+            color: #93c5fd;
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .table-empty {
+            padding: 30px 12px !important;
+            color: var(--muted);
+            text-align: center;
+            white-space: normal !important;
+        }
+
+        /* INVESTMENTS */
+
+        .investment-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .investment-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+        }
+
+        .investment-symbol {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 39px;
+            height: 39px;
+            color: #c4b5fd;
+            background: rgba(139, 92, 246, 0.13);
+            border-radius: 12px;
+            font-size: 20px;
+        }
+
+        .investment-details {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .investment-details h4 {
+            overflow: hidden;
+            font-size: 11px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .investment-details p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .investment-amount {
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .investment-amount strong {
+            display: block;
+            font-size: 11px;
+        }
+
+        .investment-amount span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            color: #717b97;
+            border-top: 1px solid var(--border);
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .footer a {
+            color: #a5adca;
+        }
+
+        /* LOADING */
+
+        .loading {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: var(--primary-light);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* RESPONSIVE */
+
+        @media (min-width: 1600px) {
+            .content {
+                padding-right: 42px;
+                padding-left: 42px;
+            }
+        }
+
+        @media (max-width: 1250px) {
+            .content {
+                padding-right: 24px;
+                padding-left: 24px;
+            }
+
+            .topbar {
+                padding-right: 24px;
+                padding-left: 24px;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .actions-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .lower-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+            :root {
+                --sidebar-width: 255px;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .topbar {
+                min-height: 70px;
+            }
+
+            .content {
+                padding-top: 25px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                gap: 10px;
+                padding: 12px 15px;
+            }
+
+            .topbar-left,
+            .topbar-right {
+                gap: 9px;
+            }
+
+            .page-context h1 {
+                font-size: 15px;
+            }
+
+            .page-context p {
+                font-size: 10px;
+            }
+
+            .page-context p {
+                max-width: 170px;
+                line-height: 1.5;
+            }
+
+            .profile-details,
+            .profile-button > i {
+                display: none;
+            }
+
+            .profile-button {
+                padding: 0;
+            }
+
+            .icon-button,
+            .menu-toggle {
+                width: 38px;
+                height: 38px;
+                border-radius: 11px;
+            }
+
+            .content {
+                padding: 22px 15px 28px;
+            }
+
+            .welcome-row {
+                flex-direction: column;
+                gap: 14px;
+                margin-bottom: 21px;
+            }
+
+            .welcome-row h2 {
+                font-size: 21px;
+            }
+
+            .date-display {
+                padding: 9px 11px;
+            }
+
+            .summary-grid {
+                gap: 11px;
+                margin-bottom: 23px;
+            }
+
+            .summary-card {
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            .summary-card-top {
+                align-items: flex-start;
+            }
+
+            .summary-card-top > span {
+                font-size: 10px;
+            }
+
+            .summary-icon {
+                width: 33px;
+                height: 33px;
+                border-radius: 10px;
+                font-size: 17px;
+            }
+
+            .summary-card h3 {
+                margin-top: 15px;
+                font-size: clamp(16px, 4.5vw, 22px);
+            }
+
+            .summary-card-bottom {
+                align-items: flex-start;
+                font-size: 9px;
+            }
+
+            .actions-grid {
+                gap: 10px;
+            }
+
+            .action-card {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 11px;
+                padding: 14px;
+                border-radius: 13px;
+            }
+
+            .action-card .summary-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .action-card h4 {
+                font-size: 11px;
+            }
+
+            .action-card p {
+                font-size: 9px;
+            }
+
+            .panel {
+                padding: 16px;
+                border-radius: 15px;
+            }
+
+            .panel-heading {
+                gap: 10px;
+            }
+
+            .portfolio-total h4 {
+                font-size: 23px;
+            }
+
+            .portfolio-legend {
+                gap: 12px;
+            }
+
+            .transactions-panel {
+                padding: 14px 10px;
+            }
+
+            .transactions-panel .panel-heading {
+                padding: 0 5px;
+            }
+
+            .transaction-table th,
+            .transaction-table td {
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+
+            .footer {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .topbar {
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+
+            .topbar-left,
+            .topbar-right {
+                gap: 6px;
+            }
+
+            .page-context h1 {
+                font-size: 13px;
+            }
+
+            .page-context p {
+                max-width: 130px;
+                font-size: 9px;
+            }
+
+            .content {
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+
+            .summary-card {
+                padding: 12px;
+            }
+
+            .summary-card h3 {
+                font-size: 16px;
+            }
+
+            .actions-grid {
+                gap: 8px;
+            }
+
+            .action-card {
+                padding: 11px;
+            }
+
+            .panel {
+                padding: 13px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <a href="../index.html" class="brand" aria-label="NEXTCHAIN home">
+            <!-- Reuse your existing logo. Change this path only if your logo is stored elsewhere. -->
+            <img src="../assets/images/logo.png" alt="NEXTCHAIN logo">
+
+            <div class="brand-name">NEXT<span>CHAIN</span></div>
+        </a>
+
+        <div class="nav-label">Workspace</div>
+
+        <nav aria-label="Main navigation">
+            <ul class="nav-menu">
+
+                <li>
+                    <a href="index.html" class="nav-link active" aria-current="page">
+                        <i class="bx bxs-dashboard"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="investments.html" class="nav-link">
+                        <i class="bx bx-layer"></i>
+                        <span>My Investments</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="deposit.html" class="nav-link">
+                        <i class="bx bx-wallet"></i>
+                        <span>Deposit</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="withdraw.html" class="nav-link">
+                        <i class="bx bx-money-withdraw"></i>
+                        <span>Withdraw</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="transactions.html" class="nav-link">
+                        <i class="bx bx-transfer-alt"></i>
+                        <span>Transactions</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="referrals.html" class="nav-link">
+                        <i class="bx bx-group"></i>
+                        <span>Referrals</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <div class="nav-label">Account</div>
+
+        <nav aria-label="Account navigation">
+            <ul class="nav-menu">
+
+                <li>
+                    <a href="notifications.html" class="nav-link">
+                        <i class="bx bx-bell"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="settings.html" class="nav-link">
+                        <i class="bx bx-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="../pages/about.html" class="nav-link">
+                        <i class="bx bx-info-circle"></i>
+                        <span>About NEXTCHAIN</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button
+                type="button"
+                class="nav-link"
+                id="logoutButton"
+                style="width:100%;margin-top:16px;background:transparent;text-align:left;"
+            >
+                <i class="bx bx-log-out"></i>
+                <span>Log out</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-toggle"
+                    id="menuToggle"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                >
+                    <i class="bx bx-menu"></i>
+                </button>
+
+                <div class="page-context">
+                    <h1>Dashboard</h1>
+                    <p>Your NEXTCHAIN account overview</p>
+                </div>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <a
+                    href="notifications.html"
+                    class="icon-button"
+                    aria-label="Notifications"
+                >
+                    <i class="bx bx-bell"></i>
+                </a>
+
+                <a
+                    href="settings.html"
+                    class="profile-button"
+                    aria-label="Open account settings"
+                >
+                    <div class="avatar" id="profileAvatar">--</div>
+
+                    <div class="profile-details">
+                        <strong id="topbarName">Loading account...</strong>
+                        <span>Account holder</span>
+                    </div>
+
+                    <i class="bx bx-chevron-down"></i>
+                </a>
+
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="content">
+
+            <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+            <!-- WELCOME -->
+            <section class="welcome-row">
+
+                <div>
+                    <h2>
+                        Welcome back, <span id="welcomeName">there</span> 👋
+                    </h2>
+
+                    <p>
+                        Here's what's happening with your account today.
+                    </p>
+                </div>
+
+                <div class="date-display">
+                    <i class="bx bx-calendar"></i>
+                    <span id="currentDate"></span>
+                </div>
+
+            </section>
+
+            <!-- ACCOUNT SUMMARY -->
+            <section class="summary-grid" aria-label="Account summary">
+
+                <article class="summary-card">
+                    <div class="summary-card-top">
+                        <span>Available Balance</span>
+
+                        <div class="summary-icon purple">
+                            <i class="bx bx-wallet"></i>
+                        </div>
+                    </div>
+
+                    <h3 id="availableBalance">
+                        <span class="loading" aria-label="Loading"></span>
+                    </h3>
+
+                    <div class="summary-card-bottom">
+                        <i class="bx bx-shield-quarter"></i>
+                        <span>Available account funds</span>
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <div class="summary-card-top">
+                        <span>Total Invested</span>
+
+                        <div class="summary-icon blue">
+                            <i class="bx bx-layer"></i>
+                        </div>
+                    </div>
+
+                    <h3 id="totalInvested">
+                        <span class="loading" aria-label="Loading"></span>
+                    </h3>
+
+                    <div class="summary-card-bottom">
+                        <i class="bx bx-data"></i>
+                        <span>Across your investments</span>
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <div class="summary-card-top">
+                        <span>Total Profit</span>
+
+                        <div class="summary-icon green">
+                            <i class="bx bx-trending-up"></i>
+                        </div>
+                    </div>
+
+                    <h3 id="totalProfit">
+                        <span class="loading" aria-label="Loading"></span>
+                    </h3>
+
+                    <div class="summary-card-bottom">
+                        <i class="bx bx-line-chart"></i>
+                        <span>Recorded investment profit</span>
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <div class="summary-card-top">
+                        <span>Active Investments</span>
+
+                        <div class="summary-icon orange">
+                            <i class="bx bx-pie-chart-alt-2"></i>
+                        </div>
+                    </div>
+
+                    <h3 id="activeInvestments">
+                        <span class="loading" aria-label="Loading"></span>
+                    </h3>
+
+                    <div class="summary-card-bottom">
+                        <i class="bx bx-check-circle"></i>
+                        <span>Currently active</span>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- QUICK ACTIONS -->
+            <section class="actions-section">
+
+                <div class="section-heading">
+                    <div>
+                        <h3>Quick Actions</h3>
+                        <p>Access your most-used account features.</p>
+                    </div>
+                </div>
+
+                <div class="actions-grid">
+
+                    <a href="deposit.html" class="action-card">
+                        <div class="summary-icon purple">
+                            <i class="bx bx-plus-circle"></i>
+                        </div>
+
+                        <div>
+                            <h4>Make a Deposit</h4>
+                            <p>Add funds to your account</p>
+                        </div>
+                    </a>
+
+                    <a href="withdraw.html" class="action-card">
+                        <div class="summary-icon blue">
+                            <i class="bx bx-money-withdraw"></i>
+                        </div>
+
+                        <div>
+                            <h4>Withdraw Funds</h4>
+                            <p>Request a withdrawal</p>
+                        </div>
+                    </a>
+
+                    <a href="investments.html" class="action-card">
+                        <div class="summary-icon green">
+                            <i class="bx bx-layer-plus"></i>
+                        </div>
+
+                        <div>
+                            <h4>My Investments</h4>
+                            <p>View your investment plans</p>
+                        </div>
+                    </a>
+
+                    <a href="transactions.html" class="action-card">
+                        <div class="summary-icon orange">
+                            <i class="bx bx-receipt"></i>
+                        </div>
+
+                        <div>
+                            <h4>Transaction History</h4>
+                            <p>Review account activity</p>
+                        </div>
+                    </a>
+
+                </div>
+
+            </section>
+
+            <!-- PORTFOLIO AND INVESTMENTS -->
+            <section class="lower-grid">
+
+                <article class="panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Portfolio Overview</h3>
+                            <p>A breakdown of your current account balance.</p>
+                        </div>
+
+                        <i
+                            class="bx bx-doughnut-chart"
+                            style="font-size:23px;color:var(--primary-light);"
+                        ></i>
+                    </div>
+
+                    <div class="portfolio-total">
+                        <span>Total Account Value</span>
+                        <h4 id="portfolioTotal">
+                            <span class="loading" aria-label="Loading"></span>
+                        </h4>
+                    </div>
+
+                    <div
+                        class="portfolio-bar"
+                        role="img"
+                        aria-label="Breakdown of invested funds and available balance"
+                    >
+                        <span
+                            class="invested-segment"
+                            id="investedSegment"
+                            style="width:0%"
+                        ></span>
+
+                        <span
+                            class="available-segment"
+                            id="availableSegment"
+                            style="width:0%"
+                        ></span>
+                    </div>
+
+                    <div class="portfolio-legend">
+
+                        <div class="legend-item">
+                            <span
+                                class="legend-dot"
+                                style="background:var(--primary);"
+                            ></span>
+
+                            <div>
+                                <span>Invested Funds</span>
+                                <strong id="portfolioInvested">—</strong>
+                            </div>
+                        </div>
+
+                        <div class="legend-item">
+                            <span
+                                class="legend-dot"
+                                style="background:var(--blue);"
+                            ></span>
+
+                            <div>
+                                <span>Available Balance</span>
+                                <strong id="portfolioAvailable">—</strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <article class="panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Active Investments</h3>
+                            <p>Your currently active plans.</p>
+                        </div>
+
+                        <a href="investments.html" class="text-link">
+                            View all
+                        </a>
+                    </div>
+
+                    <div class="investment-list" id="investmentList">
+                        <div class="empty-state">
+                            <span class="loading" aria-label="Loading"></span>
+                            <p style="margin-top:12px;">Loading investments...</p>
+                        </div>
+                    </div>
+
+                </article>
+
+            </section>
+
+            <!-- RECENT TRANSACTIONS -->
+            <section class="panel transactions-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h3>Recent Transactions</h3>
+                        <p>Your latest account transactions.</p>
+                    </div>
+
+                    <a href="transactions.html" class="text-link">
+                        View all
+                    </a>
+                </div>
+
+                <div class="table-wrap">
+
+                    <table class="transaction-table">
+
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="transactionTableBody">
+
+                            <tr>
+                                <td colspan="4" class="table-empty">
+                                    <span class="loading" aria-label="Loading"></span>
+                                    <p style="margin-top:10px;">
+                                        Loading transactions...
+                                    </p>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+
+                <p>
+                    &copy; <span id="currentYear"></span> NEXTCHAIN.
+                    All rights reserved.
+                </p>
+
+                <p>
+                    <a href="../pages/privacy.html">Privacy Policy</a>
+                    &nbsp; · &nbsp;
+                    <a href="../pages/terms.html">Terms of Service</a>
+                </p>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script>
+    /* =========================================================
+       NEXTCHAIN RESPONSIVE DASHBOARD
+       Firebase Authentication + Cloud Firestore
+       ========================================================= */
+
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const menuToggle = document.getElementById("menuToggle");
+    const logoutButton = document.getElementById("logoutButton");
+
+    const notice = document.getElementById("notice");
+
+    function openSidebar() {
+        sidebar.classList.add("open");
+        overlay.classList.add("show");
+        menuToggle.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+        menuToggle.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+    }
+
+    menuToggle.addEventListener("click", () => {
+        if (sidebar.classList.contains("open")) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    overlay.addEventListener("click", closeSidebar);
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeSidebar();
+        }
+    });
+
+    sidebar.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            if (window.innerWidth <= 850) {
+                closeSidebar();
+            }
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 850) {
+            closeSidebar();
+        }
+    });
+
+    /* Date and year */
+
+    document.getElementById("currentDate").textContent =
+        new Intl.DateTimeFormat(undefined, {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        }).format(new Date());
+
+    document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
+
+    /* Formatting */
+
+    const currencyFormatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    function formatMoney(value) {
+        const number = Number(value);
+
+        if (!Number.isFinite(number)) {
+            return currencyFormatter.format(0);
+        }
+
+        return currencyFormatter.format(number);
+    }
+
+    function safeNumber(value) {
+        const number = Number(value);
+        return Number.isFinite(number) ? number : 0;
+    }
+
+    function showNotice(message, type = "info") {
+        notice.textContent = message;
+        notice.className = "notice show " + type;
+    }
+
+    function initials(name) {
+        return String(name || "User")
+            .trim()
+            .split(/\s+/)
+            .slice(0, 2)
+            .map(part => part.charAt(0))
+            .join("")
+            .toUpperCase();
+    }
+
+    function safeText(value, fallback = "—") {
+        if (typeof value !== "string" || !value.trim()) {
+            return fallback;
+        }
+
+        return value.trim();
+    }
+
+    function safeDate(value) {
+        try {
+            let date;
+
+            if (value && typeof value.toDate === "function") {
+                date = value.toDate();
+            } else if (value instanceof Date) {
+                date = value;
+            } else {
+                date = new Date(value);
+            }
+
+            if (Number.isNaN(date.getTime())) {
+                return "—";
+            }
+
+            return new Intl.DateTimeFormat(undefined, {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+            }).format(date);
+
+        } catch {
+            return "—";
+        }
+    }
+
+    function statusClass(status) {
+        const normalized = String(status || "")
+            .toLowerCase()
+            .trim();
+
+        const allowed = [
+            "completed",
+            "pending",
+            "failed",
+            "rejected",
+            "processing"
+        ];
+
+        return allowed.includes(normalized) ? normalized : "pending";
+    }
+
+    /* Render the user profile */
+
+    function renderProfile(user, account) {
+        const name = safeText(
+            account.fullName || account.displayName || user.displayName,
+            user.email ? user.email.split("@")[0] : "User"
+        );
+
+        document.getElementById("welcomeName").textContent = name;
+        document.getElementById("topbarName").textContent = name;
+        document.getElementById("profileAvatar").textContent = initials(name);
+    }
+
+    /* Render account summary */
+
+    function renderAccount(account) {
+        const balance = safeNumber(account.balance);
+        const invested = safeNumber(account.totalInvested);
+        const profit = safeNumber(account.totalProfit);
+        const activeCount = Math.max(
+            0,
+            Math.floor(safeNumber(account.activeInvestmentsCount))
+        );
+
+        const totalValue = balance + invested;
+
+        document.getElementById("availableBalance").textContent =
+            formatMoney(balance);
+
+        document.getElementById("totalInvested").textContent =
+            formatMoney(invested);
+
+        document.getElementById("totalProfit").textContent =
+            formatMoney(profit);
+
+        document.getElementById("activeInvestments").textContent =
+            String(activeCount);
+
+        document.getElementById("portfolioTotal").textContent =
+            formatMoney(totalValue);
+
+        document.getElementById("portfolioInvested").textContent =
+            formatMoney(invested);
+
+        document.getElementById("portfolioAvailable").textContent =
+            formatMoney(balance);
+
+        const total = Math.max(0, balance) + Math.max(0, invested);
+
+        const investedPercent = total > 0
+            ? (Math.max(0, invested) / total) * 100
+            : 0;
+
+        const availablePercent = total > 0
+            ? (Math.max(0, balance) / total) * 100
+            : 0;
+
+        document.getElementById("investedSegment").style.width =
+            investedPercent + "%";
+
+        document.getElementById("availableSegment").style.width =
+            availablePercent + "%";
+    }
+
+    /* Render investments */
+
+    function renderInvestments(investments) {
+        const container = document.getElementById("investmentList");
+
+        if (!investments.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="bx bx-layer"></i>
+                    <p>You don't have any active investments yet.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.replaceChildren();
+
+        investments.slice(0, 4).forEach(investment => {
+            const item = document.createElement("div");
+            item.className = "investment-item";
+
+            const symbol = document.createElement("div");
+            symbol.className = "investment-symbol";
+            symbol.innerHTML = '<i class="bx bx-layer"></i>';
+
+            const details = document.createElement("div");
+            details.className = "investment-details";
+
+            const title = document.createElement("h4");
+            title.textContent = safeText(
+                investment.planName || investment.plan,
+                "Investment"
+            );
+
+            const date = document.createElement("p");
+            date.textContent = "Started " + safeDate(
+                investment.startDate || investment.createdAt
+            );
+
+            details.append(title, date);
+
+            const amount = document.createElement("div");
+            amount.className = "investment-amount";
+
+            const amountValue = document.createElement("strong");
+            amountValue.textContent = formatMoney(
+                investment.amount
+            );
+
+            const status = document.createElement("span");
+            status.textContent = safeText(investment.status, "Active");
+
+            amount.append(amountValue, status);
+            item.append(symbol, details, amount);
+
+            container.appendChild(item);
+        });
+    }
+
+    /* Render transactions */
+
+    function renderTransactions(transactions) {
+        const body = document.getElementById("transactionTableBody");
+
+        if (!transactions.length) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="4" class="table-empty">
+                        No transactions have been recorded yet.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        body.replaceChildren();
+
+        transactions.slice(0, 6).forEach(transaction => {
+            const row = document.createElement("tr");
+
+            const type = safeText(transaction.type, "Transaction");
+            const normalizedType = type.toLowerCase();
+
+            const isIncoming = [
+                "deposit",
+                "profit",
+                "refund",
+                "bonus"
+            ].some(word => normalizedType.includes(word));
+
+            const iconClass = isIncoming
+                ? "bx bx-down-arrow-alt"
+                : "bx bx-up-arrow-alt";
+
+            const iconColor = isIncoming ? "green" : "purple";
+
+            const typeCell = document.createElement("td");
+            const typeContainer = document.createElement("div");
+            typeContainer.className = "transaction-type";
+
+            const icon = document.createElement("div");
+            icon.className = "transaction-type-icon " + iconColor;
+            icon.innerHTML = `<i class="${iconClass}"></i>`;
+
+            const details = document.createElement("div");
+
+            const title = document.createElement("strong");
+            title.textContent = type;
+
+            const reference = document.createElement("span");
+            reference.textContent = safeText(
+                transaction.reference,
+                "Account transaction"
+            );
+
+            details.append(title, reference);
+            typeContainer.append(icon, details);
+            typeCell.appendChild(typeContainer);
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = safeDate(
+                transaction.createdAt || transaction.date
+            );
+
+            const amountCell = document.createElement("td");
+            const amount = safeNumber(transaction.amount);
+
+            amountCell.className = isIncoming
+                ? "amount-positive"
+                : "amount-negative";
+
+            amountCell.textContent =
+                (isIncoming ? "+" : "−") + formatMoney(Math.abs(amount));
+
+            const statusCell = document.createElement("td");
+            const status = document.createElement("span");
+            const normalizedStatus = statusClass(transaction.status);
+
+            status.className = "status " + normalizedStatus;
+            status.textContent =
+                normalizedStatus.charAt(0).toUpperCase() +
+                normalizedStatus.slice(1);
+
+            statusCell.appendChild(status);
+
+            row.append(typeCell, dateCell, amountCell, statusCell);
+            body.appendChild(row);
+        });
+    }
+
+    /* Firebase setup */
+
+    /*
+      Required file:
+      ../js/firebase-config.js
+
+      It must export the initialized Firebase Authentication and
+      Cloud Firestore instances as "auth" and "db".
+    */
+
+    let firebaseModules = null;
+    let unsubscribeAccount = null;
+    let unsubscribeInvestments = null;
+    let unsubscribeTransactions = null;
+
+    async function startDashboard() {
+        try {
+            const configModule = await import("../js/firebase-config.js");
+
+            const auth = configModule.auth;
+            const db = configModule.db;
+
+            if (!auth || !db) {
+                throw new Error(
+                    "Firebase auth and db exports were not found."
+                );
+            }
+
+            const [
+                authModule,
+                firestoreModule
+            ] = await Promise.all([
+                import("https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js"),
+                import("https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js")
+            ]);
+
+            firebaseModules = {
+                authModule,
+                firestoreModule,
+                auth,
+                db
+            };
+
+            authModule.onAuthStateChanged(auth, async user => {
+                if (!user) {
+                    window.location.replace("../auth/login.html");
+                    return;
+                }
+
+                await loadUserDashboard(user);
+            });
+
+            logoutButton.addEventListener("click", async () => {
+                logoutButton.disabled = true;
+
+                try {
+                    await authModule.signOut(auth);
+                    window.location.replace("../auth/login.html");
+                } catch (error) {
+                    console.error("Logout failed:", error);
+
+                    showNotice(
+                        "We couldn't sign you out. Please try again.",
+                        "error"
+                    );
+
+                    logoutButton.disabled = false;
+                }
+            });
+
+        } catch (error) {
+            console.error("Dashboard initialization failed:", error);
+
+            showNotice(
+                
+            );
+
+            document.getElementById("investmentList").innerHTML = `
+                <div class="empty-state">
+                    <i class="bx bx-cloud"></i>
+                    <p>Account data is currently unavailable.</p>
+                </div>
+            `;
+
+            document.getElementById("transactionTableBody").innerHTML = `
+                <tr>
+                    <td colspan="4" class="table-empty">
+                        Unable to load transactions.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    async function loadUserDashboard(user) {
+        const {
+            db,
+            firestoreModule: {
+                doc,
+                collection,
+                query,
+                where,
+                orderBy,
+                limit,
+                onSnapshot
+            }
+        } = firebaseModules;
+
+        /*
+          Data ownership is enforced by Firestore security rules.
+          Queries also filter records by the authenticated UID.
+        */
+
+        const accountRef = doc(db, "users", user.uid);
+
+        unsubscribeAccount = onSnapshot(
+            accountRef,
+
+            snapshot => {
+                if (!snapshot.exists()) {
+                    showNotice(
+                        "Your account profile has not been created yet. Please contact support.",
+                        "error"
+                    );
+                    return;
+                }
+
+                const account = snapshot.data();
+
+                renderProfile(user, account);
+                renderAccount(account);
+            },
+
+            error => {
+                console.error("Account data error:", error);
+
+                showNotice(
+                    "We couldn't retrieve your account information.",
+                    "error"
+                );
+            }
+        );
+
+        const investmentsQuery = query(
+            collection(db, "investments"),
+            where("userId", "==", user.uid),
+            where("status", "==", "active"),
+            limit(10)
+        );
+
+        unsubscribeInvestments = onSnapshot(
+            investmentsQuery,
+
+            snapshot => {
+                const investments = snapshot.docs.map(item => ({
+                    id: item.id,
+                    ...item.data()
+                }));
+
+                renderInvestments(investments);
+            },
+
+            error => {
+                console.error("Investment data error:", error);
+
+                document.getElementById("investmentList").innerHTML = `
+                    <div class="empty-state">
+                        <i class="bx bx-error-circle"></i>
+                        <p>Investment information is unavailable.</p>
+                    </div>
+                `;
+            }
+        );
+
+        const transactionsQuery = query(
+            collection(db, "transactions"),
+            where("userId", "==", user.uid),
+            orderBy("createdAt", "desc"),
+            limit(10)
+        );
+
+        unsubscribeTransactions = onSnapshot(
+            transactionsQuery,
+
+            snapshot => {
+                const transactions = snapshot.docs.map(item => ({
+                    id: item.id,
+                    ...item.data()
+                }));
+
+                renderTransactions(transactions);
+            },
+
+            error => {
+                console.error("Transaction data error:", error);
+
+                document.getElementById("transactionTableBody").innerHTML = `
+                    <tr>
+                        <td colspan="4" class="table-empty">
+                            Transaction information is unavailable.
+                        </td>
+                    </tr>
+                `;
+            }
+        );
+    }
+
+    window.addEventListener("pagehide", () => {
+        if (unsubscribeAccount) unsubscribeAccount();
+        if (unsubscribeInvestments) unsubscribeInvestments();
+        if (unsubscribeTransactions) unsubscribeTransactions();
+    });
+
+    startDashboard();
+</script>
+
+</body>
+</html>

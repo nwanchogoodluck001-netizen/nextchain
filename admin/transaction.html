@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080D20">
+  <title>Transactions | NEXTCHAIN Admin</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            midnight: '#080D20',
+            panel: '#101831',
+            panelLight: '#151F3D',
+            violet: '#7867FF',
+            ice: '#43D9FF',
+            muted: '#8994B5'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #080D20;
+      color: #F5F7FF;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .sidebar {
+      width: 258px;
+      background: #0B1229;
+      border-right: 1px solid rgba(255,255,255,.07);
+      transition: transform .25s ease;
+    }
+
+    .main-content {
+      margin-left: 258px;
+      min-height: 100vh;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 12px 14px;
+      border-radius: 11px;
+      color: #8994B5;
+      font-size: 13px;
+      font-weight: 500;
+      transition: .2s ease;
+    }
+
+    .nav-link i {
+      font-size: 19px;
+    }
+
+    .nav-link:hover {
+      background: rgba(255,255,255,.045);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(100deg, rgba(120,103,255,.2), rgba(67,217,255,.055));
+      color: #fff;
+      border: 1px solid rgba(120,103,255,.17);
+    }
+
+    .nav-link.active i {
+      color: #9B90FF;
+    }
+
+    .card {
+      background: #101831;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 16px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: #0B1229;
+      border: 1px solid rgba(255,255,255,.09);
+      color: #F5F7FF;
+      border-radius: 10px;
+      padding: 11px 13px;
+      outline: none;
+      font-size: 12px;
+      transition: border-color .2s;
+    }
+
+    .input-field:focus {
+      border-color: #7867FF;
+    }
+
+    .input-field::placeholder {
+      color: #687493;
+    }
+
+    select.input-field {
+      cursor: pointer;
+    }
+
+    select.input-field option {
+      background: #101831;
+      color: #fff;
+    }
+
+    .stat-icon {
+      width: 43px;
+      height: 43px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #293452 transparent;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th {
+      text-align: left;
+      color: #7884A5;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 15px 18px;
+      white-space: nowrap;
+      background: rgba(255,255,255,.018);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    td {
+      padding: 16px 18px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.045);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      transition: background .2s;
+    }
+
+    tbody tr:hover {
+      background: rgba(255,255,255,.018);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-completed {
+      color: #4ADEA5;
+      background: rgba(74,222,165,.09);
+    }
+
+    .status-pending {
+      color: #F5C76B;
+      background: rgba(245,199,107,.09);
+    }
+
+    .status-failed {
+      color: #FF8585;
+      background: rgba(255,100,100,.09);
+    }
+
+    .status-processing {
+      color: #78B9FF;
+      background: rgba(120,185,255,.09);
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #B9C3DE;
+    }
+
+    .type-badge i {
+      font-size: 16px;
+      color: #9B90FF;
+    }
+
+    .action-btn {
+      width: 31px;
+      height: 31px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,.08);
+      background: #151F3D;
+      color: #A7B2D1;
+      border-radius: 8px;
+      transition: .2s;
+    }
+
+    .action-btn:hover {
+      color: #fff;
+      border-color: #7867FF;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #7867FF;
+      color: white;
+      border-radius: 10px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      background: #6856F0;
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #151F3D;
+      color: #CFD6EB;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: .2s;
+    }
+
+    .secondary-btn:hover {
+      border-color: rgba(120,103,255,.55);
+      color: #fff;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(2,5,16,.8);
+      backdrop-filter: blur(7px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #101831;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      box-shadow: 0 25px 100px rgba(0,0,0,.4);
+      animation: modalIn .2s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      font-size: 12px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: #8994B5;
+    }
+
+    .detail-value {
+      text-align: right;
+      color: #E8ECF8;
+      overflow-wrap: anywhere;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 200;
+      max-width: calc(100% - 40px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 17px;
+      background: #172440;
+      border: 1px solid rgba(120,103,255,.35);
+      border-radius: 12px;
+      color: #E9EDFF;
+      font-size: 12px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.3);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: .25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .empty-state {
+      padding: 55px 20px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(120,103,255,.1);
+      border: 1px solid rgba(120,103,255,.15);
+      border-radius: 17px;
+      color: #A69AFF;
+      font-size: 27px;
+    }
+
+    .pagination-btn {
+      min-width: 31px;
+      height: 31px;
+      padding: 0 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.08);
+      color: #9BA6C4;
+      background: #101831;
+      font-size: 11px;
+    }
+
+    .pagination-btn.active {
+      background: #7867FF;
+      border-color: #7867FF;
+      color: white;
+    }
+
+    .pagination-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .mobile-overlay {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        z-index: 80;
+        inset: 0 auto 0 0;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-overlay.show {
+        display: block;
+        position: fixed;
+        z-index: 70;
+        inset: 0;
+        background: rgba(0,0,0,.6);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-padding {
+        padding: 19px 14px !important;
+      }
+
+      .mobile-title {
+        font-size: 20px !important;
+      }
+
+      .stat-card {
+        padding: 15px !important;
+      }
+
+      .stat-number {
+        font-size: 20px !important;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .top-actions {
+        width: 100%;
+      }
+
+      .top-actions button {
+        flex: 1;
+      }
+
+      .toast {
+        right: 12px;
+        bottom: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="mobileOverlay" class="mobile-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar fixed top-0 left-0 bottom-0 flex flex-col p-5 overflow-y-auto">
+    <a href="index.html" class="flex items-center gap-3 px-1 mb-9">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+           style="background:linear-gradient(135deg,#7867FF,#43D9FF)">
+        <i class="bx bx-cube-alt text-white text-2xl"></i>
+      </div>
+      <div>
+        <div class="font-extrabold tracking-widest text-white text-lg">NEXTCHAIN</div>
+        <div class="text-[9px] tracking-[.2em] text-muted uppercase mt-0.5">Admin Console</div>
+      </div>
+    </a>
+
+    <div class="text-[10px] text-slate-600 font-semibold tracking-[.16em] uppercase px-3 mb-3">
+      Main Menu
+    </div>
+
+    <nav class="space-y-1">
+      <a href="index.html" class="nav-link">
+        <i class="bx bx-grid-alt"></i><span>Dashboard</span>
+      </a>
+      <a href="user.html" class="nav-link">
+        <i class="bx bx-user"></i><span>Users</span>
+      </a>
+      <a href="investment.html" class="nav-link">
+        <i class="bx bx-trending-up"></i><span>Investments</span>
+      </a>
+    </nav>
+
+    <div class="text-[10px] text-slate-600 font-semibold tracking-[.16em] uppercase px-3 mt-8 mb-3">
+      Finance
+    </div>
+
+    <nav class="space-y-1">
+      <a href="deposit.html" class="nav-link">
+        <i class="bx bx-wallet"></i><span>Deposits</span>
+      </a>
+      <a href="withdrawals.html" class="nav-link">
+        <i class="bx bx-money-withdraw"></i><span>Withdrawals</span>
+      </a>
+      <a href="transaction.html" class="nav-link active">
+        <i class="bx bx-transfer-alt"></i><span>Transactions</span>
+        <span class="ml-auto text-[9px] px-2 py-1 rounded-md"
+              style="background:rgba(120,103,255,.15);color:#A69AFF">All</span>
+      </a>
+    </nav>
+
+    <div class="text-[10px] text-slate-600 font-semibold tracking-[.16em] uppercase px-3 mt-8 mb-3">
+      Management
+    </div>
+
+    <nav class="space-y-1">
+      <a href="support.html" class="nav-link">
+        <i class="bx bx-message-square-detail"></i><span>Support</span>
+      </a>
+      <a href="report-notification.html" class="nav-link">
+        <i class="bx bx-bar-chart-alt-2"></i><span>Reports</span>
+      </a>
+      <a href="settings.html" class="nav-link">
+        <i class="bx bx-cog"></i><span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="mt-auto pt-6">
+      <div class="rounded-xl p-4 mb-5"
+           style="background:linear-gradient(140deg,rgba(120,103,255,.12),rgba(67,217,255,.04));border:1px solid rgba(120,103,255,.14)">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="text-[11px] font-semibold text-slate-200">Admin Workspace</span>
+        </div>
+        <p class="text-[10px] text-muted leading-relaxed">
+          Frontend preview. Transaction records are not connected to a live data source.
+        </p>
+      </div>
+
+      <a href="settings.html" class="nav-link">
+        <i class="bx bx-user-circle"></i><span>Admin Profile</span>
+      </a>
+
+      <button onclick="showToast('Connect your authentication system to enable logout.')"
+              class="nav-link w-full text-left mt-1">
+        <i class="bx bx-log-out"></i><span>Logout</span>
+      </button>
+
+      <div class="border-t border-white/5 mt-5 pt-4 px-3 text-[10px] text-slate-600">
+        NEXTCHAIN Admin · UI Preview
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 px-5 md:px-8 py-4 flex items-center justify-between gap-4"
+            style="background:rgba(8,13,32,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)">
+      <div class="flex items-center gap-3 min-w-0">
+        <button onclick="openSidebar()"
+                class="lg:hidden w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-white/10 text-slate-300">
+          <i class="bx bx-menu text-2xl"></i>
+        </button>
+
+        <div class="min-w-0">
+          <div class="text-[10px] text-muted mb-1">Finance / Transactions</div>
+          <h1 class="mobile-title text-xl font-bold tracking-tight">Transaction Management</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="showToast('No new notifications in this frontend preview.')"
+                class="relative w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl border border-white/10 text-slate-300 hover:text-white">
+          <i class="bx bx-bell text-xl"></i>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-3 pl-3 border-l border-white/10">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
+               style="background:linear-gradient(135deg,#7867FF,#43D9FF)">A</div>
+          <div>
+            <div class="text-xs font-semibold">Administrator</div>
+            <div class="text-[10px] text-muted mt-1">Platform Manager</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-padding p-5 md:p-8 max-w-[1600px] mx-auto">
+      <!-- Intro -->
+      <section class="flex flex-col xl:flex-row xl:items-center justify-between gap-5 mb-7">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="w-2 h-2 rounded-full bg-violet"></span>
+            <span class="text-[10px] text-violet-300 tracking-[.16em] uppercase font-semibold">Financial Overview</span>
+          </div>
+
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">All Transactions</h2>
+
+          <p class="text-xs text-muted mt-2 leading-relaxed max-w-xl">
+            Review and track deposits, withdrawals, investment activities, and other transaction records.
+          </p>
+        </div>
+
+        <div class="top-actions flex flex-wrap items-center gap-2">
+          <button onclick="resetFilters()" class="secondary-btn">
+            <i class="bx bx-refresh text-base"></i> Reset Filters
+          </button>
+          <button onclick="exportTransactions()" class="primary-btn">
+            <i class="bx bx-download text-base"></i> Export CSV
+          </button>
+        </div>
+      </section>
+
+      <!-- Demo Notice -->
+      <div class="flex items-start gap-3 p-4 rounded-xl mb-6"
+           style="background:rgba(120,103,255,.07);border:1px solid rgba(120,103,255,.16)">
+        <i class="bx bx-info-circle text-violet-300 text-xl mt-0.5"></i>
+        <div>
+          <p class="text-xs font-semibold text-slate-200">Frontend preview mode</p>
+          <p class="text-[11px] text-muted leading-relaxed mt-1">
+            No live financial data is connected. Transaction totals and records will remain empty until a data source is integrated.
+            Do not use this preview to verify actual payments.
+          </p>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Total Transactions</p>
+              <h3 id="totalTransactions" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">No records loaded</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(120,103,255,.13);color:#A69AFF">
+              <i class="bx bx-transfer-alt"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Completed</p>
+              <h3 id="completedTransactions" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">Successful records</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(74,222,165,.1);color:#4ADEA5">
+              <i class="bx bx-check-circle"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Pending</p>
+              <h3 id="pendingTransactions" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">Awaiting processing</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(245,199,107,.1);color:#F5C76B">
+              <i class="bx bx-time-five"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stat-card p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-muted">Failed</p>
+              <h3 id="failedTransactions" class="stat-number text-2xl font-bold mt-3">0</h3>
+              <p class="text-[10px] text-muted mt-2">Unsuccessful records</p>
+            </div>
+            <div class="stat-icon" style="background:rgba(255,100,100,.1);color:#FF8585">
+              <i class="bx bx-x-circle"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transaction Volume -->
+      <section class="card p-5 md:p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div>
+            <h3 class="font-semibold text-sm">Transaction Activity</h3>
+            <p class="text-[11px] text-muted mt-1">Overview of transaction counts by day</p>
+          </div>
+
+          <select id="activityPeriod" class="input-field sm:w-40" onchange="renderActivity()">
+            <option value="7">Last 7 days</option>
+            <option value="14">Last 14 days</option>
+            <option value="30">Last 30 days</option>
+          </select>
+        </div>
+
+        <div id="activityChart" class="min-h-[170px] flex items-end gap-2 sm:gap-4 pt-5">
+          <!-- Activity bars are generated by JavaScript -->
+        </div>
+
+        <div class="flex items-center gap-2 mt-5 text-[10px] text-muted">
+          <span class="w-2 h-2 rounded-full" style="background:#7867FF"></span>
+          <span>Transactions per day</span>
+          <span class="ml-auto">No activity data available</span>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="card p-5 mb-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div>
+            <h3 class="font-semibold text-sm">Transaction Records</h3>
+            <p class="text-[11px] text-muted mt-1">Search and filter available records</p>
+          </div>
+
+          <span id="recordCount"
+                class="text-[10px] rounded-lg px-3 py-2"
+                style="background:rgba(255,255,255,.04);color:#A7B2D1">
+            0 records
+          </span>
+        </div>
+
+        <div class="filter-grid grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3">
+          <div class="relative">
+            <i class="bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-lg"></i>
+            <input id="searchInput" type="search" class="input-field pl-10"
+                   placeholder="Search ID, user, email..."
+                   oninput="applyFilters()">
+          </div>
+
+          <select id="typeFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All transaction types</option>
+            <option value="Deposit">Deposit</option>
+            <option value="Withdrawal">Withdrawal</option>
+            <option value="Investment">Investment</option>
+            <option value="Return">Investment Return</option>
+            <option value="Referral">Referral Bonus</option>
+            <option value="Adjustment">Adjustment</option>
+          </select>
+
+          <select id="statusFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All statuses</option>
+            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Failed">Failed</option>
+          </select>
+
+          <select id="methodFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All payment methods</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Card">Card</option>
+            <option value="Crypto">Crypto</option>
+            <option value="Internal Balance">Internal Balance</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <select id="dateFilter" class="input-field" onchange="applyFilters()">
+            <option value="">All dates</option>
+            <option value="today">Today</option>
+            <option value="7days">Last 7 days</option>
+            <option value="30days">Last 30 days</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Table -->
+      <section class="card overflow-hidden">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>User</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="transactionTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 md:px-5"
+             style="border-top:1px solid rgba(255,255,255,.06)">
+          <p id="paginationInfo" class="text-[11px] text-muted">
+            Showing 0 records
+          </p>
+
+          <div id="pagination" class="flex items-center gap-2"></div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="flex flex-col sm:flex-row items-center justify-between gap-3 py-7 mt-2">
+        <p class="text-[10px] text-slate-600">
+          © <span id="currentYear"></span> NEXTCHAIN. All rights reserved.
+        </p>
+        <div class="flex items-center gap-2 text-[10px] text-slate-600">
+          <i class="bx bx-shield-quarter text-base"></i>
+          <span>Admin interface preview · Not connected to live financial data</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Transaction Details Modal -->
+  <div id="detailsModal" class="modal-overlay" onclick="handleModalBackdrop(event)">
+    <div class="modal">
+      <div class="flex items-center justify-between gap-3 p-5 md:p-6"
+           style="border-bottom:1px solid rgba(255,255,255,.07)">
+        <div>
+          <h3 class="font-bold text-base">Transaction Details</h3>
+          <p class="text-[11px] text-muted mt-1">Review the selected transaction record</p>
+        </div>
+        <button onclick="closeDetailsModal()"
+                class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-400 hover:text-white"
+                style="background:rgba(255,255,255,.05)">
+          <i class="bx bx-x text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-5 md:p-6">
+        <div class="rounded-xl p-5 text-center mb-5"
+             style="background:linear-gradient(135deg,rgba(120,103,255,.12),rgba(67,217,255,.04));border:1px solid rgba(120,103,255,.12)">
+          <p class="text-[11px] text-muted mb-2">Transaction Amount</p>
+          <h2 id="modalAmount" class="text-3xl font-bold">$0.00</h2>
+          <div class="mt-3" id="modalStatus"></div>
+        </div>
+
+        <div id="transactionDetails"></div>
+
+        <div class="flex justify-end gap-2 mt-6">
+          <button onclick="closeDetailsModal()" class="secondary-btn">Close</button>
+          <button onclick="copyTransactionId()" class="primary-btn">
+            <i class="bx bx-copy"></i> Copy Transaction ID
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <i class="bx bx-info-circle text-violet-300 text-lg"></i>
+    <span id="toastMessage">Notice</span>
+  </div>
+
+  <script>
+    /*
+      NEXTCHAIN TRANSACTION PAGE
+
+      Frontend-only prototype.
+      No Firebase, backend, live payments, or real transaction records.
+
+      To preview the empty state, leave transactions as [].
+      When your backend developer provides a data source, replace this
+      array with the records returned by that source.
+    */
+
+    const transactions = [];
+
+    const pageSize = 8;
+    let currentPage = 1;
+    let filteredTransactions = [];
+    let selectedTransactionId = '';
+    let toastTimer;
+
+    const typeIcons = {
+      Deposit: 'bx-wallet',
+      Withdrawal: 'bx-money-withdraw',
+      Investment: 'bx-trending-up',
+      Return: 'bx-line-chart',
+      Referral: 'bx-gift',
+      Adjustment: 'bx-transfer'
+    };
+
+    const statusClasses = {
+      Completed: 'status-completed',
+      Pending: 'status-pending',
+      Processing: 'status-processing',
+      Failed: 'status-failed'
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      })[character]);
+    }
+
+    function formatAmount(amount, currency = 'USD') {
+      const numericAmount = Number(amount);
+
+      if (!Number.isFinite(numericAmount)) {
+        return '—';
+      }
+
+      try {
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency,
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }).format(numericAmount);
+      } catch {
+        return `${currency} ${numericAmount.toFixed(2)}`;
+      }
+    }
+
+    function formatDate(dateValue) {
+      if (!dateValue) return '—';
+
+      const date = new Date(dateValue);
+
+      if (Number.isNaN(date.getTime())) {
+        return String(dateValue);
+      }
+
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function getStatusClass(status) {
+      return statusClasses[status] || 'status-processing';
+    }
+
+    function getTypeIcon(type) {
+      return typeIcons[type] || 'bx-transfer';
+    }
+
+    function renderStats() {
+      const total = transactions.length;
+      const completed = transactions.filter(item => item.status === 'Completed').length;
+      const pending = transactions.filter(item =>
+        item.status === 'Pending' || item.status === 'Processing'
+      ).length;
+      const failed = transactions.filter(item => item.status === 'Failed').length;
+
+      document.getElementById('totalTransactions').textContent = total;
+      document.getElementById('completedTransactions').textContent = completed;
+      document.getElementById('pendingTransactions').textContent = pending;
+      document.getElementById('failedTransactions').textContent = failed;
+    }
+
+    function applyFilters() {
+      const search = document.getElementById('searchInput').value.trim().toLowerCase();
+      const type = document.getElementById('typeFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const method = document.getElementById('methodFilter').value;
+      const dateFilter = document.getElementById('dateFilter').value;
+
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      filteredTransactions = transactions.filter(item => {
+        const searchable = [
+          item.id,
+          item.userName,
+          item.userEmail,
+          item.userId,
+          item.type,
+          item.method,
+          item.status
+        ].join(' ').toLowerCase();
+
+        if (search && !searchable.includes(search)) return false;
+        if (type && item.type !== type) return false;
+        if (status && item.status !== status) return false;
+
+        if (method) {
+          if (method === 'Other') {
+            if (['Bank Transfer', 'Card', 'Crypto', 'Internal Balance'].includes(item.method)) {
+              return false;
+            }
+          } else if (item.method !== method) {
+            return false;
+          }
+        }
+
+        if (dateFilter) {
+          const itemDate = new Date(item.date);
+
+          if (Number.isNaN(itemDate.getTime())) return false;
+
+          if (dateFilter === 'today' && itemDate < todayStart) return false;
+
+          if (dateFilter === '7days') {
+            const start = new Date(now);
+            start.setDate(start.getDate() - 7);
+            if (itemDate < start) return false;
+          }
+
+          if (dateFilter === '30days') {
+            const start = new Date(now);
+            start.setDate(start.getDate() - 30);
+            if (itemDate < start) return false;
+          }
+        }
+
+        return true;
+      });
+
+      currentPage = 1;
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('transactionTableBody');
+      const total = filteredTransactions.length;
+      const totalPages = Math.ceil(total / pageSize);
+      const startIndex = (currentPage - 1) * pageSize;
+      const visibleTransactions = filteredTransactions.slice(startIndex, startIndex + pageSize);
+
+      document.getElementById('recordCount').textContent =
+        `${total} ${total === 1 ? 'record' : 'records'}`;
+
+      if (total === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
+                <div class="empty-icon">
+                  <i class="bx bx-transfer-alt"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-200">No transactions found</h3>
+                <p class="text-[11px] text-muted max-w-sm mx-auto mt-2 leading-relaxed">
+                  There are no transaction records to display. Records will appear here when a data source is connected.
+                </p>
+                <button onclick="resetFilters()" class="secondary-btn mt-5">
+                  <i class="bx bx-refresh"></i> Reset Filters
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+
+        document.getElementById('paginationInfo').textContent = 'Showing 0 records';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+      }
+
+      tbody.innerHTML = visibleTransactions.map(item => `
+        <tr>
+          <td>
+            <span class="font-semibold text-slate-200">${escapeHTML(item.id || '—')}</span>
+          </td>
+
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-[11px] font-bold"
+                   style="background:rgba(120,103,255,.15);color:#B6AEFF">
+                ${escapeHTML((item.userName || 'U').charAt(0).toUpperCase())}
+              </div>
+              <div>
+                <p class="text-xs font-medium text-slate-200">${escapeHTML(item.userName || 'Unknown user')}</p>
+                <p class="text-[10px] text-muted mt-1">${escapeHTML(item.userEmail || 'No email')}</p>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <span class="type-badge">
+              <i class="bx ${getTypeIcon(item.type)}"></i>
+              ${escapeHTML(item.type || 'Other')}
+            </span>
+          </td>
+
+          <td>
+            <span class="font-semibold text-slate-200">
+              ${formatAmount(item.amount, item.currency || 'USD')}
+            </span>
+          </td>
+
+          <td>
+            <span class="text-slate-400">${escapeHTML(item.method || '—')}</span>
+          </td>
+
+          <td>
+            <span class="text-slate-400">${escapeHTML(formatDate(item.date))}</span>
+          </td>
+
+          <td>
+            <span class="status ${getStatusClass(item.status)}">${escapeHTML(item.status || 'Unknown')}</span>
+          </td>
+
+          <td>
+            <button class="action-btn" title="View transaction details"
+                    onclick="openDetailsModal('${escapeHTML(item.id)}')">
+              <i class="bx bx-show text-lg"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      document.getElementById('paginationInfo').textContent =
+        `Showing ${startIndex + 1}–${Math.min(startIndex + pageSize, total)} of ${total} records`;
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const container = document.getElementById('pagination');
+
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let html = `
+        <button class="pagination-btn" onclick="changePage(${currentPage - 1})"
+                ${currentPage === 1 ? 'disabled' : ''} aria-label="Previous page">
+          <i class="bx bx-chevron-left"></i>
+        </button>
+      `;
+
+      for (let page = 1; page <= totalPages; page++) {
+        html += `
+          <button class="pagination-btn ${page === currentPage ? 'active' : ''}"
+                  onclick="changePage(${page})">${page}</button>
+        `;
+      }
+
+      html += `
+        <button class="pagination-btn" onclick="changePage(${currentPage + 1})"
+                ${currentPage === totalPages ? 'disabled' : ''} aria-label="Next page">
+          <i class="bx bx-chevron-right"></i>
+        </button>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function changePage(page) {
+      const totalPages = Math.ceil(filteredTransactions.length / pageSize);
+
+      if (page < 1 || page > totalPages) return;
+
+      currentPage = page;
+      renderTable();
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('typeFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('methodFilter').value = '';
+      document.getElementById('dateFilter').value = '';
+
+      applyFilters();
+      showToast('Filters have been reset.');
+    }
+
+    function openDetailsModal(id) {
+      const transaction = transactions.find(item => String(item.id) === String(id));
+
+      if (!transaction) {
+        showToast('Transaction record could not be found.');
+        return;
+      }
+
+      selectedTransactionId = transaction.id;
+
+      document.getElementById('modalAmount').textContent =
+        formatAmount(transaction.amount, transaction.currency || 'USD');
+
+      document.getElementById('modalStatus').innerHTML = `
+        <span class="status ${getStatusClass(transaction.status)}">
+          ${escapeHTML(transaction.status || 'Unknown')}
+        </span>
+      `;
+
+      const details = [
+        ['Transaction ID', transaction.id],
+        ['User Name', transaction.userName],
+        ['Email Address', transaction.userEmail],
+        ['User ID', transaction.userId],
+        ['Transaction Type', transaction.type],
+        ['Payment Method', transaction.method],
+        ['Currency', transaction.currency || 'USD'],
+        ['Date & Time', formatDate(transaction.date)],
+        ['Reference', transaction.reference],
+        ['Description', transaction.description]
+      ];
+
+      document.getElementById('transactionDetails').innerHTML = details.map(([label, value]) => `
+        <div class="detail-row">
+          <span class="detail-label">${escapeHTML(label)}</span>
+          <span class="detail-value">${escapeHTML(value || '—')}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('detailsModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetailsModal() {
+      document.getElementById('detailsModal').classList.remove('show');
+      document.body.style.overflow = '';
+      selectedTransactionId = '';
+    }
+
+    function handleModalBackdrop(event) {
+      if (event.target.id === 'detailsModal') {
+        closeDetailsModal();
+      }
+    }
+
+    async function copyTransactionId() {
+      if (!selectedTransactionId) {
+        showToast('No transaction ID is selected.');
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(String(selectedTransactionId));
+        showToast('Transaction ID copied.');
+      } catch {
+        const temporaryInput = document.createElement('textarea');
+        temporaryInput.value = String(selectedTransactionId);
+        temporaryInput.style.position = 'fixed';
+        temporaryInput.style.opacity = '0';
+        document.body.appendChild(temporaryInput);
+        temporaryInput.select();
+
+        try {
+          document.execCommand('copy');
+          showToast('Transaction ID copied.');
+        } catch {
+          showToast('Unable to copy the ID on this device.');
+        }
+
+        temporaryInput.remove();
+      }
+    }
+
+    function exportTransactions() {
+      if (filteredTransactions.length === 0) {
+        showToast('There are no transaction records to export.');
+        return;
+      }
+
+      const headers = [
+        'Transaction ID',
+        'User ID',
+        'User Name',
+        'Email',
+        'Type',
+        'Amount',
+        'Currency',
+        'Method',
+        'Date',
+        'Status',
+        'Reference',
+        'Description'
+      ];
+
+      const rows = filteredTransactions.map(item => [
+        item.id,
+        item.userId,
+        item.userName,
+        item.userEmail,
+        item.type,
+        item.amount,
+        item.currency || 'USD',
+        item.method,
+        item.date,
+        item.status,
+        item.reference,
+        item.description
+      ]);
+
+      const csvEscape = value => {
+        const safeValue = String(value ?? '');
+        return `"${safeValue.replace(/"/g, '""')}"`;
+      };
+
+      const csv = [
+        headers.map(csvEscape).join(','),
+        ...rows.map(row => row.map(csvEscape).join(','))
+      ].join('\r\n');
+
+      const blob = new Blob(['\uFEFF' + csv], {
+        type: 'text/csv;charset=utf-8;'
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = 'nextchain-transactions.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+      showToast('Transaction CSV exported.');
+    }
+
+    function renderActivity() {
+      const container = document.getElementById('activityChart');
+      const days = Number(document.getElementById('activityPeriod').value) || 7;
+
+      // No fabricated activity bars: this preview has no transaction history.
+      container.innerHTML = `
+        <div class="w-full flex flex-col items-center justify-center text-center py-7">
+          <i class="bx bx-bar-chart-alt-2 text-3xl text-slate-600 mb-3"></i>
+          <p class="text-xs text-slate-400">No activity data available</p>
+          <p class="text-[10px] text-slate-600 mt-2">
+            Transaction counts for the selected ${days}-day period will appear when records are connected.
+          </p>
+        </div>
+      `;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+
+      document.getElementById('toastMessage').textContent = message;
+      toast.classList.add('show');
+
+      clearTimeout(toastTimer);
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('mobileOverlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeDetailsModal();
+        closeSidebar();
+      }
+    });
+
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Initialize the page.
+    renderStats();
+    applyFilters();
+    renderActivity();
+  </script>
+</body>
+</html>
